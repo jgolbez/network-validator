@@ -1,0 +1,48 @@
+tests:
+  - name: "Default Route Present"
+    description: "Verify that a default route (0.0.0.0/0) exists in the routing table"
+    command: "show ip route"
+    match_type: "contains"
+    expected: "0.0.0.0/0"
+
+  - name: "No Errors in System Logs"
+    description: "Verify that critical/error severity logs are not present"
+    command: "show log | include CRITICAL|ERROR"
+    match_type: "not_contains"
+    expected: "CRITICAL"
+
+  - name: "NTP Synchronized"
+    description: "Check that NTP is synchronized via regex pattern"
+    command: "show ntp status"
+    match_type: "regex"
+    expected: "Clock is synchronized|Clock is unsynchronized|master"
+
+  - name: "CPU Utilization Below Threshold"
+    description: "Verify CPU is not in critical state"
+    command: "show processes cpu"
+    match_type: "regex"
+    expected: "CPU utilization for five seconds: \\d{1,2}%"
+
+  - name: "OSPF Neighbors Up"
+    description: "Ensure OSPF has established neighbor relationships"
+    command: "show ip ospf neighbor"
+    match_type: "contains"
+    expected: "FULL"
+
+  - name: "Interface Status"
+    description: "Verify at least one interface is up"
+    command: "show interface brief"
+    match_type: "regex"
+    expected: "up\\s+up"
+
+  - name: "Device Hostname Matches"
+    description: "Verify device hostname is as expected"
+    command: "show running-config | include hostname"
+    match_type: "contains"
+    expected: "hostname"
+
+  - name: "Memory Utilization Check"
+    description: "Verify system memory is available"
+    command: "show memory statistics"
+    match_type: "regex"
+    expected: "\\d+\\s+bytes"

@@ -1,0 +1,16 @@
+devices:
+  - name: "Core Router - DC1"
+    host: "192.168.1.1"
+    username: "admin"
+    password: "changeme123"
+    device_type: "cisco_ios"
+    port: 22
+    timeout: 30
+
+  - name: "Access Switch - Building A"
+    host: "192.168.1.2"
+    username: "admin"
+    password: "changeme123"
+    device_type: "cisco_ios"
+    port: 22
+    timeout: 30

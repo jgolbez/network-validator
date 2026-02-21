@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Network Validator Report</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+        }
+        .header h1 {
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+        .header p {
+            opacity: 0.9;
+            font-size: 14px;
+        }
+        .summary {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        .badge {
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 14px;
+            background: rgba(255, 255, 255, 0.2);
+            display: inline-block;
+        }
+        .badge.pass {
+            background: #4caf50;
+        }
+        .badge.fail {
+            background: #f44336;
+        }
+        .badge.error {
+            background: #ff9800;
+        }
+        .content {
+            padding: 30px;
+        }
+        .device-section {
+            margin-bottom: 30px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        .device-header {
+            background: #f9f9f9;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            user-select: none;
+            border-bottom: 1px solid #ddd;
+        }
+        .device-header:hover {
+            background: #f0f0f0;
+        }
+        .device-header h2 {
+            font-size: 18px;
+            margin: 0;
+        }
+        .device-info {
+            font-size: 12px;
+            color: #666;
+            margin-top: 4px;
+        }
+        .device-summary {
+            display: flex;
+            gap: 10px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .device-summary span {
+            padding: 4px 8px;
+            border-radius: 3px;
+            color: white;
+        }
+        .device-summary .pass {
+            background: #4caf50;
+        }
+        .device-summary .fail {
+            background: #f44336;
+        }
+        .device-summary .error {
+            background: #ff9800;
+        }
+        .toggle-icon {
+            font-size: 18px;
+            transition: transform 0.3s;
+        }
+        details[open] .toggle-icon {
+            transform: rotate(180deg);
+        }
+        .device-content {
+            padding: 15px;
+            background: white;
+        }
+        .connection-error {
+            padding: 12px;
+            margin-bottom: 15px;
+            background: #ffebee;
+            border-left: 4px solid #f44336;
+            border-radius: 4px;
+            color: #c62828;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+        th {
+            background: #f5f5f5;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 2px solid #ddd;
+        }
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+        }
+        tr:hover {
+            background: #f9f9f9;
+        }
+        td.status {
+            font-weight: bold;
+            text-align: center;
+            width: 80px;
+        }
+        .status.pass {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+        .status.fail {
+            background: #ffebee;
+            color: #c62828;
+        }
+        .status.error {
+            background: #fff3e0;
+            color: #e65100;
+        }
+        .output-cell {
+            max-height: 200px;
+            overflow-y: auto;
+            background: #f5f5f5;
+            padding: 8px;
+            border-radius: 3px;
+            font-family: "Courier New", monospace;
+            font-size: 11px;
+            word-wrap: break-word;
+            white-space: pre-wrap;
+        }
+        .error-message {
+            color: #c62828;
+            font-style: italic;
+        }
+        .footer {
+            background: #f9f9f9;
+            padding: 20px 30px;
+            border-top: 1px solid #ddd;
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+        }
+        .empty {
+            text-align: center;
+            padding: 20px;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔍 Network Validator Report</h1>
+            <p>Automated network device validation</p>
+            <div class="summary">
+                <div class="badge pass">✓ PASS: {{ total_pass }}</div>
+                <div class="badge fail">✗ FAIL: {{ total_fail }}</div>
+                <div class="badge error">⚠ ERROR: {{ total_error }}</div>
+                <div class="badge" style="background: rgba(255,255,255,0.3);">📅 {{ run_timestamp }}</div>
+            </div>
+        </div>
+
+        <div class="content">
+            {% if device_reports %}
+                {% for report in device_reports %}
+                    <div class="device-section">
+                        <details open>
+                            <summary class="device-header">
+                                <div>
+                                    <h2>{{ report.device_name }}</h2>
+                                    <div class="device-info">{{ report.host }}</div>
+                                </div>
+                                <div>
+                                    <div class="device-summary">
+                                        <span class="pass">✓ {{ report.pass_count }}</span>
+                                        <span class="fail">✗ {{ report.fail_count }}</span>
+                                        <span class="error">⚠ {{ report.error_count }}</span>
+                                    </div>
+                                </div>
+                                <div class="toggle-icon">▼</div>
+                            </summary>
+
+                            <div class="device-content">
+                                {% if report.connection_error %}
+                                    <div class="connection-error">
+                                        <strong>Connection Error:</strong> {{ report.connection_error }}
+                                    </div>
+                                {% endif %}
+
+                                {% if report.test_results %}
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>Test Name</th>
+                                                <th>Description</th>
+                                                <th>Command</th>
+                                                <th>Match Type</th>
+                                                <th>Expected</th>
+                                                <th>Output</th>
+                                                <th>Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for result in report.test_results %}
+                                                <tr>
+                                                    <td><strong>{{ result.test_name }}</strong></td>
+                                                    <td>{{ result.description }}</td>
+                                                    <td><code>{{ result.command }}</code></td>
+                                                    <td>{{ result.match_type }}</td>
+                                                    <td><code>{{ result.expected }}</code></td>
+                                                    <td>
+                                                        {% if result.output %}
+                                                            <div class="output-cell">{{ result.output }}</div>
+                                                        {% elif result.error_message %}
+                                                            <div class="error-message">{{ result.error_message }}</div>
+                                                        {% else %}
+                                                            <span style="color: #999;">—</span>
+                                                        {% endif %}
+                                                    </td>
+                                                    <td class="status {{ result.status|lower }}">{{ result.status }}</td>
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                {% else %}
+                                    <div class="empty">No test results</div>
+                                {% endif %}
+                            </div>
+                        </details>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="empty">No device reports available</div>
+            {% endif %}
+        </div>
+
+        <div class="footer">
+            <p>Generated by Network Validator</p>
+        </div>
+    </div>
+</body>
+</html>
