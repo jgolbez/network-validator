@@ -203,9 +203,9 @@
             <p>Automated network device validation</p>
             <div class="summary">
                 <div class="badge pass">✓ PASS: 12</div>
-                <div class="badge fail">✗ FAIL: 10</div>
+                <div class="badge fail">✗ FAIL: 3</div>
                 <div class="badge error">⚠ ERROR: 0</div>
-                <div class="badge" style="background: rgba(255,255,255,0.3);">📅 2026-02-23 08:45:33</div>
+                <div class="badge" style="background: rgba(255,255,255,0.3);">📅 2026-02-23 08:57:56</div>
             </div>
         </div>
 
@@ -222,7 +222,7 @@
                                 <div>
                                     <div class="device-summary">
                                         <span class="pass">✓ 8</span>
-                                        <span class="fail">✗ 3</span>
+                                        <span class="fail">✗ 2</span>
                                         <span class="error">⚠ 0</span>
                                     </div>
                                 </div>
@@ -523,21 +523,7 @@ IPv6 access list preauth_v6
 Sending 5, 100-byte ICMP Echos to 10.10.10.11, timeout is 2 seconds:
 Packet sent with a source address of 10.10.10.2 
 !!!!!
-Success rate is 100 percent (5/5), round-trip min/avg/max = 59/190/478 ms</div>
-                                                        
-                                                    </td>
-                                                    <td class="status fail">FAIL</td>
-                                                </tr>
-                                            
-                                                <tr>
-                                                    <td><strong>Ping Desktop-1 from CORE-SW2 should fail (task complete)</strong></td>
-                                                    <td>After task, CORE-SW2 should NOT be able to ping desktop-1</td>
-                                                    <td><code>ping 10.10.10.11 source 10.10.10.3</code></td>
-                                                    <td>contains</td>
-                                                    <td><code>Destination unreachable</code></td>
-                                                    <td>
-                                                        
-                                                            <div class="output-cell">% Invalid source address- IP address not on any of our up interfaces</div>
+Success rate is 100 percent (5/5), round-trip min/avg/max = 53/60/68 ms</div>
                                                         
                                                     </td>
                                                     <td class="status fail">FAIL</td>
@@ -555,7 +541,7 @@ Success rate is 100 percent (5/5), round-trip min/avg/max = 59/190/478 ms</div>
 Sending 5, 100-byte ICMP Echos to 10.10.10.10, timeout is 2 seconds:
 Packet sent with a source address of 10.10.10.2 
 !!!!!
-Success rate is 100 percent (5/5), round-trip min/avg/max = 66/173/599 ms</div>
+Success rate is 100 percent (5/5), round-trip min/avg/max = 66/131/228 ms</div>
                                                         
                                                     </td>
                                                     <td class="status pass">PASS</td>
@@ -578,7 +564,7 @@ Success rate is 100 percent (5/5), round-trip min/avg/max = 66/173/599 ms</div>
                                 <div>
                                     <div class="device-summary">
                                         <span class="pass">✓ 4</span>
-                                        <span class="fail">✗ 7</span>
+                                        <span class="fail">✗ 1</span>
                                         <span class="error">⚠ 0</span>
                                     </div>
                                 </div>
@@ -602,74 +588,6 @@ Success rate is 100 percent (5/5), round-trip min/avg/max = 66/173/599 ms</div>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            
-                                                <tr>
-                                                    <td><strong>Extract Desktop-0 IP from DHCP</strong></td>
-                                                    <td>Find desktop-0's DHCP-assigned IP by matching its MAC address</td>
-                                                    <td><code>show ip dhcp binding</code></td>
-                                                    <td>contains</td>
-                                                    <td><code>0152.5400.0ee7.0e</code></td>
-                                                    <td>
-                                                        
-                                                            <div class="output-cell">Bindings from all pools not associated with VRF:
-IP address      Client-ID/ 		Lease expiration 	Type       State      Interface
-		Hardware address/
-		User name</div>
-                                                        
-                                                    </td>
-                                                    <td class="status fail">FAIL</td>
-                                                </tr>
-                                            
-                                                <tr>
-                                                    <td><strong>Extract Desktop-1 IP from DHCP</strong></td>
-                                                    <td>Find desktop-1's DHCP-assigned IP by matching its MAC address</td>
-                                                    <td><code>show ip dhcp binding</code></td>
-                                                    <td>contains</td>
-                                                    <td><code>0152.5400.c168.c3</code></td>
-                                                    <td>
-                                                        
-                                                            <div class="output-cell">Bindings from all pools not associated with VRF:
-IP address      Client-ID/ 		Lease expiration 	Type       State      Interface
-		Hardware address/
-		User name</div>
-                                                        
-                                                    </td>
-                                                    <td class="status fail">FAIL</td>
-                                                </tr>
-                                            
-                                                <tr>
-                                                    <td><strong>Desktop-0 uses DHCP</strong></td>
-                                                    <td>Verify desktop-0 IP is from active DHCP lease, not static</td>
-                                                    <td><code>show ip dhcp binding</code></td>
-                                                    <td>regex</td>
-                                                    <td><code>0152\.5400\.0ee7\.0e.*Automatic.*Active</code></td>
-                                                    <td>
-                                                        
-                                                            <div class="output-cell">Bindings from all pools not associated with VRF:
-IP address      Client-ID/ 		Lease expiration 	Type       State      Interface
-		Hardware address/
-		User name</div>
-                                                        
-                                                    </td>
-                                                    <td class="status fail">FAIL</td>
-                                                </tr>
-                                            
-                                                <tr>
-                                                    <td><strong>Desktop-1 uses DHCP</strong></td>
-                                                    <td>Verify desktop-1 IP is from active DHCP lease, not static</td>
-                                                    <td><code>show ip dhcp binding</code></td>
-                                                    <td>regex</td>
-                                                    <td><code>0152\.5400\.c168\.c3.*Automatic.*Active</code></td>
-                                                    <td>
-                                                        
-                                                            <div class="output-cell">Bindings from all pools not associated with VRF:
-IP address      Client-ID/ 		Lease expiration 	Type       State      Interface
-		Hardware address/
-		User name</div>
-                                                        
-                                                    </td>
-                                                    <td class="status fail">FAIL</td>
-                                                </tr>
                                             
                                                 <tr>
                                                     <td><strong>No ACL denies Desktop-0 IP</strong></td>
@@ -844,43 +762,11 @@ IPv6 access list preauth_v6
                                                 </tr>
                                             
                                                 <tr>
-                                                    <td><strong>Ping Desktop-1 from CORE-SW1 should fail (task complete)</strong></td>
-                                                    <td>After task, CORE-SW1 should NOT be able to ping desktop-1</td>
-                                                    <td><code>ping {desktop_1_ip} source 10.10.10.2</code></td>
-                                                    <td>contains</td>
-                                                    <td><code>Destination unreachable</code></td>
-                                                    <td>
-                                                        
-                                                            <div class="output-cell">                             ^
-% Invalid input detected at '^' marker.
-</div>
-                                                        
-                                                    </td>
-                                                    <td class="status fail">FAIL</td>
-                                                </tr>
-                                            
-                                                <tr>
                                                     <td><strong>Ping Desktop-1 from CORE-SW2 should fail (task complete)</strong></td>
                                                     <td>After task, CORE-SW2 should NOT be able to ping desktop-1</td>
                                                     <td><code>ping {desktop_1_ip} source 10.10.10.3</code></td>
                                                     <td>contains</td>
                                                     <td><code>Destination unreachable</code></td>
-                                                    <td>
-                                                        
-                                                            <div class="output-cell">                             ^
-% Invalid input detected at '^' marker.
-</div>
-                                                        
-                                                    </td>
-                                                    <td class="status fail">FAIL</td>
-                                                </tr>
-                                            
-                                                <tr>
-                                                    <td><strong>Ping Desktop-0 should still work</strong></td>
-                                                    <td>Desktop-0 should remain reachable from CORE switches</td>
-                                                    <td><code>ping {desktop_0_ip} source 10.10.10.2</code></td>
-                                                    <td>contains</td>
-                                                    <td><code>!!!</code></td>
                                                     <td>
                                                         
                                                             <div class="output-cell">                             ^
