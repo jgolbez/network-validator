@@ -56,7 +56,7 @@ tests:
     description: "Check that no access-list denies desktop-0 by host IP or subnet (standard or extended ACL)"
     command: "show access-lists"
     match_type: "not_regex"
-    expected: 'deny\s+(?:ip\s+)?(?:host\s+)?{desktop_0_ip}(?:\s|$)|deny\s+(?:ip\s+)?{desktop_0_network}\s+{desktop_0_wildcard}'
+    expected: 'deny\s+(?:ip\s+)?(?:host\s+)?{desktop_0_ip}(?:\s|$)|deny\s+(?:ip\s+)?{desktop_0_network}\s+{desktop_0_wildcard}|deny\s+{desktop_0_network}\s+{desktop_0_subnet_mask}'
     devices: ["CORE-SW1", "CORE-SW2"]
 
   # ============================================================================

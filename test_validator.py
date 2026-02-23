@@ -872,7 +872,12 @@ class VariableIntegrationTests(unittest.TestCase):
  default-router 10.10.10.1"""
 
         # Third command returns ACL output - no deny rule present (test should PASS with not_regex)
-        acl_output = "Extended IP access list REMOVE\n    10 permit ip any any"
+        # Includes examples of both standard and extended ACLs that don't block Desktop-0
+        acl_output = """Extended IP access list REMOVE
+    10 permit ip any any
+Standard IP access list 20
+    10 deny   10.5.5.0    255.255.255.0
+    20 permit any"""
 
         mock_conn.send_command.side_effect = [dhcp_binding, dhcp_pool_config, acl_output]
 
@@ -903,10 +908,10 @@ class VariableIntegrationTests(unittest.TestCase):
                 extract_pattern=r'network\s+\d+\.\d+\.\d+\.\d+\s+(\d+\.\d+\.\d+\.\d+)',
             ),
             TestDefinition(
-                name="No ACL denies Desktop-0 (using not_regex with calculated values)",
+                name="No ACL denies Desktop-0 (standard and extended ACL formats)",
                 command="show access-lists",
                 match_type="not_regex",
-                expected=r'deny\s+(?:ip\s+)?(?:host\s+)?{desktop_0_ip}(?:\s|$)|deny\s+(?:ip\s+)?{desktop_0_network}\s+{desktop_0_wildcard}',
+                expected=r'deny\s+(?:ip\s+)?(?:host\s+)?{desktop_0_ip}(?:\s|$)|deny\s+(?:ip\s+)?{desktop_0_network}\s+{desktop_0_wildcard}|deny\s+{desktop_0_network}\s+{desktop_0_subnet_mask}',
                 description="",
             ),
         ]
