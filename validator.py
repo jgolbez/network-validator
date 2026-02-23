@@ -118,6 +118,43 @@ class DeviceReport:
         return len(self.test_results)
 
 
+@dataclass
+class Constraint:
+    """High-level constraint/restriction for attendee report (groups multiple tests)."""
+    name: str  # e.g., "Checking for Access-Lists"
+    description: str  # What this constraint validates
+    test_names: list[str]  # Names of tests that must all PASS for this constraint to PASS
+    invert_result: bool = False  # If True, constraint passes when tests FAIL (useful for negative tests)
+    status: str = ""  # PASS, FAIL, ERROR (filled in during evaluation)
+
+    def evaluate(self, test_results: list[TestResult]) -> str:
+        """
+        Evaluate constraint based on test results.
+        Returns 'PASS', 'FAIL', or 'ERROR'.
+        """
+        matching_tests = [t for t in test_results if t.test_name in self.test_names]
+
+        if not matching_tests:
+            return "ERROR"  # No tests matched this constraint
+
+        statuses = [t.status for t in matching_tests]
+
+        # If any test is ERROR, constraint is ERROR
+        if "ERROR" in statuses:
+            return "ERROR"
+
+        # Check if all tests passed (or all failed if inverted)
+        all_passed = all(status == "PASS" for status in statuses)
+
+        if self.invert_result:
+            # For inverted constraints (like "Connectivity should FAIL after task completion")
+            all_failed = all(status == "FAIL" for status in statuses)
+            return "PASS" if all_failed else "FAIL"
+        else:
+            # Normal constraint: all tests must pass
+            return "PASS" if all_passed else "FAIL"
+
+
 class TestEvaluator:
     """Dispatcher for match type evaluations."""
 
@@ -454,9 +491,34 @@ def extract_variables_from_device(
     return variables
 
 
+def get_constraints() -> list[Constraint]:
+    """
+    Define high-level constraints/restrictions for attendee report.
+    Maps multiple tests to logical business checks.
+    """
+    return [
+        Constraint(
+            name="Checking Active DHCP Leases",
+            description="Both desktops must have active DHCP leases",
+            test_names=["Desktop-0 uses DHCP", "Desktop-1 uses DHCP"],
+        ),
+        Constraint(
+            name="Checking Access-Lists Configuration",
+            description="No access-lists can block traffic to Desktop-0",
+            test_names=["No ACL denies Desktop-0 Host or Subnet"],
+        ),
+        Constraint(
+            name="Checking for Connectivity to Desktop-0",
+            description="Desktop-1 should NOT be able to ping Desktop-0 (task complete) or CAN (task incomplete)",
+            test_names=["Desktop-1 can ping Desktop-0 (before task)"],
+            invert_result=True,  # Passes when ping test FAILS (connectivity blocked)
+        ),
+    ]
+
+
 def render_report(device_reports: list[DeviceReport], run_timestamp: str) -> str:
     """
-    Render list of DeviceReport objects using Jinja2 template.
+    Render list of DeviceReport objects using Jinja2 template (detailed report).
     Returns HTML string.
     """
     template_path = Path(__file__).parent / "templates" / "report.html.j2"
@@ -479,6 +541,45 @@ def render_report(device_reports: list[DeviceReport], run_timestamp: str) -> str
         total_pass=total_pass,
         total_fail=total_fail,
         total_error=total_error,
+    )
+    return html
+
+
+def render_attendee_report(device_reports: list[DeviceReport], run_timestamp: str) -> str:
+    """
+    Render attendee-focused report with high-level constraint checks (no detailed test output).
+    Returns HTML string.
+    """
+    template_path = Path(__file__).parent / "templates" / "attendee_report.html.j2"
+    if not template_path.exists():
+        raise FileNotFoundError(f"Template not found at {template_path}")
+
+    with open(template_path, "r", encoding="utf-8") as f:
+        template_content = f.read()
+
+    template = Template(template_content)
+
+    # Get all test results from all devices
+    all_test_results = []
+    for device_report in device_reports:
+        all_test_results.extend(device_report.test_results)
+
+    # Evaluate constraints
+    constraints = get_constraints()
+    for constraint in constraints:
+        constraint.status = constraint.evaluate(all_test_results)
+
+    # Compute summary stats
+    pass_count = sum(1 for c in constraints if c.status == "PASS")
+    fail_count = sum(1 for c in constraints if c.status == "FAIL")
+    error_count = sum(1 for c in constraints if c.status == "ERROR")
+
+    html = template.render(
+        constraints=constraints,
+        run_timestamp=run_timestamp,
+        pass_count=pass_count,
+        fail_count=fail_count,
+        error_count=error_count,
     )
     return html
 
@@ -533,19 +634,25 @@ def main():
         report = run_device_tests(device, tests, global_variables)
         device_reports.append(report)
 
-    # Generate report
+    # Generate reports
     run_timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    html_content = render_report(device_reports, run_timestamp)
+    detailed_html = render_report(device_reports, run_timestamp)
+    attendee_html = render_attendee_report(device_reports, run_timestamp)
 
-    # Derive output filename from config directory name
-    # e.g., "config/network1" -> "network1_report.html"
+    # Derive output filenames from config directory name
+    # e.g., "config/network1" -> "network1_report.html" and "network1_attendee_report.html"
     config_dir_name = Path(config_dir).name
-    output_file = Path.cwd() / f"{config_dir_name}_report.html"
+    detailed_file = Path.cwd() / f"{config_dir_name}_report.html"
+    attendee_file = Path.cwd() / f"{config_dir_name}_attendee_report.html"
 
-    with open(output_file, "w", encoding="utf-8") as f:
-        f.write(html_content)
+    with open(detailed_file, "w", encoding="utf-8") as f:
+        f.write(detailed_html)
 
-    print(f"Report written to: {output_file}")
+    with open(attendee_file, "w", encoding="utf-8") as f:
+        f.write(attendee_html)
+
+    print(f"Detailed report written to: {detailed_file}")
+    print(f"Attendee report written to: {attendee_file}")
     print("Done!")
 
 
