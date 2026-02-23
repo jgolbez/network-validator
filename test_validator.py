@@ -195,10 +195,12 @@ class ConfigLoadingTests(unittest.TestCase):
     def test_load_devices_config(self):
         """Test loading devices.yaml."""
         devices = load_devices_config("config/network1")
-        self.assertEqual(len(devices), 2)
+        self.assertEqual(len(devices), 3)
         self.assertEqual(devices[0].name, "CORE-SW1")
         self.assertEqual(devices[0].host, "198.18.133.101")
         self.assertEqual(devices[1].name, "CORE-SW2")
+        self.assertEqual(devices[2].name, "DESKTOP-1")
+        self.assertEqual(devices[2].host, "10.10.10.11")
 
     def test_load_tests_config(self):
         """Test loading tests.yaml."""

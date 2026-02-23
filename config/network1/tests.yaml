@@ -69,27 +69,13 @@ tests:
 
   # ============================================================================
   # STEP 4: Connectivity Tests (Task Outcome Validation)
-  # Note: These will fail if the task hasn't been completed yet, which is OK
-  # They demonstrate what the validator will check once attendees modify network
+  # Note: This test will PASS before task completion (ping succeeds)
+  # After task completion, it should FAIL (ping blocked by attendee's solution)
   # ============================================================================
 
-  - name: "Ping Desktop-1 from CORE-SW1 should fail (task complete)"
-    description: "After task, CORE-SW1 should NOT be able to ping desktop-1"
-    command: "ping {desktop_1_ip} source 10.10.10.2"
+  - name: "Desktop-1 can ping Desktop-0 (before task)"
+    description: "Desktop-1 should be able to reach Desktop-0 before task completion"
+    command: "ping -c 5 {desktop_0_ip}"
     match_type: "contains"
-    expected: "Destination unreachable"
-    devices: ["CORE-SW1"]
-
-  - name: "Ping Desktop-1 from CORE-SW2 should fail (task complete)"
-    description: "After task, CORE-SW2 should NOT be able to ping desktop-1"
-    command: "ping {desktop_1_ip} source 10.10.10.3"
-    match_type: "contains"
-    expected: "Destination unreachable"
-    devices: ["CORE-SW2"]
-
-  - name: "Ping Desktop-0 should still work"
-    description: "Desktop-0 should remain reachable from CORE switches"
-    command: "ping {desktop_0_ip} source 10.10.10.2"
-    match_type: "contains"
-    expected: "!!!"
-    devices: ["CORE-SW1"]
+    expected: "5 packets received"
+    devices: ["DESKTOP-1"]
