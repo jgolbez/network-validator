@@ -78,15 +78,18 @@ tests:
     command: "ping {desktop_1_ip} source 10.10.10.2"
     match_type: "contains"
     expected: "Destination unreachable"
+    devices: ["CORE-SW1"]
 
   - name: "Ping Desktop-1 from CORE-SW2 should fail (task complete)"
     description: "After task, CORE-SW2 should NOT be able to ping desktop-1"
     command: "ping {desktop_1_ip} source 10.10.10.3"
     match_type: "contains"
     expected: "Destination unreachable"
+    devices: ["CORE-SW2"]
 
   - name: "Ping Desktop-0 should still work"
     description: "Desktop-0 should remain reachable from CORE switches"
     command: "ping {desktop_0_ip} source 10.10.10.2"
     match_type: "contains"
     expected: "!!!"
+    devices: ["CORE-SW1"]
