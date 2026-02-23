@@ -216,8 +216,11 @@ def send_ssh_command_with_password(conn, command: str, password: str) -> str:
     """
     Send an SSH command that prompts for a password (nested SSH scenario).
     Uses expect_string to detect the password prompt, then sends password via write_channel.
+    Waits for command completion with extended timeout for slow commands (ping, traceroute, etc).
     """
     try:
+        import time
+
         # Send the SSH command and wait for "Password:" prompt
         output = conn.send_command(
             command,
@@ -228,20 +231,25 @@ def send_ssh_command_with_password(conn, command: str, password: str) -> str:
         # Send the password as raw text (not a command) and wait for output
         conn.write_channel(password + "\n")
 
-        # Read the command output - wait for either the command to complete or device prompt
-        # Use send_command_timing to wait for the output after password is sent
-        import time
-        time.sleep(1)  # Give the SSH connection time to establish and command to run
+        # Give the remote command time to execute (especially for ping/traceroute which take several seconds)
+        # Sleep longer for commands that might take 10+ seconds
+        time.sleep(3)
 
-        # Read any available output
+        # Read any available output after command execution
         remaining_output = conn.read_channel()
         output += remaining_output
+
+        # If still not getting full output, read more with extended timeout
+        if remaining_output:
+            time.sleep(1)
+            more_output = conn.read_channel()
+            output += more_output
 
         return output
     except Exception as e:
         # Fallback: try sending without special handling
         try:
-            return conn.send_command(command, read_timeout=30)
+            return conn.send_command(command, read_timeout=45)
         except Exception:
             raise e
 
