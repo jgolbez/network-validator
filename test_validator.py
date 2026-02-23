@@ -1042,5 +1042,75 @@ class DeviceTargetingTests(unittest.TestCase):
         self.assertEqual(report.test_results[0].status, "PASS")
 
 
+class ACLCheckingTests(unittest.TestCase):
+    """Test intelligent ACL checking with network ranges."""
+
+    def test_ip_in_network_basic(self):
+        """Test checking if IP is in a specific subnet."""
+        from validator import is_ip_in_network
+
+        # Desktop-0 IP 10.10.10.22 in Desktop-0 subnet 10.10.10.0/24
+        self.assertTrue(is_ip_in_network("10.10.10.22", "10.10.10.0", "0.0.0.255"))
+
+    def test_ip_in_network_broader(self):
+        """Test checking if IP is in a broader network range."""
+        from validator import is_ip_in_network
+
+        # Desktop-0 IP 10.10.10.22 in broader 10.0.0.0/8
+        self.assertTrue(is_ip_in_network("10.10.10.22", "10.0.0.0", "0.255.255.255"))
+
+    def test_ip_not_in_network(self):
+        """Test checking if IP is NOT in a network range."""
+        from validator import is_ip_in_network
+
+        # Desktop-0 IP 10.10.10.22 NOT in 192.168.0.0/16
+        self.assertFalse(is_ip_in_network("10.10.10.22", "192.168.0.0", "0.0.255.255"))
+
+    def test_check_acl_blocks_specific_host(self):
+        """Test ACL checking for specific host deny."""
+        from validator import check_ip_blocked_by_acl
+
+        acl_output = """Standard IP access list 10
+    10 deny   10.10.10.22
+    20 permit any"""
+
+        # Should detect that 10.10.10.22 is blocked
+        self.assertTrue(check_ip_blocked_by_acl(acl_output, "10.10.10.22", "255.255.255.0"))
+
+    def test_check_acl_blocks_subnet(self):
+        """Test ACL checking for subnet deny with wildcard."""
+        from validator import check_ip_blocked_by_acl
+
+        acl_output = """Extended IP access list 100
+    10 deny ip 10.10.10.0 0.0.0.255 any
+    20 permit ip any any"""
+
+        # Should detect that 10.10.10.22 is blocked by subnet
+        self.assertTrue(check_ip_blocked_by_acl(acl_output, "10.10.10.22", "255.255.255.0"))
+
+    def test_check_acl_blocks_broader_network(self):
+        """Test ACL checking for broader network deny (entire 10.0.0.0/8)."""
+        from validator import check_ip_blocked_by_acl
+
+        # This is the case that was slipping through the cracks
+        acl_output = """Standard IP access list 10
+    10 deny   10.0.0.0, wildcard bits 0.255.255.255
+    20 permit any"""
+
+        # Should detect that 10.10.10.22 is blocked by broader network
+        self.assertTrue(check_ip_blocked_by_acl(acl_output, "10.10.10.22", "255.255.255.0"))
+
+    def test_check_acl_not_blocked(self):
+        """Test ACL checking when IP is not blocked."""
+        from validator import check_ip_blocked_by_acl
+
+        acl_output = """Standard IP access list 10
+    10 deny   192.168.1.0 0.0.0.255
+    20 permit any"""
+
+        # Should NOT detect blocking since rule is for different network
+        self.assertFalse(check_ip_blocked_by_acl(acl_output, "10.10.10.22", "255.255.255.0"))
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)

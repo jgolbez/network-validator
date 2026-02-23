@@ -27,6 +27,88 @@ def int_to_ip(ip_int: int) -> str:
     return f"{(ip_int >> 24) & 0xFF}.{(ip_int >> 16) & 0xFF}.{(ip_int >> 8) & 0xFF}.{ip_int & 0xFF}"
 
 
+def is_ip_in_network(ip_str: str, network_str: str, wildcard_str: str) -> bool:
+    """
+    Check if an IP address falls within a network/wildcard range.
+
+    Args:
+        ip_str: IP address to check (e.g., "10.10.10.50")
+        network_str: Network address (e.g., "10.0.0.0")
+        wildcard_str: Wildcard mask (e.g., "0.255.255.255")
+
+    Returns:
+        True if IP is within the network, False otherwise
+    """
+    try:
+        ip_int = ip_to_int(ip_str)
+        network_int = ip_to_int(network_str)
+        wildcard_int = ip_to_int(wildcard_str)
+
+        # IP is in network if: (IP ^ network) & ~wildcard == 0
+        # Or equivalently: (IP ^ network) is a subset of wildcard
+        return (ip_int ^ network_int) & ~wildcard_int == 0
+    except Exception:
+        return False
+
+
+def check_ip_blocked_by_acl(acl_output: str, target_ip: str, target_subnet_mask: str) -> bool:
+    """
+    Check if a target IP is blocked by any deny rule in ACL output.
+    Handles both standard and extended ACL formats, including broader denies.
+
+    Args:
+        acl_output: Output from "show access-lists" command
+        target_ip: IP address to check (e.g., "10.10.10.50")
+        target_subnet_mask: Subnet mask (e.g., "255.255.255.0")
+
+    Returns:
+        True if target IP is blocked by any deny rule, False otherwise
+    """
+    import re
+
+    # Pattern 1: deny with IP and wildcard/mask
+    deny_pattern_with_mask = r'deny\s+(?:ip\s+)?(?:host\s+)?(\d+\.\d+\.\d+\.\d+)\s+([\d\.]+)'
+
+    # Pattern 2: deny with just IP (host)
+    deny_pattern_host_only = r'deny\s+(?:ip\s+)?(?:host\s+)?(\d+\.\d+\.\d+\.\d+)(?:\s+any)?(?:\n|$)'
+
+    # Pattern 3: wildcard bits notation
+    deny_pattern_wildcard_bits = r'deny\s+(?:ip\s+)?(\d+\.\d+\.\d+\.\d+),?\s+wildcard\s+bits\s+([\d\.]+)'
+
+    # Check deny rules with mask/wildcard
+    for denied_ip, denied_mask_or_wildcard in re.findall(deny_pattern_with_mask, acl_output):
+        try:
+            denied_mask_int = ip_to_int(denied_mask_or_wildcard)
+
+            # If most high bits are 255, it's a subnet mask; convert to wildcard
+            if denied_mask_int > 0xFF000000:
+                wildcard_int = denied_mask_int ^ 0xFFFFFFFF
+            else:
+                wildcard_int = denied_mask_int
+
+            wildcard_str = int_to_ip(wildcard_int)
+
+            if is_ip_in_network(target_ip, denied_ip, wildcard_str):
+                return True
+        except Exception:
+            pass
+
+    # Check deny rules with just host IP
+    for denied_ip in re.findall(deny_pattern_host_only, acl_output, re.MULTILINE):
+        if denied_ip == target_ip:
+            return True
+
+    # Check deny rules with wildcard bits notation
+    for denied_ip, wildcard_str in re.findall(deny_pattern_wildcard_bits, acl_output):
+        try:
+            if is_ip_in_network(target_ip, denied_ip, wildcard_str):
+                return True
+        except Exception:
+            pass
+
+    return False
+
+
 def calculate_network_and_wildcard(ip_str: str, subnet_mask_str: str) -> tuple[str, str]:
     """
     Calculate network address and wildcard mask from IP and subnet mask.
@@ -398,10 +480,28 @@ def run_device_tests(
                 expected = substitute_variables(test.expected, variables)
                 command = substitute_variables(test.command, variables)
 
-                passed = TestEvaluator.evaluate(
-                    test.match_type, output, expected
-                )
-                status = "PASS" if passed else "FAIL"
+                # Special handling for ACL tests: use intelligent IP blocking check
+                if "ACL" in test.name.upper() and "show access-lists" in command:
+                    if "desktop_0_ip" in variables and "desktop_0_subnet_mask" in variables:
+                        # Use intelligent ACL checking instead of regex
+                        is_blocked = check_ip_blocked_by_acl(
+                            output,
+                            variables["desktop_0_ip"],
+                            variables["desktop_0_subnet_mask"]
+                        )
+                        # Test passes if IP is NOT blocked (not_regex semantics)
+                        passed = not is_blocked
+                        status = "PASS" if passed else "FAIL"
+                    else:
+                        # Fall back to standard evaluation if variables missing
+                        passed = TestEvaluator.evaluate(test.match_type, output, expected)
+                        status = "PASS" if passed else "FAIL"
+                else:
+                    # Standard evaluation for all other tests
+                    passed = TestEvaluator.evaluate(
+                        test.match_type, output, expected
+                    )
+                    status = "PASS" if passed else "FAIL"
 
                 report.test_results.append(
                     TestResult(
