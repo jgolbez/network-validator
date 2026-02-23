@@ -675,8 +675,8 @@ class VariableIntegrationTests(unittest.TestCase):
         # First command returns DHCP binding
         dhcp_output = "10.10.10.10     0152.5400.0ee7.0e       Feb 24 2026 12:37 PM    Automatic  Active     Vlan10"
 
-        # Second command (ping) will use extracted IP - Alpine Linux format with PING header
-        ping_output = "PING 10.10.10.10 (10.10.10.10): 56 data bytes"
+        # Second command (ping) will use extracted IP - Alpine Linux format with response lines
+        ping_output = "PING 10.10.10.10 (10.10.10.10): 56 data bytes\n64 bytes from 10.10.10.10: ttl=42 time=1.23 ms"
 
         mock_conn.send_command.side_effect = [dhcp_output, ping_output]
 
@@ -701,7 +701,7 @@ class VariableIntegrationTests(unittest.TestCase):
                 name="Ping Desktop via CORE-SW1",
                 command="ssh -l cisco {desktop_ip} \"ping -c 5 10.10.10.10\"",
                 match_type="contains",
-                expected="PING",
+                expected="bytes from",
                 description="",
             ),
         ]
