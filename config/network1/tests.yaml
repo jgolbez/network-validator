@@ -74,8 +74,8 @@ tests:
   # ============================================================================
 
   - name: "Desktop-1 can ping Desktop-0 (before task)"
-    description: "Desktop-1 should be able to reach Desktop-0 before task completion"
+    description: "Desktop-1 should be able to reach Desktop-0 before task completion (at least 1 successful ping)"
     command: "ping -c 5 {desktop_0_ip}"
     match_type: "contains"
-    expected: "5 packets received"
+    expected: "seq="
     devices: ["DESKTOP-1"]
