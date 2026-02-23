@@ -1,6 +1,6 @@
 devices:
   - name: "CORE-SW1"
-    host: "198.18.133.202"
+    host: "198.18.133.101"
     username: "admin"
     password: "cisco"
     device_type: "cisco_ios"
@@ -8,7 +8,7 @@ devices:
     timeout: 30
 
   - name: "CORE-SW2"
-    host: "198.18.133.222"
+    host: "198.18.133.202"
     username: "admin"
     password: "cisco"
     device_type: "cisco_ios"
