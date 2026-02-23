@@ -676,8 +676,8 @@ class VariableIntegrationTests(unittest.TestCase):
         # First command returns DHCP binding
         dhcp_output = "10.10.10.10     0152.5400.0ee7.0e       Feb 24 2026 12:37 PM    Automatic  Active     Vlan10"
 
-        # Second command (ping) will use extracted IP
-        ping_output = "!!!"
+        # Second command (ping) will use extracted IP - Alpine Linux format with seq=
+        ping_output = "64 bytes from 10.10.10.10: seq=0 ttl=42 time=118.360 ms"
 
         mock_conn.send_command.side_effect = [dhcp_output, ping_output]
 
@@ -702,7 +702,7 @@ class VariableIntegrationTests(unittest.TestCase):
                 name="Ping Desktop",
                 command="ping {desktop_ip}",
                 match_type="contains",
-                expected="!!!",
+                expected="seq=",
                 description="",
             ),
         ]
