@@ -2,7 +2,7 @@ devices:
   - name: "CORE-SW1"
     host: "198.18.133.101"
     username: "admin"
-    password: "cisco"
+    password: "C1sco12345"
     device_type: "cisco_ios"
     port: 22
     timeout: 30
@@ -10,7 +10,7 @@ devices:
   - name: "CORE-SW2"
     host: "198.18.133.202"
     username: "admin"
-    password: "cisco"
+    password: "C1sco12345"
     device_type: "cisco_ios"
     port: 22
     timeout: 30
