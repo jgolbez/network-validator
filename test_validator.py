@@ -866,14 +866,15 @@ class VariableIntegrationTests(unittest.TestCase):
         # First command returns DHCP binding with Desktop-0 IP
         dhcp_binding = "10.10.10.50     0152.5400.0ee7.0e       Feb 24 2026 12:37 PM    Automatic  Active     Vlan10"
 
-        # Second command returns DHCP pool with subnet mask
-        dhcp_pool = """Pool DESKTOP :
- Subnet mask              : 255.255.255.0"""
+        # Second command returns running config with DHCP pool network statement
+        dhcp_pool_config = """ip dhcp pool DESKTOP
+ network 10.10.10.0 255.255.255.0
+ default-router 10.10.10.1"""
 
         # Third command returns ACL output to test with calculated values
         acl_output = "Standard IP access list BLOCK-SUBNET\n    10 deny 10.10.10.0 0.0.0.255"
 
-        mock_conn.send_command.side_effect = [dhcp_binding, dhcp_pool, acl_output]
+        mock_conn.send_command.side_effect = [dhcp_binding, dhcp_pool_config, acl_output]
 
         device = DeviceConfig(
             name="CORE-SW1",
@@ -894,12 +895,12 @@ class VariableIntegrationTests(unittest.TestCase):
             ),
             TestDefinition(
                 name="Extract Desktop-0 Subnet Mask",
-                command="show ip dhcp pool DESKTOP",
+                command="show run | include ip dhcp pool DESKTOP",
                 match_type="contains",
-                expected="Subnet mask",
+                expected="network 10.10.10.0",
                 description="",
                 extract_var="desktop_0_subnet_mask",
-                extract_pattern=r'Subnet mask\s+:\s+(\d+\.\d+\.\d+\.\d+)',
+                extract_pattern=r'network\s+\d+\.\d+\.\d+\.\d+\s+(\d+\.\d+\.\d+\.\d+)',
             ),
             TestDefinition(
                 name="Check ACL with calculated network and wildcard",
