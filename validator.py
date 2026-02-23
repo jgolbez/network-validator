@@ -39,6 +39,7 @@ class TestDefinition:
     extract_var: str = ""  # Variable name to extract from output
     extract_pattern: str = ""  # Regex pattern with capture group for extraction
     devices: list[str] = field(default_factory=list)  # Devices to run test on; empty = all devices
+    ssh_password: str = ""  # Password for nested SSH commands (when command contains 'ssh')
 
 
 @dataclass
@@ -174,6 +175,33 @@ def extract_variable(output: str, pattern: str) -> str | None:
     return None
 
 
+def send_ssh_command_with_password(conn, command: str, password: str) -> str:
+    """
+    Send an SSH command that prompts for a password (nested SSH scenario).
+    Uses expect_string to detect the password prompt and sends the password.
+    """
+    try:
+        # Send the command and wait for "Password:" prompt
+        output = conn.send_command(
+            command,
+            expect_string=r"Password:",
+            read_timeout=10
+        )
+        # Send the password
+        output += conn.send_command(
+            password,
+            expect_string=r"#",  # Wait for command prompt after password+command completes
+            read_timeout=30
+        )
+        return output
+    except Exception as e:
+        # Fallback: try sending without special handling
+        try:
+            return conn.send_command(command, read_timeout=30)
+        except Exception:
+            raise e
+
+
 def run_device_tests(
     device: DeviceConfig, tests: list[TestDefinition], global_variables: dict[str, str] | None = None
 ) -> DeviceReport:
@@ -251,7 +279,11 @@ def run_device_tests(
                 command = substitute_variables(test.command, variables)
                 expected = substitute_variables(test.expected, variables)
 
-                output = conn.send_command(command)
+                # Send command - use special handling for nested SSH with password
+                if "ssh" in command.lower() and test.ssh_password:
+                    output = send_ssh_command_with_password(conn, command, test.ssh_password)
+                else:
+                    output = conn.send_command(command)
                 # Truncate output to 2000 chars for report
                 truncated_output = output[:2000]
 
