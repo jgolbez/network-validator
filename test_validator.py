@@ -698,8 +698,8 @@ class VariableIntegrationTests(unittest.TestCase):
                 extract_pattern=r'(\d+\.\d+\.\d+\.\d+)\s+0152\.5400\.0ee7\.0e',
             ),
             TestDefinition(
-                name="Ping Desktop",
-                command="ping {desktop_ip}",
+                name="Ping Desktop via CORE-SW1",
+                command="sshpass -p cisco ssh -l cisco 10.10.10.11 \"ping -c 5 {desktop_ip}\"",
                 match_type="contains",
                 expected="seq=",
                 description="",
