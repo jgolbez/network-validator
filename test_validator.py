@@ -895,7 +895,7 @@ class VariableIntegrationTests(unittest.TestCase):
             ),
             TestDefinition(
                 name="Extract Desktop-0 Subnet Mask",
-                command="show run | include ip dhcp pool DESKTOP",
+                command="show run | section ip dhcp pool DESKTOP",
                 match_type="contains",
                 expected="network 10.10.10.0",
                 description="",

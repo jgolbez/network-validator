@@ -14,7 +14,7 @@ tests:
 
   - name: "Extract Desktop-0 Subnet Mask from DHCP Pool Config"
     description: "Extract subnet mask from running config DHCP pool network statement"
-    command: "show run | include ip dhcp pool DESKTOP"
+    command: "show run | section ip dhcp pool DESKTOP"
     match_type: "contains"
     expected: "network 10.10.10.0"
     extract_var: "desktop_0_subnet_mask"
