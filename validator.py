@@ -175,15 +175,17 @@ def extract_variable(output: str, pattern: str) -> str | None:
 
 
 def run_device_tests(
-    device: DeviceConfig, tests: list[TestDefinition]
+    device: DeviceConfig, tests: list[TestDefinition], global_variables: dict[str, str] | None = None
 ) -> DeviceReport:
     """
     SSH into device, run all tests, collect results.
     Gracefully degrade on connection failure.
     Supports variable extraction and substitution.
+    global_variables: variables extracted from other devices, available to all tests
     """
     report = DeviceReport(device_name=device.name, host=device.host)
-    variables: dict[str, str] = {}  # Store extracted variables
+    # Start with global variables, then add device-specific extractions
+    variables: dict[str, str] = dict(global_variables) if global_variables else {}
 
     # Attempt connection
     try:
@@ -296,6 +298,50 @@ def run_device_tests(
     return report
 
 
+def extract_variables_from_device(
+    device: DeviceConfig, tests: list[TestDefinition]
+) -> dict[str, str]:
+    """
+    Extract variables from a device by running extraction tests only.
+    Returns a dict of extracted variables.
+    """
+    variables: dict[str, str] = {}
+
+    # Only extract from tests meant for this device
+    extraction_tests = [t for t in tests if (not t.devices or device.name in t.devices) and t.extract_var]
+
+    if not extraction_tests:
+        return variables
+
+    try:
+        connection_params = {
+            "device_type": device.device_type,
+            "host": device.host,
+            "username": device.username,
+            "password": device.password,
+            "port": device.port,
+            "timeout": device.timeout,
+            "ssh_strict": False,
+        }
+        conn = ConnectHandler(**connection_params)
+
+        for test in extraction_tests:
+            try:
+                output = conn.send_command(test.command)
+                if test.extract_pattern:
+                    extracted_value = extract_variable(output, test.extract_pattern)
+                    if extracted_value and test.extract_var:
+                        variables[test.extract_var] = extracted_value
+            except Exception:
+                pass
+
+        conn.disconnect()
+    except Exception:
+        pass
+
+    return variables
+
+
 def render_report(device_reports: list[DeviceReport], run_timestamp: str) -> str:
     """
     Render list of DeviceReport objects using Jinja2 template.
@@ -359,11 +405,20 @@ def main():
     print(f"Loaded {len(devices)} device(s) and {len(tests)} test(s)")
     print(f"Starting test run...")
 
-    # Run tests on all devices
+    # Extract variables from all devices first (these become global/shared)
+    print("Extracting variables...")
+    global_variables: dict[str, str] = {}
+    for device in devices:
+        extracted = extract_variables_from_device(device, tests)
+        global_variables.update(extracted)
+        if extracted:
+            print(f"  {device.name}: extracted {len(extracted)} variable(s)")
+
+    # Run tests on all devices with extracted variables available globally
     device_reports = []
     for device in devices:
         print(f"  Testing {device.name} ({device.host})...")
-        report = run_device_tests(device, tests)
+        report = run_device_tests(device, tests, global_variables)
         device_reports.append(report)
 
     # Generate report
