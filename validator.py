@@ -36,6 +36,8 @@ class TestDefinition:
     match_type: str
     expected: str
     description: str = ""
+    extract_var: str = ""  # Variable name to extract from output
+    extract_pattern: str = ""  # Regex pattern with capture group for extraction
 
 
 @dataclass
@@ -152,14 +154,35 @@ def load_tests_config(config_dir: str) -> list[TestDefinition]:
     return tests
 
 
+def substitute_variables(text: str, variables: dict[str, str]) -> str:
+    """Replace {var_name} placeholders with actual values."""
+    result = text
+    for var_name, var_value in variables.items():
+        result = result.replace(f"{{{var_name}}}", var_value)
+    return result
+
+
+def extract_variable(output: str, pattern: str) -> str | None:
+    """Extract a value from output using regex capture group."""
+    try:
+        match = re.search(pattern, output, re.MULTILINE | re.DOTALL)
+        if match and match.groups():
+            return match.group(1)
+    except Exception:
+        pass
+    return None
+
+
 def run_device_tests(
     device: DeviceConfig, tests: list[TestDefinition]
 ) -> DeviceReport:
     """
     SSH into device, run all tests, collect results.
     Gracefully degrade on connection failure.
+    Supports variable extraction and substitution.
     """
     report = DeviceReport(device_name=device.name, host=device.host)
+    variables: dict[str, str] = {}  # Store extracted variables
 
     # Attempt connection
     try:
@@ -211,12 +234,22 @@ def run_device_tests(
     try:
         for test in tests:
             try:
-                output = conn.send_command(test.command)
+                # Substitute variables in command and expected pattern
+                command = substitute_variables(test.command, variables)
+                expected = substitute_variables(test.expected, variables)
+
+                output = conn.send_command(command)
                 # Truncate output to 2000 chars for report
                 truncated_output = output[:2000]
 
+                # Extract variable if pattern is defined
+                if test.extract_pattern:
+                    extracted_value = extract_variable(output, test.extract_pattern)
+                    if extracted_value and test.extract_var:
+                        variables[test.extract_var] = extracted_value
+
                 passed = TestEvaluator.evaluate(
-                    test.match_type, output, test.expected
+                    test.match_type, output, expected
                 )
                 status = "PASS" if passed else "FAIL"
 
@@ -224,9 +257,9 @@ def run_device_tests(
                     TestResult(
                         device_name=device.name,
                         test_name=test.name,
-                        command=test.command,
+                        command=command,
                         match_type=test.match_type,
-                        expected=test.expected,
+                        expected=expected,
                         description=test.description,
                         status=status,
                         output=truncated_output,

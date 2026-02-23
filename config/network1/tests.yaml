@@ -1,48 +1,88 @@
 tests:
-  - name: "Default Route Present"
-    description: "Verify that a default route (0.0.0.0/0) exists in the routing table"
-    command: "show ip route"
-    match_type: "contains"
-    expected: "0.0.0.0/0"
+  # ============================================================================
+  # STEP 1: Extract Desktop IPs from DHCP Binding
+  # ============================================================================
 
-  - name: "No Errors in System Logs"
-    description: "Verify that critical/error severity logs are not present"
-    command: "show log | include CRITICAL|ERROR"
+  - name: "Extract Desktop-0 IP from DHCP"
+    description: "Find desktop-0's DHCP-assigned IP by matching its MAC address"
+    command: "show ip dhcp binding"
+    match_type: "contains"
+    expected: "0152.5400.0ee7.0e"
+    extract_var: "desktop_0_ip"
+    extract_pattern: '0152\.5400\.0ee7\.0e\s+.*?(\d+\.\d+\.\d+\.\d+)'
+
+  - name: "Extract Desktop-1 IP from DHCP"
+    description: "Find desktop-1's DHCP-assigned IP by matching its MAC address"
+    command: "show ip dhcp binding"
+    match_type: "contains"
+    expected: "0152.5400.c168.c3"
+    extract_var: "desktop_1_ip"
+    extract_pattern: '0152\.5400\.c168\.c3\s+.*?(\d+\.\d+\.\d+\.\d+)'
+
+  # ============================================================================
+  # STEP 2: Verify DHCP is Working (Not Static IPs)
+  # ============================================================================
+
+  - name: "Desktop-0 uses DHCP"
+    description: "Verify desktop-0 IP is from active DHCP lease, not static"
+    command: "show ip dhcp binding"
+    match_type: "regex"
+    expected: '0152\.5400\.0ee7\.0e.*Automatic.*Active'
+
+  - name: "Desktop-1 uses DHCP"
+    description: "Verify desktop-1 IP is from active DHCP lease, not static"
+    command: "show ip dhcp binding"
+    match_type: "regex"
+    expected: '0152\.5400\.c168\.c3.*Automatic.*Active'
+
+  # ============================================================================
+  # STEP 3: Verify No Access-Lists Block Desktop IPs
+  # ============================================================================
+
+  - name: "No ACL denies Desktop-0 IP"
+    description: "Check that no access-list contains a deny for desktop-0"
+    command: "show access-lists"
     match_type: "not_contains"
-    expected: "CRITICAL"
+    expected: "deny.*{desktop_0_ip}"
 
-  - name: "NTP Synchronized"
-    description: "Check that NTP is synchronized via regex pattern"
-    command: "show ntp status"
-    match_type: "regex"
-    expected: "Clock is synchronized|Clock is unsynchronized|master"
+  - name: "No ACL denies Desktop-1 IP"
+    description: "Check that no access-list contains a deny for desktop-1"
+    command: "show access-lists"
+    match_type: "not_contains"
+    expected: "deny.*{desktop_1_ip}"
 
-  - name: "CPU Utilization Below Threshold"
-    description: "Verify CPU is not in critical state"
-    command: "show processes cpu"
-    match_type: "regex"
-    expected: "CPU utilization for five seconds: \\d{1,2}%"
+  - name: "No Standard ACL denies Desktop-0"
+    description: "Standard ACLs may just show 'deny 10.10.10.x' format"
+    command: "show access-lists"
+    match_type: "not_contains"
+    expected: "deny   {desktop_0_ip}"
 
-  - name: "OSPF Neighbors Up"
-    description: "Ensure OSPF has established neighbor relationships"
-    command: "show ip ospf neighbor"
+  - name: "No Standard ACL denies Desktop-1"
+    description: "Standard ACLs may just show 'deny 10.10.10.x' format"
+    command: "show access-lists"
+    match_type: "not_contains"
+    expected: "deny   {desktop_1_ip}"
+
+  # ============================================================================
+  # STEP 4: Connectivity Tests (Task Outcome Validation)
+  # Note: These will fail if the task hasn't been completed yet, which is OK
+  # They demonstrate what the validator will check once attendees modify network
+  # ============================================================================
+
+  - name: "Ping Desktop-1 from CORE-SW1 should fail (task complete)"
+    description: "After task, CORE-SW1 should NOT be able to ping desktop-1"
+    command: "ping {desktop_1_ip} source 10.10.10.2"
     match_type: "contains"
-    expected: "FULL"
+    expected: "Destination unreachable"
 
-  - name: "Interface Status"
-    description: "Verify at least one interface is up"
-    command: "show interface brief"
-    match_type: "regex"
-    expected: "up\\s+up"
-
-  - name: "Device Hostname Matches"
-    description: "Verify device hostname is as expected"
-    command: "show running-config | include hostname"
+  - name: "Ping Desktop-1 from CORE-SW2 should fail (task complete)"
+    description: "After task, CORE-SW2 should NOT be able to ping desktop-1"
+    command: "ping {desktop_1_ip} source 10.10.10.3"
     match_type: "contains"
-    expected: "hostname"
+    expected: "Destination unreachable"
 
-  - name: "Memory Utilization Check"
-    description: "Verify system memory is available"
-    command: "show memory statistics"
-    match_type: "regex"
-    expected: "\\d+\\s+bytes"
+  - name: "Ping Desktop-0 should still work"
+    description: "Desktop-0 should remain reachable from CORE switches"
+    command: "ping {desktop_0_ip} source 10.10.10.2"
+    match_type: "contains"
+    expected: "!!!"

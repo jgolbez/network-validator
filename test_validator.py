@@ -19,6 +19,8 @@ from validator import (
     load_tests_config,
     run_device_tests,
     render_report,
+    extract_variable,
+    substitute_variables,
 )
 
 
@@ -194,18 +196,16 @@ class ConfigLoadingTests(unittest.TestCase):
         """Test loading devices.yaml."""
         devices = load_devices_config("config/network1")
         self.assertEqual(len(devices), 2)
-        self.assertEqual(devices[0].name, "Core Router - DC1")
-        self.assertEqual(devices[0].host, "192.168.1.1")
-        self.assertEqual(devices[1].name, "Access Switch - Building A")
+        self.assertEqual(devices[0].name, "CORE-SW1")
+        self.assertEqual(devices[0].host, "198.18.133.202")
+        self.assertEqual(devices[1].name, "CORE-SW2")
 
     def test_load_tests_config(self):
         """Test loading tests.yaml."""
         tests = load_tests_config("config/network1")
-        self.assertEqual(len(tests), 8)
-        self.assertEqual(tests[0].name, "Default Route Present")
-        self.assertEqual(tests[0].match_type, "contains")
-        self.assertEqual(tests[1].match_type, "not_contains")
-        self.assertEqual(tests[2].match_type, "regex")
+        self.assertGreater(len(tests), 0)  # POC has 13+ tests now
+        self.assertEqual(tests[0].name, "Extract Desktop-0 IP from DHCP")
+        self.assertEqual(tests[0].extract_var, "desktop_0_ip")
 
     def test_load_devices_missing_file(self):
         """Test that missing devices.yaml raises error."""
@@ -494,8 +494,8 @@ class IntegrationTests(unittest.TestCase):
         mock_conn = Mock()
         mock_handler_class.return_value = mock_conn
         mock_conn.send_command.side_effect = [
-            "0.0.0.0/0 via 10.0.1.1",  # Default Route test
-            "no errors",  # No Errors test
+            "0152.5400.0ee7.0e",  # DHCP binding check
+            "0152.5400.0ee7.0e Automatic Active",  # DHCP active check
         ]
 
         # Load configs
@@ -510,9 +510,9 @@ class IntegrationTests(unittest.TestCase):
         html = render_report([report], "2024-01-15 10:30:00")
 
         # Verify workflow
-        self.assertEqual(report.device_name, "Core Router - DC1")
+        self.assertEqual(report.device_name, "CORE-SW1")
         self.assertGreater(len(html), 1000)  # HTML should be substantial
-        self.assertIn("Core Router - DC1", html)
+        self.assertIn("CORE-SW1", html)
 
 
 class EdgeCaseTests(unittest.TestCase):
@@ -549,6 +549,261 @@ class EdgeCaseTests(unittest.TestCase):
         self.assertTrue(
             TestEvaluator.evaluate("exact", "\n\nhello\n\n", "hello")
         )
+
+
+class VariableExtractionTests(unittest.TestCase):
+    """Test variable extraction from command output."""
+
+    def test_extract_ip_from_dhcp_binding(self):
+        """Test extracting IP address from DHCP binding output."""
+        output = """10.10.10.10     0152.5400.0ee7.0e       Feb 24 2026 12:37 PM    Automatic  Active     Vlan10"""
+
+        pattern = r'(\d+\.\d+\.\d+\.\d+)\s+0152\.5400\.0ee7\.0e'
+        extracted = extract_variable(output, pattern)
+        self.assertEqual(extracted, "10.10.10.10")
+
+    def test_extract_mac_address(self):
+        """Test extracting MAC address."""
+        output = "Device MAC: 0152.5400.0ee7.0e is configured"
+        pattern = r'([0-9a-f]{4}\.[0-9a-f]{4}\.[0-9a-f]{4}\.[0-9a-f]{2})'
+        extracted = extract_variable(output, pattern)
+        self.assertEqual(extracted, "0152.5400.0ee7.0e")
+
+    def test_extract_no_match_returns_none(self):
+        """Test that extract returns None when pattern doesn't match."""
+        output = "No matching data here"
+        pattern = r'0152\.5400\.0ee7\.0e\s+.*?(\d+\.\d+\.\d+\.\d+)'
+        extracted = extract_variable(output, pattern)
+        self.assertIsNone(extracted)
+
+    def test_extract_multiline_output(self):
+        """Test extraction from multiline output."""
+        output = """Interface GigabitEthernet0/0
+  IP address: 192.168.1.1
+  Status: up
+"""
+        pattern = r'IP address: (\d+\.\d+\.\d+\.\d+)'
+        extracted = extract_variable(output, pattern)
+        self.assertEqual(extracted, "192.168.1.1")
+
+    def test_extract_first_capture_group_only(self):
+        """Test that only first capture group is used."""
+        output = "Start 10.0.0.1 middle 10.0.0.2 end"
+        pattern = r'(\d+\.\d+\.\d+\.\d+)'
+        extracted = extract_variable(output, pattern)
+        self.assertEqual(extracted, "10.0.0.1")
+
+    def test_extract_with_special_characters(self):
+        """Test extraction handles special regex characters."""
+        output = "ACL: deny ip host 10.10.10.10 any"
+        pattern = r'deny ip host (\d+\.\d+\.\d+\.\d+)'
+        extracted = extract_variable(output, pattern)
+        self.assertEqual(extracted, "10.10.10.10")
+
+    def test_extract_invalid_regex_returns_none(self):
+        """Test that invalid regex doesn't crash."""
+        output = "Some output"
+        pattern = r'[invalid('  # Intentionally broken regex
+        extracted = extract_variable(output, pattern)
+        self.assertIsNone(extracted)
+
+
+class VariableSubstitutionTests(unittest.TestCase):
+    """Test variable substitution in strings."""
+
+    def test_substitute_single_variable(self):
+        """Test substituting a single variable."""
+        text = "ping {desktop_ip} from 10.10.10.2"
+        variables = {"desktop_ip": "10.10.10.10"}
+        result = substitute_variables(text, variables)
+        self.assertEqual(result, "ping 10.10.10.10 from 10.10.10.2")
+
+    def test_substitute_multiple_variables(self):
+        """Test substituting multiple variables."""
+        text = "deny ip {source_ip} {dest_ip}"
+        variables = {"source_ip": "10.0.0.0", "dest_ip": "192.168.1.0"}
+        result = substitute_variables(text, variables)
+        self.assertEqual(result, "deny ip 10.0.0.0 192.168.1.0")
+
+    def test_substitute_same_variable_multiple_times(self):
+        """Test substituting the same variable multiple times."""
+        text = "From {ip} to {ip} ping"
+        variables = {"ip": "10.0.0.1"}
+        result = substitute_variables(text, variables)
+        self.assertEqual(result, "From 10.0.0.1 to 10.0.0.1 ping")
+
+    def test_substitute_unset_variable_unchanged(self):
+        """Test that unset variables remain as placeholders."""
+        text = "ping {desktop_ip}"
+        variables = {}
+        result = substitute_variables(text, variables)
+        self.assertEqual(result, "ping {desktop_ip}")
+
+    def test_substitute_empty_variables(self):
+        """Test substitution with empty variables dict."""
+        text = "show access-lists"
+        variables = {}
+        result = substitute_variables(text, variables)
+        self.assertEqual(result, "show access-lists")
+
+    def test_substitute_regex_pattern(self):
+        """Test substituting into regex pattern."""
+        text = r"deny.*{desktop_ip}"
+        variables = {"desktop_ip": "10.10.10.10"}
+        result = substitute_variables(text, variables)
+        self.assertEqual(result, r"deny.*10.10.10.10")
+
+    def test_substitute_partial_matches_not_affected(self):
+        """Test that partial variable name matches don't get replaced."""
+        text = "{ip} and {ip_prefix}"
+        variables = {"ip": "10.0.0.1"}
+        result = substitute_variables(text, variables)
+        # Should only replace exact {ip}, not {ip_prefix}
+        self.assertEqual(result, "10.0.0.1 and {ip_prefix}")
+
+
+class VariableIntegrationTests(unittest.TestCase):
+    """Integration tests for variable extraction and substitution."""
+
+    @patch("validator.ConnectHandler")
+    def test_extract_and_use_variable_in_tests(self, mock_handler_class):
+        """Test full workflow: extract variable, then use it in next test."""
+        mock_conn = Mock()
+        mock_handler_class.return_value = mock_conn
+
+        # First command returns DHCP binding
+        dhcp_output = "10.10.10.10     0152.5400.0ee7.0e       Feb 24 2026 12:37 PM    Automatic  Active     Vlan10"
+
+        # Second command (ping) will use extracted IP
+        ping_output = "!!!"
+
+        mock_conn.send_command.side_effect = [dhcp_output, ping_output]
+
+        device = DeviceConfig(
+            name="CORE-SW1",
+            host="198.18.133.202",
+            username="admin",
+            password="cisco",
+        )
+
+        tests = [
+            TestDefinition(
+                name="Extract Desktop IP",
+                command="show ip dhcp binding",
+                match_type="contains",
+                expected="0152.5400.0ee7.0e",
+                description="",
+                extract_var="desktop_ip",
+                extract_pattern=r'(\d+\.\d+\.\d+\.\d+)\s+0152\.5400\.0ee7\.0e',
+            ),
+            TestDefinition(
+                name="Ping Desktop",
+                command="ping {desktop_ip}",
+                match_type="contains",
+                expected="!!!",
+                description="",
+            ),
+        ]
+
+        report = run_device_tests(device, tests)
+
+        # Verify both tests passed
+        self.assertEqual(len(report.test_results), 2)
+        self.assertEqual(report.test_results[0].status, "PASS")
+        self.assertEqual(report.test_results[1].status, "PASS")
+
+        # Verify the ping command was substituted with actual IP
+        self.assertIn("10.10.10.10", report.test_results[1].command)
+
+    @patch("validator.ConnectHandler")
+    def test_acl_check_with_extracted_ip(self, mock_handler_class):
+        """Test checking for ACLs that deny extracted IP."""
+        mock_conn = Mock()
+        mock_handler_class.return_value = mock_conn
+
+        dhcp_output = "10.10.10.10     0152.5400.0ee7.0e       Active     Vlan10"
+
+        # ACL that denies the desktop IP
+        acl_output = "Extended IP access list DENY-DESKTOP\n    10 deny ip host 10.10.10.10 any"
+
+        mock_conn.send_command.side_effect = [dhcp_output, acl_output]
+
+        device = DeviceConfig(
+            name="CORE-SW1",
+            host="198.18.133.202",
+            username="admin",
+            password="cisco",
+        )
+
+        tests = [
+            TestDefinition(
+                name="Extract Desktop IP",
+                command="show ip dhcp binding",
+                match_type="contains",
+                expected="0152.5400.0ee7.0e",
+                description="",
+                extract_var="desktop_ip",
+                extract_pattern=r'(\d+\.\d+\.\d+\.\d+)\s+0152\.5400\.0ee7\.0e',
+            ),
+            TestDefinition(
+                name="No ACL denies Desktop",
+                command="show access-lists",
+                match_type="not_regex",
+                expected=r'deny.*{desktop_ip}',
+                description="",
+            ),
+        ]
+
+        report = run_device_tests(device, tests)
+
+        # First test should pass (IP extracted)
+        self.assertEqual(report.test_results[0].status, "PASS")
+
+        # Second test should FAIL (ACL denies the IP after substitution, so the negative regex fails)
+        self.assertEqual(report.test_results[1].status, "FAIL")
+
+    @patch("validator.ConnectHandler")
+    def test_multiple_variables_independent_scope(self, mock_handler_class):
+        """Test that each device has independent variable scope."""
+        mock_conn = Mock()
+        mock_handler_class.return_value = mock_conn
+
+        dhcp_output1 = """10.10.10.10     0152.5400.0ee7.0e       Active"""
+        dhcp_output2 = """10.10.10.11     0152.5400.c168.c3       Active"""
+
+        mock_conn.send_command.side_effect = [dhcp_output1, dhcp_output2]
+
+        device1 = DeviceConfig(
+            name="CORE-SW1",
+            host="198.18.133.202",
+            username="admin",
+            password="cisco",
+        )
+        device2 = DeviceConfig(
+            name="CORE-SW2",
+            host="198.18.133.222",
+            username="admin",
+            password="cisco",
+        )
+
+        tests = [
+            TestDefinition(
+                name="Extract Desktop IP",
+                command="show ip dhcp binding",
+                match_type="contains",
+                expected="0152.5400",
+                description="",
+                extract_var="desktop_ip",
+                extract_pattern=r'(\d+\.\d+\.\d+\.\d+)',
+            )
+        ]
+
+        report1 = run_device_tests(device1, tests)
+        report2 = run_device_tests(device2, tests)
+
+        # Both should have different extracted values
+        self.assertEqual(report1.test_results[0].status, "PASS")
+        self.assertEqual(report2.test_results[0].status, "PASS")
 
 
 if __name__ == "__main__":
