@@ -197,7 +197,7 @@ class ConfigLoadingTests(unittest.TestCase):
         devices = load_devices_config("config/network1")
         self.assertEqual(len(devices), 2)
         self.assertEqual(devices[0].name, "CORE-SW1")
-        self.assertEqual(devices[0].host, "198.18.133.202")
+        self.assertEqual(devices[0].host, "198.18.133.101")
         self.assertEqual(devices[1].name, "CORE-SW2")
 
     def test_load_tests_config(self):
@@ -681,7 +681,7 @@ class VariableIntegrationTests(unittest.TestCase):
 
         device = DeviceConfig(
             name="CORE-SW1",
-            host="198.18.133.202",
+            host="198.18.133.101",
             username="admin",
             password="cisco",
         )
@@ -730,7 +730,7 @@ class VariableIntegrationTests(unittest.TestCase):
 
         device = DeviceConfig(
             name="CORE-SW1",
-            host="198.18.133.202",
+            host="198.18.133.101",
             username="admin",
             password="cisco",
         )
@@ -775,13 +775,13 @@ class VariableIntegrationTests(unittest.TestCase):
 
         device1 = DeviceConfig(
             name="CORE-SW1",
-            host="198.18.133.202",
+            host="198.18.133.101",
             username="admin",
             password="cisco",
         )
         device2 = DeviceConfig(
             name="CORE-SW2",
-            host="198.18.133.222",
+            host="198.18.133.202",
             username="admin",
             password="cisco",
         )
