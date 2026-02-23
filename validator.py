@@ -38,6 +38,7 @@ class TestDefinition:
     description: str = ""
     extract_var: str = ""  # Variable name to extract from output
     extract_pattern: str = ""  # Regex pattern with capture group for extraction
+    devices: list[str] = field(default_factory=list)  # Devices to run test on; empty = all devices
 
 
 @dataclass
@@ -198,8 +199,11 @@ def run_device_tests(
         conn = ConnectHandler(**connection_params)
     except (NetmikoTimeoutException, NetmikoAuthenticationException) as e:
         report.connection_error = str(e)
-        # Mark all tests as ERROR
+        # Mark all applicable tests as ERROR
         for test in tests:
+            # Skip tests not meant for this device
+            if test.devices and device.name not in test.devices:
+                continue
             report.test_results.append(
                 TestResult(
                     device_name=device.name,
@@ -216,6 +220,9 @@ def run_device_tests(
     except Exception as e:
         report.connection_error = f"Unexpected error: {e}"
         for test in tests:
+            # Skip tests not meant for this device
+            if test.devices and device.name not in test.devices:
+                continue
             report.test_results.append(
                 TestResult(
                     device_name=device.name,
@@ -234,6 +241,10 @@ def run_device_tests(
     try:
         for test in tests:
             try:
+                # Skip test if not meant for this device
+                if test.devices and device.name not in test.devices:
+                    continue
+
                 # Substitute variables in command and expected pattern
                 command = substitute_variables(test.command, variables)
                 expected = substitute_variables(test.expected, variables)

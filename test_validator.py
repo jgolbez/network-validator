@@ -806,5 +806,121 @@ class VariableIntegrationTests(unittest.TestCase):
         self.assertEqual(report2.test_results[0].status, "PASS")
 
 
+class DeviceTargetingTests(unittest.TestCase):
+    """Test device-specific test targeting."""
+
+    def test_test_definition_with_devices_field(self):
+        """Test creating TestDefinition with devices field."""
+        test = TestDefinition(
+            name="Example Test",
+            command="show version",
+            match_type="contains",
+            expected="Cisco",
+            devices=["CORE-SW1"],
+        )
+        self.assertEqual(test.devices, ["CORE-SW1"])
+
+    def test_test_definition_devices_default_empty(self):
+        """Test that devices field defaults to empty list (runs on all devices)."""
+        test = TestDefinition(
+            name="Example Test",
+            command="show version",
+            match_type="contains",
+            expected="Cisco",
+        )
+        self.assertEqual(test.devices, [])
+
+    @patch("validator.ConnectHandler")
+    def test_skip_test_not_meant_for_device(self, mock_handler):
+        """Test that tests are skipped if not meant for the device."""
+        mock_handler.return_value.send_command.return_value = "10.10.10.10"
+
+        device = DeviceConfig(
+            name="CORE-SW1",
+            host="198.18.133.101",
+            username="admin",
+            password="cisco",
+        )
+
+        tests = [
+            TestDefinition(
+                name="For SW1 Only",
+                command="show version",
+                match_type="contains",
+                expected="Cisco",
+                devices=["CORE-SW2"],  # This test is NOT for CORE-SW1
+            ),
+            TestDefinition(
+                name="For Both",
+                command="show ip route",
+                match_type="contains",
+                expected="10.0.0.0",
+                devices=[],  # Empty = runs on all devices
+            ),
+        ]
+
+        report = run_device_tests(device, tests)
+
+        # Should only have 1 test result (the second one), first should be skipped
+        self.assertEqual(len(report.test_results), 1)
+        self.assertEqual(report.test_results[0].test_name, "For Both")
+
+    @patch("validator.ConnectHandler")
+    def test_run_test_when_device_matches(self, mock_handler):
+        """Test that tests run when device is in the devices list."""
+        mock_handler.return_value.send_command.return_value = "Cisco IOS"
+
+        device = DeviceConfig(
+            name="CORE-SW1",
+            host="198.18.133.101",
+            username="admin",
+            password="cisco",
+        )
+
+        tests = [
+            TestDefinition(
+                name="For SW1",
+                command="show version",
+                match_type="contains",
+                expected="Cisco",
+                devices=["CORE-SW1"],  # This test IS for CORE-SW1
+            ),
+        ]
+
+        report = run_device_tests(device, tests)
+
+        # Should have 1 test result that passes
+        self.assertEqual(len(report.test_results), 1)
+        self.assertEqual(report.test_results[0].status, "PASS")
+
+    @patch("validator.ConnectHandler")
+    def test_multiple_devices_in_list(self, mock_handler):
+        """Test that test runs if device is one of multiple in devices list."""
+        mock_handler.return_value.send_command.return_value = "output"
+
+        device = DeviceConfig(
+            name="CORE-SW2",
+            host="198.18.133.202",
+            username="admin",
+            password="cisco",
+        )
+
+        tests = [
+            TestDefinition(
+                name="For SW1 and SW2",
+                command="show version",
+                match_type="contains",
+                expected="output",
+                devices=["CORE-SW1", "CORE-SW2"],
+            ),
+        ]
+
+        report = run_device_tests(device, tests)
+
+        # Should run because CORE-SW2 is in the list
+        self.assertEqual(len(report.test_results), 1)
+        self.assertEqual(report.test_results[0].status, "PASS")
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)
