@@ -1042,6 +1042,78 @@ class DeviceTargetingTests(unittest.TestCase):
         self.assertEqual(report.test_results[0].status, "PASS")
 
 
+class ACLIntegrationTests(unittest.TestCase):
+    """Integration tests for ACL checking in device tests."""
+
+    @patch("validator.ConnectHandler")
+    def test_acl_test_detects_broader_deny_rule(self, mock_handler_class):
+        """Test that ACL tests use intelligent checking to detect broader deny rules."""
+        mock_conn = Mock()
+        mock_handler_class.return_value = mock_conn
+
+        # Simulate DHCP response
+        dhcp_binding = "10.10.10.50     0152.5400.0ee7.0e       Feb 24 2026 12:37 PM    Automatic  Active     Vlan10"
+
+        # Simulate subnet mask extraction
+        dhcp_pool_config = """ip dhcp pool DESKTOP
+ network 10.10.10.0 255.255.255.0
+ default-router 10.10.10.1"""
+
+        # Simulate ACL with broader deny that should be caught
+        acl_output = """Standard IP access list 10
+    10 deny   10.0.0.0, wildcard bits 0.255.255.255
+    20 permit any"""
+
+        mock_conn.send_command.side_effect = [dhcp_binding, dhcp_pool_config, acl_output]
+
+        device = DeviceConfig(
+            name="CORE-SW1",
+            host="198.18.133.101",
+            username="admin",
+            password="cisco",
+        )
+
+        tests = [
+            TestDefinition(
+                name="Extract Desktop-0 IP",
+                command="show ip dhcp binding",
+                match_type="contains",
+                expected="0152.5400.0ee7.0e",
+                description="",
+                extract_var="desktop_0_ip",
+                extract_pattern=r'(\d+\.\d+\.\d+\.\d+)\s+0152\.5400\.0ee7\.0e',
+            ),
+            TestDefinition(
+                name="Extract Desktop-0 Subnet Mask",
+                command="show run | section ip dhcp pool DESKTOP",
+                match_type="contains",
+                expected="network 10.10.10.0",
+                description="",
+                extract_var="desktop_0_subnet_mask",
+                extract_pattern=r'network\s+\d+\.\d+\.\d+\.\d+\s+(\d+\.\d+\.\d+\.\d+)',
+            ),
+            TestDefinition(
+                name="No ACL denies Desktop-0 Host or Subnet",
+                command="show access-lists",
+                match_type="not_regex",
+                expected=r'deny\s+(?:ip\s+)?(?:host\s+)?{desktop_0_ip}(?:\s|$)|deny\s+(?:ip\s+)?{desktop_0_network}\s+{desktop_0_wildcard}|deny\s+{desktop_0_network}\s+{desktop_0_subnet_mask}',
+                description="",
+            ),
+        ]
+
+        report = run_device_tests(device, tests)
+
+        # First two tests should pass (extraction)
+        self.assertEqual(report.test_results[0].status, "PASS")
+        self.assertEqual(report.test_results[1].status, "PASS")
+
+        # Third test (ACL check) should FAIL because the broader deny rule blocks Desktop-0
+        # Even though the regex pattern doesn't match the broader rule,
+        # the intelligent checking should detect it
+        self.assertEqual(report.test_results[2].status, "FAIL",
+                        "ACL test should detect that 10.0.0.0/8 deny blocks 10.10.10.50")
+
+
 class ACLCheckingTests(unittest.TestCase):
     """Test intelligent ACL checking with network ranges."""
 
