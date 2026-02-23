@@ -202,10 +202,10 @@
             <h1>🔍 Network Validator Report</h1>
             <p>Automated network device validation</p>
             <div class="summary">
-                <div class="badge pass">✓ PASS: 12</div>
-                <div class="badge fail">✗ FAIL: 3</div>
-                <div class="badge error">⚠ ERROR: 0</div>
-                <div class="badge" style="background: rgba(255,255,255,0.3);">📅 2026-02-23 08:57:56</div>
+                <div class="badge pass">✓ PASS: 11</div>
+                <div class="badge fail">✗ FAIL: 1</div>
+                <div class="badge error">⚠ ERROR: 5</div>
+                <div class="badge" style="background: rgba(255,255,255,0.3);">📅 2026-02-23 09:18:42</div>
             </div>
         </div>
 
@@ -221,8 +221,8 @@
                                 </div>
                                 <div>
                                     <div class="device-summary">
-                                        <span class="pass">✓ 8</span>
-                                        <span class="fail">✗ 2</span>
+                                        <span class="pass">✓ 7</span>
+                                        <span class="fail">✗ 1</span>
                                         <span class="error">⚠ 0</span>
                                     </div>
                                 </div>
@@ -511,42 +511,6 @@ IPv6 access list preauth_v6
                                                     <td class="status pass">PASS</td>
                                                 </tr>
                                             
-                                                <tr>
-                                                    <td><strong>Ping Desktop-1 from CORE-SW1 should fail (task complete)</strong></td>
-                                                    <td>After task, CORE-SW1 should NOT be able to ping desktop-1</td>
-                                                    <td><code>ping 10.10.10.11 source 10.10.10.2</code></td>
-                                                    <td>contains</td>
-                                                    <td><code>Destination unreachable</code></td>
-                                                    <td>
-                                                        
-                                                            <div class="output-cell">Type escape sequence to abort.
-Sending 5, 100-byte ICMP Echos to 10.10.10.11, timeout is 2 seconds:
-Packet sent with a source address of 10.10.10.2 
-!!!!!
-Success rate is 100 percent (5/5), round-trip min/avg/max = 53/60/68 ms</div>
-                                                        
-                                                    </td>
-                                                    <td class="status fail">FAIL</td>
-                                                </tr>
-                                            
-                                                <tr>
-                                                    <td><strong>Ping Desktop-0 should still work</strong></td>
-                                                    <td>Desktop-0 should remain reachable from CORE switches</td>
-                                                    <td><code>ping 10.10.10.10 source 10.10.10.2</code></td>
-                                                    <td>contains</td>
-                                                    <td><code>!!!</code></td>
-                                                    <td>
-                                                        
-                                                            <div class="output-cell">Type escape sequence to abort.
-Sending 5, 100-byte ICMP Echos to 10.10.10.10, timeout is 2 seconds:
-Packet sent with a source address of 10.10.10.2 
-!!!!!
-Success rate is 100 percent (5/5), round-trip min/avg/max = 66/131/228 ms</div>
-                                                        
-                                                    </td>
-                                                    <td class="status pass">PASS</td>
-                                                </tr>
-                                            
                                         </tbody>
                                     </table>
                                 
@@ -564,7 +528,7 @@ Success rate is 100 percent (5/5), round-trip min/avg/max = 66/131/228 ms</div>
                                 <div>
                                     <div class="device-summary">
                                         <span class="pass">✓ 4</span>
-                                        <span class="fail">✗ 1</span>
+                                        <span class="fail">✗ 0</span>
                                         <span class="error">⚠ 0</span>
                                     </div>
                                 </div>
@@ -594,7 +558,7 @@ Success rate is 100 percent (5/5), round-trip min/avg/max = 66/131/228 ms</div>
                                                     <td>Check that no access-list contains a deny for desktop-0</td>
                                                     <td><code>show access-lists</code></td>
                                                     <td>not_contains</td>
-                                                    <td><code>deny.*{desktop_0_ip}</code></td>
+                                                    <td><code>deny.*10.10.10.10</code></td>
                                                     <td>
                                                         
                                                             <div class="output-cell">Extended IP access list IP-Adm-V4-Int-ACL-global
@@ -637,7 +601,7 @@ IPv6 access list preauth_v6
                                                     <td>Check that no access-list contains a deny for desktop-1</td>
                                                     <td><code>show access-lists</code></td>
                                                     <td>not_contains</td>
-                                                    <td><code>deny.*{desktop_1_ip}</code></td>
+                                                    <td><code>deny.*10.10.10.11</code></td>
                                                     <td>
                                                         
                                                             <div class="output-cell">Extended IP access list IP-Adm-V4-Int-ACL-global
@@ -680,7 +644,7 @@ IPv6 access list preauth_v6
                                                     <td>Standard ACLs may just show 'deny 10.10.10.x' format</td>
                                                     <td><code>show access-lists</code></td>
                                                     <td>not_contains</td>
-                                                    <td><code>deny   {desktop_0_ip}</code></td>
+                                                    <td><code>deny   10.10.10.10</code></td>
                                                     <td>
                                                         
                                                             <div class="output-cell">Extended IP access list IP-Adm-V4-Int-ACL-global
@@ -723,7 +687,7 @@ IPv6 access list preauth_v6
                                                     <td>Standard ACLs may just show 'deny 10.10.10.x' format</td>
                                                     <td><code>show access-lists</code></td>
                                                     <td>not_contains</td>
-                                                    <td><code>deny   {desktop_1_ip}</code></td>
+                                                    <td><code>deny   10.10.10.11</code></td>
                                                     <td>
                                                         
                                                             <div class="output-cell">Extended IP access list IP-Adm-V4-Int-ACL-global
@@ -761,20 +725,912 @@ IPv6 access list preauth_v6
                                                     <td class="status pass">PASS</td>
                                                 </tr>
                                             
+                                        </tbody>
+                                    </table>
+                                
+                            </div>
+                        </details>
+                    </div>
+                
+                    <div class="device-section">
+                        <details open>
+                            <summary class="device-header">
+                                <div>
+                                    <h2>DESKTOP-1</h2>
+                                    <div class="device-info">10.10.10.11</div>
+                                </div>
+                                <div>
+                                    <div class="device-summary">
+                                        <span class="pass">✓ 0</span>
+                                        <span class="fail">✗ 0</span>
+                                        <span class="error">⚠ 5</span>
+                                    </div>
+                                </div>
+                                <div class="toggle-icon">▼</div>
+                            </summary>
+
+                            <div class="device-content">
+                                
+                                    <div class="connection-error">
+                                        <strong>Connection Error:</strong> Unexpected error: Unsupported 'device_type' currently supported platforms are: 
+a10
+accedian
+adtran_os
+adva_fsp150f2
+adva_fsp150f3
+alcatel_aos
+alcatel_sros
+allied_telesis_awplus
+apresia_aeos
+arista_eos
+arris_cer
+aruba_aoscx
+aruba_os
+aruba_osswitch
+aruba_procurve
+audiocode_66
+audiocode_72
+audiocode_shell
+avaya_ers
+avaya_vsp
+broadcom_icos
+brocade_fastiron
+brocade_fos
+brocade_netiron
+brocade_nos
+brocade_vdx
+brocade_vyos
+calix_b6
+casa_cmts
+cdot_cros
+centec_os
+checkpoint_gaia
+ciena_saos
+cisco_asa
+cisco_ftd
+cisco_ios
+cisco_nxos
+cisco_s200
+cisco_s300
+cisco_tp
+cisco_viptela
+cisco_wlc
+cisco_xe
+cisco_xr
+cloudgenix_ion
+coriant
+dell_dnos9
+dell_force10
+dell_isilon
+dell_os10
+dell_os6
+dell_os9
+dell_powerconnect
+dell_sonic
+digi_transport
+dlink_ds
+eltex
+eltex_esr
+endace
+enterasys
+ericsson_ipos
+ericsson_mltn63
+ericsson_mltn66
+extreme
+extreme_ers
+extreme_exos
+extreme_netiron
+extreme_nos
+extreme_slx
+extreme_tierra
+extreme_vdx
+extreme_vsp
+extreme_wing
+f5_linux
+f5_ltm
+f5_tmsh
+fiberstore_fsos
+flexvnf
+fortinet
+generic
+generic_termserver
+hillstone_stoneos
+hp_comware
+hp_procurve
+huawei
+huawei_olt
+huawei_smartax
+huawei_vrp
+huawei_vrpv8
+ipinfusion_ocnos
+juniper
+juniper_junos
+juniper_screenos
+keymile
+keymile_nos
+linux
+maipu
+mellanox
+mellanox_mlnxos
+mikrotik_routeros
+mikrotik_switchos
+mrv_lx
+mrv_optiswitch
+netapp_cdot
+netgear_prosafe
+netscaler
+nokia_srl
+nokia_sros
+oneaccess_oneos
+ovs_linux
+paloalto_panos
+pluribus
+quanta_mesh
+rad_etx
+raisecom_roap
+ruckus_fastiron
+ruijie_os
+sixwind_os
+sophos_sfos
+supermicro_smis
+teldat_cit
+tplink_jetstream
+ubiquiti_edge
+ubiquiti_edgerouter
+ubiquiti_edgeswitch
+ubiquiti_unifiswitch
+vyatta_vyos
+vyos
+watchguard_fireware
+yamaha
+zte_zxros
+zyxel_os
+                                    </div>
+                                
+
+                                
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>Test Name</th>
+                                                <th>Description</th>
+                                                <th>Command</th>
+                                                <th>Match Type</th>
+                                                <th>Expected</th>
+                                                <th>Output</th>
+                                                <th>Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            
                                                 <tr>
-                                                    <td><strong>Ping Desktop-1 from CORE-SW2 should fail (task complete)</strong></td>
-                                                    <td>After task, CORE-SW2 should NOT be able to ping desktop-1</td>
-                                                    <td><code>ping {desktop_1_ip} source 10.10.10.3</code></td>
-                                                    <td>contains</td>
-                                                    <td><code>Destination unreachable</code></td>
+                                                    <td><strong>No ACL denies Desktop-0 IP</strong></td>
+                                                    <td>Check that no access-list contains a deny for desktop-0</td>
+                                                    <td><code>show access-lists</code></td>
+                                                    <td>not_contains</td>
+                                                    <td><code>deny.*{desktop_0_ip}</code></td>
                                                     <td>
                                                         
-                                                            <div class="output-cell">                             ^
-% Invalid input detected at '^' marker.
-</div>
+                                                            <div class="error-message">Connection failed: Unsupported 'device_type' currently supported platforms are: 
+a10
+accedian
+adtran_os
+adva_fsp150f2
+adva_fsp150f3
+alcatel_aos
+alcatel_sros
+allied_telesis_awplus
+apresia_aeos
+arista_eos
+arris_cer
+aruba_aoscx
+aruba_os
+aruba_osswitch
+aruba_procurve
+audiocode_66
+audiocode_72
+audiocode_shell
+avaya_ers
+avaya_vsp
+broadcom_icos
+brocade_fastiron
+brocade_fos
+brocade_netiron
+brocade_nos
+brocade_vdx
+brocade_vyos
+calix_b6
+casa_cmts
+cdot_cros
+centec_os
+checkpoint_gaia
+ciena_saos
+cisco_asa
+cisco_ftd
+cisco_ios
+cisco_nxos
+cisco_s200
+cisco_s300
+cisco_tp
+cisco_viptela
+cisco_wlc
+cisco_xe
+cisco_xr
+cloudgenix_ion
+coriant
+dell_dnos9
+dell_force10
+dell_isilon
+dell_os10
+dell_os6
+dell_os9
+dell_powerconnect
+dell_sonic
+digi_transport
+dlink_ds
+eltex
+eltex_esr
+endace
+enterasys
+ericsson_ipos
+ericsson_mltn63
+ericsson_mltn66
+extreme
+extreme_ers
+extreme_exos
+extreme_netiron
+extreme_nos
+extreme_slx
+extreme_tierra
+extreme_vdx
+extreme_vsp
+extreme_wing
+f5_linux
+f5_ltm
+f5_tmsh
+fiberstore_fsos
+flexvnf
+fortinet
+generic
+generic_termserver
+hillstone_stoneos
+hp_comware
+hp_procurve
+huawei
+huawei_olt
+huawei_smartax
+huawei_vrp
+huawei_vrpv8
+ipinfusion_ocnos
+juniper
+juniper_junos
+juniper_screenos
+keymile
+keymile_nos
+linux
+maipu
+mellanox
+mellanox_mlnxos
+mikrotik_routeros
+mikrotik_switchos
+mrv_lx
+mrv_optiswitch
+netapp_cdot
+netgear_prosafe
+netscaler
+nokia_srl
+nokia_sros
+oneaccess_oneos
+ovs_linux
+paloalto_panos
+pluribus
+quanta_mesh
+rad_etx
+raisecom_roap
+ruckus_fastiron
+ruijie_os
+sixwind_os
+sophos_sfos
+supermicro_smis
+teldat_cit
+tplink_jetstream
+ubiquiti_edge
+ubiquiti_edgerouter
+ubiquiti_edgeswitch
+ubiquiti_unifiswitch
+vyatta_vyos
+vyos
+watchguard_fireware
+yamaha
+zte_zxros
+zyxel_os</div>
                                                         
                                                     </td>
-                                                    <td class="status fail">FAIL</td>
+                                                    <td class="status error">ERROR</td>
+                                                </tr>
+                                            
+                                                <tr>
+                                                    <td><strong>No ACL denies Desktop-1 IP</strong></td>
+                                                    <td>Check that no access-list contains a deny for desktop-1</td>
+                                                    <td><code>show access-lists</code></td>
+                                                    <td>not_contains</td>
+                                                    <td><code>deny.*{desktop_1_ip}</code></td>
+                                                    <td>
+                                                        
+                                                            <div class="error-message">Connection failed: Unsupported 'device_type' currently supported platforms are: 
+a10
+accedian
+adtran_os
+adva_fsp150f2
+adva_fsp150f3
+alcatel_aos
+alcatel_sros
+allied_telesis_awplus
+apresia_aeos
+arista_eos
+arris_cer
+aruba_aoscx
+aruba_os
+aruba_osswitch
+aruba_procurve
+audiocode_66
+audiocode_72
+audiocode_shell
+avaya_ers
+avaya_vsp
+broadcom_icos
+brocade_fastiron
+brocade_fos
+brocade_netiron
+brocade_nos
+brocade_vdx
+brocade_vyos
+calix_b6
+casa_cmts
+cdot_cros
+centec_os
+checkpoint_gaia
+ciena_saos
+cisco_asa
+cisco_ftd
+cisco_ios
+cisco_nxos
+cisco_s200
+cisco_s300
+cisco_tp
+cisco_viptela
+cisco_wlc
+cisco_xe
+cisco_xr
+cloudgenix_ion
+coriant
+dell_dnos9
+dell_force10
+dell_isilon
+dell_os10
+dell_os6
+dell_os9
+dell_powerconnect
+dell_sonic
+digi_transport
+dlink_ds
+eltex
+eltex_esr
+endace
+enterasys
+ericsson_ipos
+ericsson_mltn63
+ericsson_mltn66
+extreme
+extreme_ers
+extreme_exos
+extreme_netiron
+extreme_nos
+extreme_slx
+extreme_tierra
+extreme_vdx
+extreme_vsp
+extreme_wing
+f5_linux
+f5_ltm
+f5_tmsh
+fiberstore_fsos
+flexvnf
+fortinet
+generic
+generic_termserver
+hillstone_stoneos
+hp_comware
+hp_procurve
+huawei
+huawei_olt
+huawei_smartax
+huawei_vrp
+huawei_vrpv8
+ipinfusion_ocnos
+juniper
+juniper_junos
+juniper_screenos
+keymile
+keymile_nos
+linux
+maipu
+mellanox
+mellanox_mlnxos
+mikrotik_routeros
+mikrotik_switchos
+mrv_lx
+mrv_optiswitch
+netapp_cdot
+netgear_prosafe
+netscaler
+nokia_srl
+nokia_sros
+oneaccess_oneos
+ovs_linux
+paloalto_panos
+pluribus
+quanta_mesh
+rad_etx
+raisecom_roap
+ruckus_fastiron
+ruijie_os
+sixwind_os
+sophos_sfos
+supermicro_smis
+teldat_cit
+tplink_jetstream
+ubiquiti_edge
+ubiquiti_edgerouter
+ubiquiti_edgeswitch
+ubiquiti_unifiswitch
+vyatta_vyos
+vyos
+watchguard_fireware
+yamaha
+zte_zxros
+zyxel_os</div>
+                                                        
+                                                    </td>
+                                                    <td class="status error">ERROR</td>
+                                                </tr>
+                                            
+                                                <tr>
+                                                    <td><strong>No Standard ACL denies Desktop-0</strong></td>
+                                                    <td>Standard ACLs may just show 'deny 10.10.10.x' format</td>
+                                                    <td><code>show access-lists</code></td>
+                                                    <td>not_contains</td>
+                                                    <td><code>deny   {desktop_0_ip}</code></td>
+                                                    <td>
+                                                        
+                                                            <div class="error-message">Connection failed: Unsupported 'device_type' currently supported platforms are: 
+a10
+accedian
+adtran_os
+adva_fsp150f2
+adva_fsp150f3
+alcatel_aos
+alcatel_sros
+allied_telesis_awplus
+apresia_aeos
+arista_eos
+arris_cer
+aruba_aoscx
+aruba_os
+aruba_osswitch
+aruba_procurve
+audiocode_66
+audiocode_72
+audiocode_shell
+avaya_ers
+avaya_vsp
+broadcom_icos
+brocade_fastiron
+brocade_fos
+brocade_netiron
+brocade_nos
+brocade_vdx
+brocade_vyos
+calix_b6
+casa_cmts
+cdot_cros
+centec_os
+checkpoint_gaia
+ciena_saos
+cisco_asa
+cisco_ftd
+cisco_ios
+cisco_nxos
+cisco_s200
+cisco_s300
+cisco_tp
+cisco_viptela
+cisco_wlc
+cisco_xe
+cisco_xr
+cloudgenix_ion
+coriant
+dell_dnos9
+dell_force10
+dell_isilon
+dell_os10
+dell_os6
+dell_os9
+dell_powerconnect
+dell_sonic
+digi_transport
+dlink_ds
+eltex
+eltex_esr
+endace
+enterasys
+ericsson_ipos
+ericsson_mltn63
+ericsson_mltn66
+extreme
+extreme_ers
+extreme_exos
+extreme_netiron
+extreme_nos
+extreme_slx
+extreme_tierra
+extreme_vdx
+extreme_vsp
+extreme_wing
+f5_linux
+f5_ltm
+f5_tmsh
+fiberstore_fsos
+flexvnf
+fortinet
+generic
+generic_termserver
+hillstone_stoneos
+hp_comware
+hp_procurve
+huawei
+huawei_olt
+huawei_smartax
+huawei_vrp
+huawei_vrpv8
+ipinfusion_ocnos
+juniper
+juniper_junos
+juniper_screenos
+keymile
+keymile_nos
+linux
+maipu
+mellanox
+mellanox_mlnxos
+mikrotik_routeros
+mikrotik_switchos
+mrv_lx
+mrv_optiswitch
+netapp_cdot
+netgear_prosafe
+netscaler
+nokia_srl
+nokia_sros
+oneaccess_oneos
+ovs_linux
+paloalto_panos
+pluribus
+quanta_mesh
+rad_etx
+raisecom_roap
+ruckus_fastiron
+ruijie_os
+sixwind_os
+sophos_sfos
+supermicro_smis
+teldat_cit
+tplink_jetstream
+ubiquiti_edge
+ubiquiti_edgerouter
+ubiquiti_edgeswitch
+ubiquiti_unifiswitch
+vyatta_vyos
+vyos
+watchguard_fireware
+yamaha
+zte_zxros
+zyxel_os</div>
+                                                        
+                                                    </td>
+                                                    <td class="status error">ERROR</td>
+                                                </tr>
+                                            
+                                                <tr>
+                                                    <td><strong>No Standard ACL denies Desktop-1</strong></td>
+                                                    <td>Standard ACLs may just show 'deny 10.10.10.x' format</td>
+                                                    <td><code>show access-lists</code></td>
+                                                    <td>not_contains</td>
+                                                    <td><code>deny   {desktop_1_ip}</code></td>
+                                                    <td>
+                                                        
+                                                            <div class="error-message">Connection failed: Unsupported 'device_type' currently supported platforms are: 
+a10
+accedian
+adtran_os
+adva_fsp150f2
+adva_fsp150f3
+alcatel_aos
+alcatel_sros
+allied_telesis_awplus
+apresia_aeos
+arista_eos
+arris_cer
+aruba_aoscx
+aruba_os
+aruba_osswitch
+aruba_procurve
+audiocode_66
+audiocode_72
+audiocode_shell
+avaya_ers
+avaya_vsp
+broadcom_icos
+brocade_fastiron
+brocade_fos
+brocade_netiron
+brocade_nos
+brocade_vdx
+brocade_vyos
+calix_b6
+casa_cmts
+cdot_cros
+centec_os
+checkpoint_gaia
+ciena_saos
+cisco_asa
+cisco_ftd
+cisco_ios
+cisco_nxos
+cisco_s200
+cisco_s300
+cisco_tp
+cisco_viptela
+cisco_wlc
+cisco_xe
+cisco_xr
+cloudgenix_ion
+coriant
+dell_dnos9
+dell_force10
+dell_isilon
+dell_os10
+dell_os6
+dell_os9
+dell_powerconnect
+dell_sonic
+digi_transport
+dlink_ds
+eltex
+eltex_esr
+endace
+enterasys
+ericsson_ipos
+ericsson_mltn63
+ericsson_mltn66
+extreme
+extreme_ers
+extreme_exos
+extreme_netiron
+extreme_nos
+extreme_slx
+extreme_tierra
+extreme_vdx
+extreme_vsp
+extreme_wing
+f5_linux
+f5_ltm
+f5_tmsh
+fiberstore_fsos
+flexvnf
+fortinet
+generic
+generic_termserver
+hillstone_stoneos
+hp_comware
+hp_procurve
+huawei
+huawei_olt
+huawei_smartax
+huawei_vrp
+huawei_vrpv8
+ipinfusion_ocnos
+juniper
+juniper_junos
+juniper_screenos
+keymile
+keymile_nos
+linux
+maipu
+mellanox
+mellanox_mlnxos
+mikrotik_routeros
+mikrotik_switchos
+mrv_lx
+mrv_optiswitch
+netapp_cdot
+netgear_prosafe
+netscaler
+nokia_srl
+nokia_sros
+oneaccess_oneos
+ovs_linux
+paloalto_panos
+pluribus
+quanta_mesh
+rad_etx
+raisecom_roap
+ruckus_fastiron
+ruijie_os
+sixwind_os
+sophos_sfos
+supermicro_smis
+teldat_cit
+tplink_jetstream
+ubiquiti_edge
+ubiquiti_edgerouter
+ubiquiti_edgeswitch
+ubiquiti_unifiswitch
+vyatta_vyos
+vyos
+watchguard_fireware
+yamaha
+zte_zxros
+zyxel_os</div>
+                                                        
+                                                    </td>
+                                                    <td class="status error">ERROR</td>
+                                                </tr>
+                                            
+                                                <tr>
+                                                    <td><strong>Desktop-1 can ping Desktop-0 (before task)</strong></td>
+                                                    <td>Desktop-1 should be able to reach Desktop-0 before task completion (at least 1 successful ping)</td>
+                                                    <td><code>ping -c 5 {desktop_0_ip}</code></td>
+                                                    <td>contains</td>
+                                                    <td><code>seq=</code></td>
+                                                    <td>
+                                                        
+                                                            <div class="error-message">Connection failed: Unsupported 'device_type' currently supported platforms are: 
+a10
+accedian
+adtran_os
+adva_fsp150f2
+adva_fsp150f3
+alcatel_aos
+alcatel_sros
+allied_telesis_awplus
+apresia_aeos
+arista_eos
+arris_cer
+aruba_aoscx
+aruba_os
+aruba_osswitch
+aruba_procurve
+audiocode_66
+audiocode_72
+audiocode_shell
+avaya_ers
+avaya_vsp
+broadcom_icos
+brocade_fastiron
+brocade_fos
+brocade_netiron
+brocade_nos
+brocade_vdx
+brocade_vyos
+calix_b6
+casa_cmts
+cdot_cros
+centec_os
+checkpoint_gaia
+ciena_saos
+cisco_asa
+cisco_ftd
+cisco_ios
+cisco_nxos
+cisco_s200
+cisco_s300
+cisco_tp
+cisco_viptela
+cisco_wlc
+cisco_xe
+cisco_xr
+cloudgenix_ion
+coriant
+dell_dnos9
+dell_force10
+dell_isilon
+dell_os10
+dell_os6
+dell_os9
+dell_powerconnect
+dell_sonic
+digi_transport
+dlink_ds
+eltex
+eltex_esr
+endace
+enterasys
+ericsson_ipos
+ericsson_mltn63
+ericsson_mltn66
+extreme
+extreme_ers
+extreme_exos
+extreme_netiron
+extreme_nos
+extreme_slx
+extreme_tierra
+extreme_vdx
+extreme_vsp
+extreme_wing
+f5_linux
+f5_ltm
+f5_tmsh
+fiberstore_fsos
+flexvnf
+fortinet
+generic
+generic_termserver
+hillstone_stoneos
+hp_comware
+hp_procurve
+huawei
+huawei_olt
+huawei_smartax
+huawei_vrp
+huawei_vrpv8
+ipinfusion_ocnos
+juniper
+juniper_junos
+juniper_screenos
+keymile
+keymile_nos
+linux
+maipu
+mellanox
+mellanox_mlnxos
+mikrotik_routeros
+mikrotik_switchos
+mrv_lx
+mrv_optiswitch
+netapp_cdot
+netgear_prosafe
+netscaler
+nokia_srl
+nokia_sros
+oneaccess_oneos
+ovs_linux
+paloalto_panos
+pluribus
+quanta_mesh
+rad_etx
+raisecom_roap
+ruckus_fastiron
+ruijie_os
+sixwind_os
+sophos_sfos
+supermicro_smis
+teldat_cit
+tplink_jetstream
+ubiquiti_edge
+ubiquiti_edgerouter
+ubiquiti_edgeswitch
+ubiquiti_unifiswitch
+vyatta_vyos
+vyos
+watchguard_fireware
+yamaha
+zte_zxros
+zyxel_os</div>
+                                                        
+                                                    </td>
+                                                    <td class="status error">ERROR</td>
                                                 </tr>
                                             
                                         </tbody>
