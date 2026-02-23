@@ -53,10 +53,10 @@ tests:
   # ============================================================================
 
   - name: "No ACL denies Desktop-0 Host or Subnet"
-    description: "Check that no access-list denies desktop-0 by host IP or subnet"
+    description: "Check that no access-list denies desktop-0 by host IP or subnet (standard or extended ACL)"
     command: "show access-lists"
     match_type: "not_regex"
-    expected: 'deny\s+{desktop_0_ip}(\s|$)|deny\s+{desktop_0_network}\s+{desktop_0_wildcard}'
+    expected: 'deny\s+(?:ip\s+)?(?:host\s+)?{desktop_0_ip}(?:\s|$)|deny\s+(?:ip\s+)?{desktop_0_network}\s+{desktop_0_wildcard}'
     devices: ["CORE-SW1", "CORE-SW2"]
 
   # ============================================================================

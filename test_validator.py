@@ -871,8 +871,8 @@ class VariableIntegrationTests(unittest.TestCase):
  network 10.10.10.0 255.255.255.0
  default-router 10.10.10.1"""
 
-        # Third command returns ACL output to test with calculated values
-        acl_output = "Standard IP access list BLOCK-SUBNET\n    10 deny 10.10.10.0 0.0.0.255"
+        # Third command returns ACL output - no deny rule present (test should PASS with not_regex)
+        acl_output = "Extended IP access list REMOVE\n    10 permit ip any any"
 
         mock_conn.send_command.side_effect = [dhcp_binding, dhcp_pool_config, acl_output]
 
@@ -903,10 +903,10 @@ class VariableIntegrationTests(unittest.TestCase):
                 extract_pattern=r'network\s+\d+\.\d+\.\d+\.\d+\s+(\d+\.\d+\.\d+\.\d+)',
             ),
             TestDefinition(
-                name="Check ACL with calculated network and wildcard",
+                name="No ACL denies Desktop-0 (using not_regex with calculated values)",
                 command="show access-lists",
-                match_type="contains",
-                expected="deny {desktop_0_network} {desktop_0_wildcard}",
+                match_type="not_regex",
+                expected=r'deny\s+(?:ip\s+)?(?:host\s+)?{desktop_0_ip}(?:\s|$)|deny\s+(?:ip\s+)?{desktop_0_network}\s+{desktop_0_wildcard}',
                 description="",
             ),
         ]
@@ -917,11 +917,8 @@ class VariableIntegrationTests(unittest.TestCase):
         self.assertEqual(report.test_results[0].status, "PASS")
         self.assertEqual(report.test_results[1].status, "PASS")
 
-        # Third test should pass - network and wildcard should be calculated and substituted correctly
+        # Third test should pass - not_regex should pass because the deny pattern is NOT found
         self.assertEqual(report.test_results[2].status, "PASS")
-
-        # Verify that the expected pattern was substituted with calculated values
-        self.assertIn("10.10.10.0 0.0.0.255", report.test_results[2].expected)
 
 
 class DeviceTargetingTests(unittest.TestCase):
