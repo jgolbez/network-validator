@@ -13,13 +13,13 @@ tests:
     devices: ["CORE-SW1"]
 
   - name: "Extract Desktop-1 IP from DHCP"
-    description: "Find desktop-1's DHCP-assigned IP by matching its MAC address"
+    description: "Find desktop-1's DHCP-assigned IP by matching its MAC address (from CORE-SW2)"
     command: "show ip dhcp binding"
     match_type: "contains"
     expected: "0152.5400.c168.c3"
     extract_var: "desktop_1_ip"
     extract_pattern: '(\d+\.\d+\.\d+\.\d+)\s+0152\.5400\.c168\.c3'
-    devices: ["CORE-SW1"]
+    devices: ["CORE-SW2"]
 
   # ============================================================================
   # STEP 2: Verify DHCP is Working (Not Static IPs)
@@ -33,11 +33,11 @@ tests:
     devices: ["CORE-SW1"]
 
   - name: "Desktop-1 uses DHCP"
-    description: "Verify desktop-1 IP is from active DHCP lease, not static"
+    description: "Verify desktop-1 IP is from active DHCP lease, not static (on CORE-SW2)"
     command: "show ip dhcp binding"
     match_type: "regex"
     expected: '0152\.5400\.c168\.c3.*Automatic.*Active'
-    devices: ["CORE-SW1"]
+    devices: ["CORE-SW2"]
 
   # ============================================================================
   # STEP 3: Verify No Access-Lists Block Desktop IPs
