@@ -21,6 +21,9 @@ from validator import (
     render_report,
     extract_variable,
     substitute_variables,
+    ip_to_int,
+    int_to_ip,
+    calculate_network_and_wildcard,
 )
 
 
@@ -609,6 +612,54 @@ class VariableExtractionTests(unittest.TestCase):
         self.assertIsNone(extracted)
 
 
+class NetworkCalculationTests(unittest.TestCase):
+    """Test network address and wildcard mask calculations."""
+
+    def test_ip_to_int_conversion(self):
+        """Test converting IP address to integer."""
+        self.assertEqual(ip_to_int("10.10.10.10"), 168430090)
+        self.assertEqual(ip_to_int("255.255.255.0"), 4294967040)
+        self.assertEqual(ip_to_int("0.0.0.0"), 0)
+
+    def test_int_to_ip_conversion(self):
+        """Test converting integer to IP address."""
+        self.assertEqual(int_to_ip(168430090), "10.10.10.10")
+        self.assertEqual(int_to_ip(4294967040), "255.255.255.0")
+        self.assertEqual(int_to_ip(0), "0.0.0.0")
+
+    def test_calculate_network_and_wildcard_class_c(self):
+        """Test calculating network and wildcard for /24 (class C) network."""
+        ip = "10.10.10.50"
+        subnet_mask = "255.255.255.0"
+        network, wildcard = calculate_network_and_wildcard(ip, subnet_mask)
+        self.assertEqual(network, "10.10.10.0")
+        self.assertEqual(wildcard, "0.0.0.255")
+
+    def test_calculate_network_and_wildcard_class_b(self):
+        """Test calculating network and wildcard for /16 (class B) network."""
+        ip = "192.168.50.100"
+        subnet_mask = "255.255.0.0"
+        network, wildcard = calculate_network_and_wildcard(ip, subnet_mask)
+        self.assertEqual(network, "192.168.0.0")
+        self.assertEqual(wildcard, "0.0.255.255")
+
+    def test_calculate_network_and_wildcard_class_a(self):
+        """Test calculating network and wildcard for /8 (class A) network."""
+        ip = "172.16.50.100"
+        subnet_mask = "255.0.0.0"
+        network, wildcard = calculate_network_and_wildcard(ip, subnet_mask)
+        self.assertEqual(network, "172.0.0.0")
+        self.assertEqual(wildcard, "0.255.255.255")
+
+    def test_calculate_network_and_wildcard_slash_30(self):
+        """Test calculating network and wildcard for /30 (point-to-point) network."""
+        ip = "10.20.30.5"
+        subnet_mask = "255.255.255.252"
+        network, wildcard = calculate_network_and_wildcard(ip, subnet_mask)
+        self.assertEqual(network, "10.20.30.4")
+        self.assertEqual(wildcard, "0.0.0.3")
+
+
 class VariableSubstitutionTests(unittest.TestCase):
     """Test variable substitution in strings."""
 
@@ -805,6 +856,71 @@ class VariableIntegrationTests(unittest.TestCase):
         # Both should have different extracted values
         self.assertEqual(report1.test_results[0].status, "PASS")
         self.assertEqual(report2.test_results[0].status, "PASS")
+
+    @patch("validator.ConnectHandler")
+    def test_automatic_network_and_wildcard_calculation(self, mock_handler_class):
+        """Test that network and wildcard are automatically calculated from IP and subnet mask."""
+        mock_conn = Mock()
+        mock_handler_class.return_value = mock_conn
+
+        # First command returns DHCP binding with Desktop-0 IP
+        dhcp_binding = "10.10.10.50     0152.5400.0ee7.0e       Feb 24 2026 12:37 PM    Automatic  Active     Vlan10"
+
+        # Second command returns DHCP pool with subnet mask
+        dhcp_pool = """Pool DESKTOP :
+ Subnet mask              : 255.255.255.0"""
+
+        # Third command returns ACL output to test with calculated values
+        acl_output = "Standard IP access list BLOCK-SUBNET\n    10 deny 10.10.10.0 0.0.0.255"
+
+        mock_conn.send_command.side_effect = [dhcp_binding, dhcp_pool, acl_output]
+
+        device = DeviceConfig(
+            name="CORE-SW1",
+            host="198.18.133.101",
+            username="admin",
+            password="cisco",
+        )
+
+        tests = [
+            TestDefinition(
+                name="Extract Desktop-0 IP",
+                command="show ip dhcp binding",
+                match_type="contains",
+                expected="0152.5400.0ee7.0e",
+                description="",
+                extract_var="desktop_0_ip",
+                extract_pattern=r'(\d+\.\d+\.\d+\.\d+)\s+0152\.5400\.0ee7\.0e',
+            ),
+            TestDefinition(
+                name="Extract Desktop-0 Subnet Mask",
+                command="show ip dhcp pool DESKTOP",
+                match_type="contains",
+                expected="Subnet mask",
+                description="",
+                extract_var="desktop_0_subnet_mask",
+                extract_pattern=r'Subnet mask\s+:\s+(\d+\.\d+\.\d+\.\d+)',
+            ),
+            TestDefinition(
+                name="Check ACL with calculated network and wildcard",
+                command="show access-lists",
+                match_type="contains",
+                expected="deny {desktop_0_network} {desktop_0_wildcard}",
+                description="",
+            ),
+        ]
+
+        report = run_device_tests(device, tests)
+
+        # First two tests should pass (extraction)
+        self.assertEqual(report.test_results[0].status, "PASS")
+        self.assertEqual(report.test_results[1].status, "PASS")
+
+        # Third test should pass - network and wildcard should be calculated and substituted correctly
+        self.assertEqual(report.test_results[2].status, "PASS")
+
+        # Verify that the expected pattern was substituted with calculated values
+        self.assertIn("10.10.10.0 0.0.0.255", report.test_results[2].expected)
 
 
 class DeviceTargetingTests(unittest.TestCase):

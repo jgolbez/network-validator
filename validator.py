@@ -16,6 +16,43 @@ from netmiko import ConnectHandler
 from netmiko.exceptions import NetmikoTimeoutException, NetmikoAuthenticationException
 
 
+def ip_to_int(ip_str: str) -> int:
+    """Convert IP address string to integer."""
+    parts = ip_str.split('.')
+    return (int(parts[0]) << 24) + (int(parts[1]) << 16) + (int(parts[2]) << 8) + int(parts[3])
+
+
+def int_to_ip(ip_int: int) -> str:
+    """Convert integer to IP address string."""
+    return f"{(ip_int >> 24) & 0xFF}.{(ip_int >> 16) & 0xFF}.{(ip_int >> 8) & 0xFF}.{ip_int & 0xFF}"
+
+
+def calculate_network_and_wildcard(ip_str: str, subnet_mask_str: str) -> tuple[str, str]:
+    """
+    Calculate network address and wildcard mask from IP and subnet mask.
+
+    Args:
+        ip_str: IP address (e.g., "10.10.10.50")
+        subnet_mask_str: Subnet mask (e.g., "255.255.255.0")
+
+    Returns:
+        Tuple of (network_address, wildcard_mask)
+        Example: ("10.10.10.0", "0.0.0.255")
+    """
+    ip_int = ip_to_int(ip_str)
+    mask_int = ip_to_int(subnet_mask_str)
+
+    # Network address = IP & Subnet Mask
+    network_int = ip_int & mask_int
+    network_addr = int_to_ip(network_int)
+
+    # Wildcard mask = inverted subnet mask (NOT of subnet mask)
+    wildcard_int = mask_int ^ 0xFFFFFFFF  # XOR with all 1s to invert
+    wildcard_addr = int_to_ip(wildcard_int)
+
+    return (network_addr, wildcard_addr)
+
+
 @dataclass
 class DeviceConfig:
     """SSH connection details for a network device."""
@@ -300,6 +337,22 @@ def run_device_tests(
                     if extracted_value and test.extract_var:
                         variables[test.extract_var] = extracted_value
 
+                # Calculate derived values (network and wildcard from IP and subnet mask)
+                if "desktop_0_ip" in variables and "desktop_0_subnet_mask" in variables:
+                    try:
+                        network, wildcard = calculate_network_and_wildcard(
+                            variables["desktop_0_ip"],
+                            variables["desktop_0_subnet_mask"]
+                        )
+                        variables["desktop_0_network"] = network
+                        variables["desktop_0_wildcard"] = wildcard
+                    except Exception:
+                        pass
+
+                # Re-substitute now that we have new variables
+                expected = substitute_variables(test.expected, variables)
+                command = substitute_variables(test.command, variables)
+
                 passed = TestEvaluator.evaluate(
                     test.match_type, output, expected
                 )
@@ -377,6 +430,18 @@ def extract_variables_from_device(
         conn.disconnect()
     except Exception:
         pass
+
+    # Calculate derived values (network and wildcard from IP and subnet mask)
+    if "desktop_0_ip" in variables and "desktop_0_subnet_mask" in variables:
+        try:
+            network, wildcard = calculate_network_and_wildcard(
+                variables["desktop_0_ip"],
+                variables["desktop_0_subnet_mask"]
+            )
+            variables["desktop_0_network"] = network
+            variables["desktop_0_wildcard"] = wildcard
+        except Exception:
+            pass
 
     return variables
 

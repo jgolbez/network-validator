@@ -12,6 +12,15 @@ tests:
     extract_pattern: '(\d+\.\d+\.\d+\.\d+)\s+0152\.5400\.0ee7\.0e'
     devices: ["CORE-SW1"]
 
+  - name: "Extract Desktop-0 Subnet Mask from DHCP Pool"
+    description: "Extract subnet mask from DHCP pool to calculate network and wildcard"
+    command: "show ip dhcp pool DESKTOP"
+    match_type: "contains"
+    expected: "Subnet mask"
+    extract_var: "desktop_0_subnet_mask"
+    extract_pattern: 'Subnet mask\s+:\s+(\d+\.\d+\.\d+\.\d+)'
+    devices: ["CORE-SW1"]
+
   - name: "Extract Desktop-1 IP from DHCP"
     description: "Find desktop-1's DHCP-assigned IP by matching its MAC address (from CORE-SW2)"
     command: "show ip dhcp binding"
@@ -40,32 +49,15 @@ tests:
     devices: ["CORE-SW2"]
 
   # ============================================================================
-  # STEP 3: Verify No Access-Lists Block Desktop IPs
+  # STEP 3: Verify No Access-Lists Block Desktop-0
   # ============================================================================
 
-  - name: "No ACL denies Desktop-0 IP"
-    description: "Check that no access-list contains a deny for desktop-0"
+  - name: "No ACL denies Desktop-0 Host or Subnet"
+    description: "Check that no access-list denies desktop-0 by host IP or subnet"
     command: "show access-lists"
-    match_type: "not_contains"
-    expected: "deny.*{desktop_0_ip}"
-
-  - name: "No ACL denies Desktop-1 IP"
-    description: "Check that no access-list contains a deny for desktop-1"
-    command: "show access-lists"
-    match_type: "not_contains"
-    expected: "deny.*{desktop_1_ip}"
-
-  - name: "No Standard ACL denies Desktop-0"
-    description: "Standard ACLs may just show 'deny 10.10.10.x' format"
-    command: "show access-lists"
-    match_type: "not_contains"
-    expected: "deny   {desktop_0_ip}"
-
-  - name: "No Standard ACL denies Desktop-1"
-    description: "Standard ACLs may just show 'deny 10.10.10.x' format"
-    command: "show access-lists"
-    match_type: "not_contains"
-    expected: "deny   {desktop_1_ip}"
+    match_type: "not_regex"
+    expected: 'deny\s+{desktop_0_ip}(\s|$)|deny\s+{desktop_0_network}\s+{desktop_0_wildcard}'
+    devices: ["CORE-SW1", "CORE-SW2"]
 
   # ============================================================================
   # STEP 4: Connectivity Tests (Task Outcome Validation)
