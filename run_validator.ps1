@@ -21,12 +21,16 @@ try {
     if (Test-Path $reportPath) {
         Write-Host "Opening report in Chrome..." -ForegroundColor Green
 
-        # Open in Chrome (will use default browser if Chrome not found)
-        $chromePath = "C:\Program Files\Google\Chrome\Application\chrome.exe"
-        if (Test-Path $chromePath) {
-            Start-Process $chromePath $reportPath
+        # Open in Chrome (check both 64-bit and 32-bit installations)
+        $chromePath64 = "C:\Program Files\Google\Chrome\Application\chrome.exe"
+        $chromePath32 = "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe"
+
+        if (Test-Path $chromePath64) {
+            Start-Process $chromePath64 $reportPath
+        } elseif (Test-Path $chromePath32) {
+            Start-Process $chromePath32 $reportPath
         } else {
-            # Fallback to default browser
+            # Fallback to default browser if Chrome not found
             Start-Process $reportPath
         }
 
