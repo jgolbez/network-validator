@@ -28,11 +28,11 @@ try {
     # Activate the virtual environment silently
     & "$venvActivate" 2>$null
 
-    # Show validation in progress message (no buttons, just appears)
-    $msgScriptPath = Join-Path $scriptPath "show_validation_message.vbs"
+    # Show validation in progress message (clean popup, no buttons)
+    $msgPath = Join-Path $scriptPath "show_validation_message.hta"
     $popupProcess = $null
-    if (Test-Path $msgScriptPath) {
-        $popupProcess = Start-Process cscript.exe -ArgumentList $msgScriptPath -PassThru 2>$null
+    if (Test-Path $msgPath) {
+        $popupProcess = Start-Process mshta.exe -ArgumentList $msgPath -PassThru 2>$null
         Start-Sleep -Milliseconds 300
     }
 
