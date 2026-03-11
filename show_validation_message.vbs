@@ -1,5 +1,6 @@
 ' VBScript popup to show validation status
-' Auto-closes after timeout, doesn't block the calling script
+' No buttons, no user interaction needed
+' Will be closed by the calling PowerShell script when validation completes
 
 Set objShell = CreateObject("WScript.Shell")
-objShell.Popup "Validation underway...", 25, "Network Validator", 0 + 64
+objShell.Popup "Validation underway...", 3600, "Network Validator", 0 + 64

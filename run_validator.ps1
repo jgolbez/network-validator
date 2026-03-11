@@ -28,15 +28,21 @@ try {
     # Activate the virtual environment silently
     & "$venvActivate" 2>$null
 
-    # Show validation in progress message (spawns in separate process, doesn't block)
+    # Show validation in progress message (no buttons, just appears)
     $msgScriptPath = Join-Path $scriptPath "show_validation_message.vbs"
+    $popupProcess = $null
     if (Test-Path $msgScriptPath) {
-        Start-Process cscript.exe -ArgumentList $msgScriptPath -WindowStyle Hidden 2>$null
+        $popupProcess = Start-Process cscript.exe -ArgumentList $msgScriptPath -PassThru 2>$null
         Start-Sleep -Milliseconds 300
     }
 
     # Run the validator silently
     python validator.py $configDir 2>$null
+
+    # Close the validation popup now that we're done
+    if ($popupProcess -and -not $popupProcess.HasExited) {
+        Stop-Process -Id $popupProcess.Id -Force -ErrorAction SilentlyContinue
+    }
 
     # Get the attendee report path
     $reportPath = Join-Path $scriptPath "network1_attendee_report.html"
