@@ -19,10 +19,11 @@ powershell -NoProfile -ExecutionPolicy Bypass -File "%SCRIPT_DIR%run_validator.p
 
 echo.
 echo ========================================
-echo Validator completed. Keeping window open for 10 seconds...
+echo Validator completed. Window will close in 5 seconds...
+echo (Press any key to close immediately)
 echo ========================================
 echo.
 
-timeout /t 10
+timeout /t 5 /nobreak
 
 exit /b 0
