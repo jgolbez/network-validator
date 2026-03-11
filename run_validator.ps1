@@ -4,18 +4,31 @@
 # Get the directory where this script is located
 $scriptPath = Split-Path -Parent $MyInvocation.MyCommand.Path
 $configDir = Join-Path $scriptPath "config\network1"
-$venvActivate = Join-Path $scriptPath ".venv\Scripts\Activate.ps1"
-$pythonPath = Join-Path $scriptPath ".venv\Scripts\python.exe"
+
+# Try to find venv - check for both .venv and venv folders
+$venvDir = $null
+if (Test-Path (Join-Path $scriptPath ".venv")) {
+    $venvDir = Join-Path $scriptPath ".venv"
+} elseif (Test-Path (Join-Path $scriptPath "venv")) {
+    $venvDir = Join-Path $scriptPath "venv"
+}
+
+$venvActivate = Join-Path $venvDir "Scripts\Activate.ps1"
+$pythonPath = Join-Path $venvDir "Scripts\python.exe"
 
 # Change to the script directory
 Push-Location $scriptPath
 
 try {
     # Verify virtual environment exists
-    if (-not (Test-Path $venvActivate)) {
-        Write-Host "Error: Virtual environment not found at: $($scriptPath)\.venv" -ForegroundColor Red
-        Write-Host "Please ensure .venv is properly initialized." -ForegroundColor Yellow
-        Write-Host "Run: python -m venv .venv" -ForegroundColor Yellow
+    if ($null -eq $venvDir) {
+        Write-Host "Error: Virtual environment not found" -ForegroundColor Red
+        Write-Host "Checked for: $($scriptPath)\.venv" -ForegroundColor Yellow
+        Write-Host "Checked for: $($scriptPath)\venv" -ForegroundColor Yellow
+        Write-Host "Please ensure virtual environment is properly initialized." -ForegroundColor Yellow
+        Write-Host "Run one of:" -ForegroundColor Yellow
+        Write-Host "  python -m venv .venv" -ForegroundColor Cyan
+        Write-Host "  python -m venv venv" -ForegroundColor Cyan
         exit 1
     }
 
