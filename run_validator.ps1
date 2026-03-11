@@ -20,53 +20,37 @@ $pythonPath = Join-Path $venvDir "Scripts\python.exe"
 Push-Location $scriptPath
 
 try {
-    # Verify virtual environment exists
+    # Verify virtual environment exists (silently fail if not found)
     if ($null -eq $venvDir) {
-        Write-Host "Error: Virtual environment not found" -ForegroundColor Red
-        Write-Host "Checked for: $($scriptPath)\.venv" -ForegroundColor Yellow
-        Write-Host "Checked for: $($scriptPath)\venv" -ForegroundColor Yellow
-        Write-Host "Please ensure virtual environment is properly initialized." -ForegroundColor Yellow
-        Write-Host "Run one of:" -ForegroundColor Yellow
-        Write-Host "  python -m venv .venv" -ForegroundColor Cyan
-        Write-Host "  python -m venv venv" -ForegroundColor Cyan
         exit 1
     }
 
-    # Activate the virtual environment
-    Write-Host "Activating virtual environment..." -ForegroundColor Cyan
-    & "$venvActivate"
+    # Activate the virtual environment silently
+    & "$venvActivate" 2>$null
 
-    # Run the validator
-    Write-Host "Running validator..." -ForegroundColor Green
-    python validator.py $configDir
+    # Run the validator silently
+    python validator.py $configDir 2>$null
 
     # Get the attendee report path
     $reportPath = Join-Path $scriptPath "network1_attendee_report.html"
 
-    # Check if the report was generated
+    # Check if the report was generated and open in browser
     if (Test-Path $reportPath) {
-        Write-Host "Opening report in Chrome..." -ForegroundColor Green
-
         # Open in Chrome (check both 64-bit and 32-bit installations)
         $chromePath64 = "C:\Program Files\Google\Chrome\Application\chrome.exe"
         $chromePath32 = "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe"
 
         if (Test-Path $chromePath64) {
-            Start-Process $chromePath64 $reportPath
+            Start-Process $chromePath64 $reportPath -WindowStyle Hidden
         } elseif (Test-Path $chromePath32) {
-            Start-Process $chromePath32 $reportPath
+            Start-Process $chromePath32 $reportPath -WindowStyle Hidden
         } else {
             # Fallback to default browser if Chrome not found
-            Start-Process $reportPath
+            Start-Process $reportPath -WindowStyle Hidden
         }
-
-        Write-Host "Done! Report opened successfully." -ForegroundColor Green
-    } else {
-        Write-Host "Error: Report file not found." -ForegroundColor Red
-        Write-Host "Check that validator ran successfully." -ForegroundColor Yellow
     }
 } catch {
-    Write-Host "Error running validator: $_" -ForegroundColor Red
+    # Silently fail - no output
 } finally {
     Pop-Location
 }
