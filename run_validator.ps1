@@ -4,23 +4,28 @@
 # Get the directory where this script is located
 $scriptPath = Split-Path -Parent $MyInvocation.MyCommand.Path
 $configDir = Join-Path $scriptPath "config\network1"
-$venvPath = Join-Path $scriptPath ".venv\Scripts\python.exe"
+$venvActivate = Join-Path $scriptPath ".venv\Scripts\Activate.ps1"
+$pythonPath = Join-Path $scriptPath ".venv\Scripts\python.exe"
 
 # Change to the script directory
 Push-Location $scriptPath
 
 try {
-    # Verify Python exists
-    if (-not (Test-Path $venvPath)) {
-        Write-Host "Error: Python executable not found at: $venvPath" -ForegroundColor Red
+    # Verify virtual environment exists
+    if (-not (Test-Path $venvActivate)) {
+        Write-Host "Error: Virtual environment not found at: $($scriptPath)\.venv" -ForegroundColor Red
         Write-Host "Please ensure .venv is properly initialized." -ForegroundColor Yellow
         Write-Host "Run: python -m venv .venv" -ForegroundColor Yellow
         exit 1
     }
 
-    # Run the validator (Python will execute silently if there are no errors)
+    # Activate the virtual environment
+    Write-Host "Activating virtual environment..." -ForegroundColor Cyan
+    & "$venvActivate"
+
+    # Run the validator
     Write-Host "Running validator..." -ForegroundColor Green
-    & "$venvPath" validator.py $configDir
+    python validator.py $configDir
 
     # Get the attendee report path
     $reportPath = Join-Path $scriptPath "network1_attendee_report.html"
