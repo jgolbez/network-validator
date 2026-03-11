@@ -10,9 +10,17 @@ $venvPath = Join-Path $scriptPath ".venv\Scripts\python.exe"
 Push-Location $scriptPath
 
 try {
+    # Verify Python exists
+    if (-not (Test-Path $venvPath)) {
+        Write-Host "Error: Python executable not found at: $venvPath" -ForegroundColor Red
+        Write-Host "Please ensure .venv is properly initialized." -ForegroundColor Yellow
+        Write-Host "Run: python -m venv .venv" -ForegroundColor Yellow
+        exit 1
+    }
+
     # Run the validator (Python will execute silently if there are no errors)
     Write-Host "Running validator..." -ForegroundColor Green
-    & $venvPath validator.py $configDir
+    & "$venvPath" validator.py $configDir
 
     # Get the attendee report path
     $reportPath = Join-Path $scriptPath "network1_attendee_report.html"
