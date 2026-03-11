@@ -28,6 +28,13 @@ try {
     # Activate the virtual environment silently
     & "$venvActivate" 2>$null
 
+    # Show validation in progress message (spawns in separate process, doesn't block)
+    $msgScriptPath = Join-Path $scriptPath "show_validation_message.vbs"
+    if (Test-Path $msgScriptPath) {
+        Start-Process cscript.exe -ArgumentList $msgScriptPath -WindowStyle Hidden 2>$null
+        Start-Sleep -Milliseconds 300
+    }
+
     # Run the validator silently
     python validator.py $configDir 2>$null
 
