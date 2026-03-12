@@ -1,0 +1,8 @@
+# CML (Cisco Modeling Labs) Configuration
+# Update these values with your CML instance details
+
+cml:
+  url: "https://cml.demo.dcloud.cisco.com"
+  username: "Administrator"
+  password: "C1sco12345!"
+  lab_id: "9d6fa336-d968-4085-930f-d50e2cad7105"
