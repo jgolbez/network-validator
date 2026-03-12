@@ -66,16 +66,18 @@ try {
         -Settings $settings `
         -Description $taskDescription
 
-    Write-Host "✓ Task created successfully" -ForegroundColor Green
-    Write-Host "`nTask Details:" -ForegroundColor Cyan
+    Write-Host "Task created successfully" -ForegroundColor Green
+    Write-Host ""
+    Write-Host "Task Details:" -ForegroundColor Cyan
     Write-Host "  Name: $taskName"
     Write-Host "  Trigger: At system startup (5 minute delay)"
     Write-Host "  Action: Run start_lab.ps1 silently"
     Write-Host "  User: SYSTEM (runs automatically)"
-    Write-Host "`nThe lab will now start automatically 5 minutes after Windows boots."
+    Write-Host ""
+    Write-Host "The lab will now start automatically 5 minutes after Windows boots."
     Write-Host "Monitor the CML console to confirm the lab is starting." -ForegroundColor Yellow
 
 } catch {
-    Write-Host "✗ Error: $($_.Exception.Message)" -ForegroundColor Red
+    Write-Host "Error: $($_.Exception.Message)" -ForegroundColor Red
     exit 1
 }

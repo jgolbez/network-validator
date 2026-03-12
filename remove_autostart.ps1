@@ -24,10 +24,10 @@ try {
     # Remove the task
     Unregister-ScheduledTask -TaskName $taskName -Confirm:$false
 
-    Write-Host "✓ Task removed successfully" -ForegroundColor Green
+    Write-Host "Task removed successfully" -ForegroundColor Green
     Write-Host "The lab will no longer start automatically on boot." -ForegroundColor Cyan
 
 } catch {
-    Write-Host "✗ Error: $($_.Exception.Message)" -ForegroundColor Red
+    Write-Host "Error: $($_.Exception.Message)" -ForegroundColor Red
     exit 1
 }
