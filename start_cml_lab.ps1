@@ -65,7 +65,7 @@ try {
         -Body $authBody
 
     $token = $authResponse
-    Write-Host "✓ Authentication successful" -ForegroundColor Green
+    Write-Host "Authentication successful" -ForegroundColor Green
 
     # Start the lab
     Write-Host "Starting lab $LabId..." -ForegroundColor Cyan
@@ -81,10 +81,11 @@ try {
             "accept" = "application/json"
         }
 
-    Write-Host "✓ Lab started successfully" -ForegroundColor Green
-    Write-Host "`nLab is starting up. Devices will be available shortly." -ForegroundColor Cyan
+    Write-Host "Lab started successfully" -ForegroundColor Green
+    Write-Host ""
+    Write-Host "Lab is starting up. Devices will be available shortly." -ForegroundColor Cyan
 
 } catch {
-    Write-Host "✗ Error: $($_.Exception.Message)" -ForegroundColor Red
+    Write-Host "Error: $($_.Exception.Message)" -ForegroundColor Red
     exit 1
 }
