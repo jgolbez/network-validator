@@ -12,8 +12,17 @@ param(
     [string]$Password,
 
     [Parameter(Mandatory=$true)]
-    [string]$LabId
+    [string]$LabId,
+
+    [string]$LogFile = "start_lab.log"
 )
+
+# Function to log messages
+function Log-Message {
+    param([string]$Message)
+    $timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
+    "$timestamp - [CML] $Message" | Add-Content $LogFile
+}
 
 # Disable SSL certificate validation (for demo/test environments)
 if (-not ([System.Management.Automation.PSTypeName]'ServerCertificateValidationCallback').Type) {
@@ -48,14 +57,18 @@ public class ServerCertificateValidationCallback
 
 try {
     Write-Host "Authenticating with CML..." -ForegroundColor Cyan
+    Log-Message "Starting authentication to $CMLUrl"
 
     # Authenticate and get token
     $authUrl = "$CMLUrl/api/v0/authenticate"
+    Log-Message "Auth URL: $authUrl"
+
     $authBody = @{
         username = $Username
         password = $Password
     } | ConvertTo-Json
 
+    Log-Message "Sending authentication request"
     $authResponse = Invoke-RestMethod -Uri $authUrl `
         -Method POST `
         -Headers @{
@@ -65,13 +78,17 @@ try {
         -Body $authBody
 
     $token = $authResponse
+    Log-Message "Authentication successful, token received (length: $($token.Length))"
     Write-Host "Authentication successful" -ForegroundColor Green
 
     # Start the lab
     Write-Host "Starting lab $LabId..." -ForegroundColor Cyan
+    Log-Message "Starting lab $LabId"
 
     $startUrl = "$CMLUrl/api/v0/labs/$LabId/start"
+    Log-Message "Start URL: $startUrl"
 
+    Log-Message "Sending PUT request to start lab"
     $startResponse = Invoke-RestMethod -Uri $startUrl `
         -Method PUT `
         -Headers @{
@@ -81,11 +98,15 @@ try {
             "accept" = "application/json"
         }
 
+    Log-Message "Lab start request completed: $($startResponse | ConvertTo-Json)"
     Write-Host "Lab started successfully" -ForegroundColor Green
     Write-Host ""
     Write-Host "Lab is starting up. Devices will be available shortly." -ForegroundColor Cyan
 
 } catch {
-    Write-Host "Error: $($_.Exception.Message)" -ForegroundColor Red
+    $errorMsg = $_.Exception.Message
+    Log-Message "ERROR: $errorMsg"
+    Log-Message "Exception details: $($_ | ConvertTo-Json)"
+    Write-Host "Error: $errorMsg" -ForegroundColor Red
     exit 1
 }

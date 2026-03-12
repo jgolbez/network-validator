@@ -52,8 +52,8 @@ try {
 
     Log-Message "Calling start_cml_lab.ps1"
 
-    # Call the start_cml_lab script
-    & ".\start_cml_lab.ps1" -CMLUrl $cmlUrl -Username $username -Password $password -LabId $labId
+    # Call the start_cml_lab script with log file path
+    & ".\start_cml_lab.ps1" -CMLUrl $cmlUrl -Username $username -Password $password -LabId $labId -LogFile $logFile
 
     Log-Message "Script completed successfully"
 
