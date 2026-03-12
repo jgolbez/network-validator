@@ -68,9 +68,54 @@ Create a desktop shortcut to `start_lab_hidden.vbs`:
 2. Click **Change Icon**
 3. Choose a suitable icon (or use `%SystemRoot%\System32\imageres.dll`)
 
-## Usage Workflow
+## Automatic Lab Startup (Optional)
 
-For workshop attendees:
+Instead of manually clicking to start the lab, you can configure it to start automatically 5 minutes after Windows boots.
+
+### Setup Automatic Startup
+
+1. Open PowerShell as **Administrator**
+2. Navigate to the project directory
+3. Run the setup script:
+   ```powershell
+   .\setup_autostart.ps1
+   ```
+4. The script will:
+   - Create a Windows Task Scheduler task named "Start CML Lab"
+   - Configure it to run 5 minutes after system startup
+   - Run silently (no console window or user interaction)
+
+### How It Works
+
+- **Windows boots** → System waits 5 minutes for CML to be ready
+- **5 minutes after boot** → Lab startup script runs automatically
+- **Lab starts silently** → No user interaction needed
+- **Workshop attendees** → Workstation is ready when they arrive
+
+### Remove Automatic Startup
+
+If you want to disable automatic startup later:
+
+```powershell
+.\remove_autostart.ps1
+```
+
+This removes the Task Scheduler task and returns to manual control.
+
+### Verify Setup
+
+To check if the task is configured:
+
+1. Open Task Scheduler (press `Win+R`, type `taskschd.msc`)
+2. Look for "Start CML Lab" in the list
+3. You should see:
+   - **Trigger**: "At startup (delayed 5 minutes)"
+   - **Action**: PowerShell running start_lab.ps1
+   - **Status**: Enabled
+
+## Usage Workflow (Manual)
+
+For workshop attendees (if not using automatic startup):
 
 1. **Click "Start Lab" shortcut** → Lab begins starting (silent, 1-2 minutes to fully boot)
 2. **Wait for devices to be ready** → You'll know when devices respond to SSH
