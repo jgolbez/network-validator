@@ -1,0 +1,19 @@
+site_name: Break the Network
+theme:
+  name: material
+nav:
+  - Welcome: index.md
+  - Ground Rules: rules.md
+  - Challenges:
+    - Challenge 1:
+        - Overview: challenges/challenge1.md
+        - Exploration: challenges/exploration1.md
+        - Diagram: challenges/diagram1.md
+    - Challenge 2:
+        - Overview: challenges/challenge2.md
+        - Exploration: challenges/exploration2.md
+        - Diagram: challenges/diagram2.md
+  - Reference:
+    - Accessing Lab Devices: reference/accessing-devices.md
+    - Renewing a DHCP Lease: reference/dhcp-renewal.md
+    - Using the Validator: reference/validator.md
