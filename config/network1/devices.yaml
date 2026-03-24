@@ -14,3 +14,11 @@ devices:
     device_type: "cisco_ios"
     port: 22
     timeout: 30
+
+  - name: "localhost"
+    host: "127.0.0.1"
+    username: ""
+    password: ""
+    device_type: "local"
+    port: 22
+    timeout: 30

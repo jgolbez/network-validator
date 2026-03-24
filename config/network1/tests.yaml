@@ -71,3 +71,4 @@ tests:
     match_type: "contains"
     expected: "bytes from"
     ssh_password: "cisco"
+    devices: ["localhost"]

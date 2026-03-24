@@ -6,6 +6,7 @@ Network Validator - SSH into Cisco IOS-XE devices, run tests, generate HTML repo
 import sys
 import os
 import re
+import subprocess
 from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
@@ -387,17 +388,24 @@ def run_device_tests(
     variables: dict[str, str] = dict(global_variables) if global_variables else {}
 
     # Attempt connection
+    is_localhost = device.device_type == "local"
+    conn = None
+
     try:
-        connection_params = {
-            "device_type": device.device_type,
-            "host": device.host,
-            "username": device.username,
-            "password": device.password,
-            "port": device.port,
-            "timeout": device.timeout,
-            "ssh_strict": False,  # Lab-friendly; disable for production if desired
-        }
-        conn = ConnectHandler(**connection_params)
+        if is_localhost:
+            # For localhost, we'll run commands directly with subprocess
+            conn = None  # No SSH connection needed
+        else:
+            connection_params = {
+                "device_type": device.device_type,
+                "host": device.host,
+                "username": device.username,
+                "password": device.password,
+                "port": device.port,
+                "timeout": device.timeout,
+                "ssh_strict": False,  # Lab-friendly; disable for production if desired
+            }
+            conn = ConnectHandler(**connection_params)
     except (NetmikoTimeoutException, NetmikoAuthenticationException) as e:
         report.connection_error = str(e)
         # Mark all applicable tests as ERROR
@@ -450,8 +458,23 @@ def run_device_tests(
                 command = substitute_variables(test.command, variables)
                 expected = substitute_variables(test.expected, variables)
 
-                # Send command - use special handling for nested SSH with password
-                if "ssh" in command.lower() and test.ssh_password:
+                # Send command - use special handling for localhost and nested SSH with password
+                if is_localhost:
+                    # Run command locally using shell
+                    try:
+                        result = subprocess.run(
+                            command,
+                            shell=True,
+                            capture_output=True,
+                            text=True,
+                            timeout=device.timeout
+                        )
+                        output = result.stdout + result.stderr
+                    except subprocess.TimeoutExpired:
+                        output = "Command timed out"
+                    except Exception as e:
+                        output = f"Error running command: {e}"
+                elif "ssh" in command.lower() and test.ssh_password:
                     output = send_ssh_command_with_password(conn, command, test.ssh_password)
                 else:
                     output = conn.send_command(command)
