@@ -772,7 +772,10 @@ def main():
     # e.g., "config/network1" -> "network1_report.html" and "network1_attendee_report.html"
     config_dir_name = Path(config_dir).name
     detailed_file = Path.cwd() / f"{config_dir_name}_report.html"
-    attendee_file = Path.cwd() / f"{config_dir_name}_attendee_report.html"
+
+    # Write attendee report to Desktop (separate from project files)
+    desktop_path = Path.home() / "Desktop"
+    attendee_file = desktop_path / f"{config_dir_name}_attendee_report.html"
 
     with open(detailed_file, "w", encoding="utf-8") as f:
         f.write(detailed_html)

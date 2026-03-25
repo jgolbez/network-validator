@@ -44,8 +44,8 @@ try {
         Stop-Process -Id $popupProcess.Id -Force -ErrorAction SilentlyContinue
     }
 
-    # Get the attendee report path
-    $reportPath = Join-Path $scriptPath "network1_attendee_report.html"
+    # Get the attendee report path (now on Desktop)
+    $reportPath = Join-Path $env:USERPROFILE "Desktop\network1_attendee_report.html"
 
     # Check if the report was generated and open in browser
     if (Test-Path $reportPath) {
