@@ -553,7 +553,8 @@ def run_device_tests(
                     )
                 )
     finally:
-        conn.disconnect()
+        if conn is not None:
+            conn.disconnect()
 
     return report
 
@@ -595,7 +596,8 @@ def extract_variables_from_device(
             except Exception:
                 pass
 
-        conn.disconnect()
+        if conn is not None:
+            conn.disconnect()
     except Exception:
         pass
 
