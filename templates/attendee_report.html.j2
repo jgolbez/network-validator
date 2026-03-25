@@ -134,6 +134,21 @@
             color: #666;
             margin-top: 5px;
         }
+        .task-complete-banner {
+            background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+            color: white;
+            padding: 25px;
+            margin-bottom: 20px;
+            border-radius: 6px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+        }
+        .task-complete-banner .check-mark {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 <body>
@@ -160,6 +175,14 @@
         </div>
 
         <div class="content">
+            {% if all_pass %}
+            <div class="task-complete-banner">
+                <div class="check-mark">✓</div>
+                <div>TASK COMPLETE</div>
+                <p style="font-size: 14px; margin-top: 10px; font-weight: normal;">All requirements have been met successfully!</p>
+            </div>
+            {% endif %}
+
             <div class="checks-container">
                 {% for constraint in constraints %}
                 <div class="check {{ constraint.status|lower }}">

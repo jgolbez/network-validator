@@ -634,8 +634,8 @@ def get_constraints() -> list[Constraint]:
         ),
         Constraint(
             name="Checking for Connectivity to Desktop-0",
-            description="Desktop-1 should NOT be able to ping Desktop-0 (task complete) or CAN (task incomplete)",
-            test_names=["Desktop-1 can ping Desktop-0 (before task)"],
+            description="Desktop-2 should NOT be able to ping Desktop-1 (task complete) or CAN (task incomplete)",
+            test_names=["Desktop-2 can ping Desktop-1 (before task)"],
             invert_result=True,  # Passes when ping test FAILS (connectivity blocked)
         ),
     ]
@@ -699,12 +699,16 @@ def render_attendee_report(device_reports: list[DeviceReport], run_timestamp: st
     fail_count = sum(1 for c in constraints if c.status == "FAIL")
     error_count = sum(1 for c in constraints if c.status == "ERROR")
 
+    # Check if all constraints pass (task complete)
+    all_pass = fail_count == 0 and error_count == 0 and pass_count > 0
+
     html = template.render(
         constraints=constraints,
         run_timestamp=run_timestamp,
         pass_count=pass_count,
         fail_count=fail_count,
         error_count=error_count,
+        all_pass=all_pass,
     )
     return html
 
