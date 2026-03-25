@@ -45,7 +45,8 @@ try {
     }
 
     # Get the attendee report path (now on Desktop)
-    $reportPath = Join-Path $env:USERPROFILE "Desktop\network1_attendee_report.html"
+    $desktopPath = Join-Path $env:USERPROFILE "Desktop"
+    $reportPath = Join-Path $desktopPath "network1_attendee_report.html"
 
     # Check if the report was generated and open in browser
     if (Test-Path $reportPath) {
