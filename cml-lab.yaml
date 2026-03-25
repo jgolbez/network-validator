@@ -4,13 +4,14 @@ nodes:
   - boot_disk_size: null
     configuration:
       - name: iosxe_config.txt
-        content: "Building configuration...\n\nCurrent configuration : 5927 bytes\n\
-          !\n! Last configuration change at 17:43:02 UTC Mon Feb 23 2026\n!\nversion\
-          \ 17.16\nservice timestamps debug datetime msec\nservice timestamps log\
+        content: "Building configuration...\n\nCurrent configuration : 6162 bytes\n\
+          !\n! Last configuration change at 14:16:57 UTC Tue Mar 24 2026\n!\nversion\
+          \ 17.18\nservice timestamps debug datetime msec\nservice timestamps log\
           \ datetime msec\nplatform qfp utilization monitor load 80\nplatform sslvpn\
           \ use-pd\nplatform console serial\n!\nhostname WAN-RTR1\n!\nboot-start-marker\n\
-          boot-end-marker\n!\n!\nno logging console\nno aaa new-model\n!\n!\n!\n!\n\
-          !\n!\n!\n!\n!\n!\n!\n!\nip domain name dcloud.org\n!\n!\n!\nlogin on-success\
+          boot-end-marker\n!\n!\nvrf definition Mgmt-vrf\n !\n address-family ipv4\n\
+          \ exit-address-family\n!\nno logging console\nno aaa new-model\n!\n!\n!\n\
+          !\n!\n!\n!\n!\n!\n!\n!\n!\nip domain name dcloud.org\n!\n!\n!\nlogin on-success\
           \ log\n!\n!\nsubscriber templating\n!\n!\n!\ncrypto pki trustpoint SLA-TrustPoint\n\
           \ enrollment pkcs12\n revocation-check crl\n hash sha512\n!\ncrypto pki\
           \ trustpoint TP-self-signed-2153732510\n enrollment selfsigned\n subject-name\
@@ -69,23 +70,26 @@ nodes:
           \  4FC13B0A 18C8481C 9575F7CD 841A9DD4 70803BB2 B4D1F106 072E3BF9 5E2F5F33\n\
           \  1831B6CF 7669F2B6 2D1FB9C0 5C201A46 A42DB259 8EF95409 AB3FAA05 158C6139\n\
           \  519D5B0E CF6265CF D6F10818 FC33F7C9 CE483EAD\n  \tquit\n!\n!\nlicense\
-          \ udi pid C8000V sn 9LQWWYTV35H\nmemory free low-watermark processor 165529\n\
+          \ udi pid C8000V sn 9E7LDVVPF89\nmemory free low-watermark processor 165529\n\
           diagnostic bootup level minimal\n!\n!\n!\nusername admin privilege 15 secret\
           \ 9 $9$cZ24tICcAIAI3k$msvqgnATG/3c3Fxd8ntdLL4ChWFkUl5rb3o.jmImJBE\n!\nredundancy\n\
           !\n!\n!\n!\n!\n!\n!\n!\n!\n!\ninterface GigabitEthernet1\n description LINK\
-          \ TO CORE-SW1\n ip address 10.255.255.1 255.255.255.252\n negotiation auto\n\
-          !\ninterface GigabitEthernet2\n description LINK TO CORE-SW2\n ip address\
-          \ 10.255.255.13 255.255.255.252\n negotiation auto\n!\ninterface GigabitEthernet3\n\
-          \ description LINK TO INTERNET AND WAN-RTR2\n no ip address\n negotiation\
-          \ auto\n!\ninterface GigabitEthernet3.51\n description LINK TO INET\n encapsulation\
-          \ dot1Q 51\n ip address 100.64.1.2 255.255.255.252\n!\ninterface GigabitEthernet3.102\n\
-          \ description LINK TO WAN-RTR2\n encapsulation dot1Q 102\n ip address 10.255.255.17\
-          \ 255.255.255.252\n!\ninterface GigabitEthernet4\n ip address 198.18.133.111\
-          \ 255.255.192.0\n negotiation auto\n!\nip forward-protocol nd\nip forward-protocol\
-          \ udp\n!\nno ip http server\nip http secure-server\nip ssh bulk-mode 131072\n\
-          !\n!\n!\ncontrol-plane\n!\n!\nline con 0\n exec-timeout 0 0\n stopbits 1\n\
-          line aux 0\nline vty 0 4\n exec-timeout 0 0\n login local\n transport input\
-          \ ssh\n!\n!\n!\n!\n!\n!\n!\nend"
+          \ TO CORE-SW1\n ip address 10.255.255.1 255.255.255.252\n shutdown\n negotiation\
+          \ auto\n!\ninterface GigabitEthernet2\n description LINK TO CORE-SW2\n ip\
+          \ address 10.255.255.13 255.255.255.252\n shutdown\n negotiation auto\n\
+          !\ninterface GigabitEthernet3\n description LINK TO INTERNET AND WAN-RTR2\n\
+          \ no ip address\n shutdown\n negotiation auto\n!\ninterface GigabitEthernet3.51\n\
+          \ description LINK TO INET\n encapsulation dot1Q 51\n ip address 100.64.1.2\
+          \ 255.255.255.252\n!\ninterface GigabitEthernet3.102\n description LINK\
+          \ TO WAN-RTR2\n encapsulation dot1Q 102\n ip address 10.255.255.17 255.255.255.252\n\
+          !\ninterface GigabitEthernet4\n vrf forwarding Mgmt-vrf\n ip address 198.18.1.111\
+          \ 255.255.255.0\n negotiation auto\n!\nip forward-protocol nd\n!\nno ip\
+          \ http server\nip http secure-server\nip route vrf Mgmt-vrf 198.18.128.0\
+          \ 255.255.192.0 198.18.1.1\nip ssh bulk-mode 131072\n!\n!\n!\ncontrol-plane\n\
+          !\n!\nline con 0\n exec-timeout 0 0\n activation-character 13\n stopbits\
+          \ 1\nline aux 0\n activation-character 13\nline vty 0 4\n exec-timeout 0\
+          \ 0\n activation-character 13\n login local\n transport input ssh\n!\n!\n\
+          !\n!\n!\n!\n!\nend"
     cpu_limit: null
     cpus: null
     data_volume: null
@@ -95,6 +99,11 @@ nodes:
     label: WAN-RTR1
     node_definition: cat8000v
     parameters: {}
+    priority: null
+    pyats:
+      username: null
+      password: null
+      enable_password: null
     ram: null
     tags: []
     x: -440
@@ -127,13 +136,14 @@ nodes:
   - boot_disk_size: null
     configuration:
       - name: iosxe_config.txt
-        content: "Building configuration...\n\nCurrent configuration : 5918 bytes\n\
-          !\n! Last configuration change at 15:43:37 UTC Sun Feb 22 2026\n!\nversion\
-          \ 17.16\nservice timestamps debug datetime msec\nservice timestamps log\
+        content: "Building configuration...\n\nCurrent configuration : 6153 bytes\n\
+          !\n! Last configuration change at 14:18:02 UTC Tue Mar 24 2026\n!\nversion\
+          \ 17.18\nservice timestamps debug datetime msec\nservice timestamps log\
           \ datetime msec\nplatform qfp utilization monitor load 80\nplatform sslvpn\
           \ use-pd\nplatform console serial\n!\nhostname WAN-RTR2\n!\nboot-start-marker\n\
-          boot-end-marker\n!\n!\nno logging console\nno aaa new-model\n!\n!\n!\n!\n\
-          !\n!\n!\n!\n!\n!\n!\n!\nip domain name dcloud.org\n!\n!\n!\nlogin on-success\
+          boot-end-marker\n!\n!\nvrf definition Mgmt-vrf\n !\n address-family ipv4\n\
+          \ exit-address-family\n!\nno logging console\nno aaa new-model\n!\n!\n!\n\
+          !\n!\n!\n!\n!\n!\n!\n!\n!\nip domain name dcloud.org\n!\n!\n!\nlogin on-success\
           \ log\n!\n!\nsubscriber templating\n!\n!\n!\ncrypto pki trustpoint TP-self-signed-3477365538\n\
           \ enrollment selfsigned\n subject-name cn=IOS-Self-Signed-Certificate-3477365538\n\
           \ revocation-check none\n rsakeypair TP-self-signed-3477365538\n hash sha512\n\
@@ -191,23 +201,25 @@ nodes:
           \  5FB0DA06 B92AFE7F 494E8A9E 07B85737 F3A58BE1 1A48A229 C37C1E69 39F08678\n\
           \  80DDCD16 D6BACECA EEBC7CF9 8428787B 35202CDC 60E4616A B623CDBD 230E3AFB\n\
           \  418616A9 4093E049 4D10AB75 27E86F73 932E35B5 8862FDAE 0275156F 719BB2F0\n\
-          \  D697DF7F 28\n  \tquit\n!\n!\nlicense udi pid C8000V sn 90UFPD9VESD\n\
+          \  D697DF7F 28\n  \tquit\n!\n!\nlicense udi pid C8000V sn 94VFS3BY3G3\n\
           memory free low-watermark processor 165529\ndiagnostic bootup level minimal\n\
           !\n!\nenable secret 9 $9$1bD4nUBB3Y75LE$u.4t4J5kim6YmPeLZPfdWGeVF1/VXFmf96Zoa8CMTY.\n\
           !\nusername admin privilege 15 secret 9 $9$7icDUaHJRM5.3U$KZwPl/sZTHi9bg7Ip7S0xEP0eku7so70aFXa7loM1gM\n\
           !\nredundancy\n!\n!\n!\n!\n!\n!\n!\n!\n!\n!\ninterface GigabitEthernet1\n\
-          \ no ip address\n negotiation auto\n!\ninterface GigabitEthernet2\n no ip\
-          \ address\n negotiation auto\n!\ninterface GigabitEthernet3\n description\
-          \ LINK TO INTERNET AND WAN-RTR1\n no ip address\n negotiation auto\n!\n\
-          interface GigabitEthernet3.52\n description LINK TO INET\n encapsulation\
-          \ dot1Q 52\n ip address 100.64.1.6 255.255.255.252\n!\ninterface GigabitEthernet3.102\n\
-          \ description LINK TO WAN-RTR1\n encapsulation dot1Q 102\n ip address 10.255.255.18\
-          \ 255.255.255.252\n!\ninterface GigabitEthernet4\n ip address 198.18.133.222\
-          \ 255.255.192.0\n negotiation auto\n!\nip forward-protocol nd\nip forward-protocol\
-          \ udp\n!\nip http server\nip http authentication local\nip http secure-server\n\
-          ip ssh bulk-mode 131072\n!\n!\n!\ncontrol-plane\n!\n!\nline con 0\n exec-timeout\
-          \ 0 0\n stopbits 1\nline aux 0\nline vty 0 4\n exec-timeout 0 0\n login\
-          \ local\n transport input ssh\n!\n!\n!\n!\n!\n!\n!\nend"
+          \ no ip address\n shutdown\n negotiation auto\n!\ninterface GigabitEthernet2\n\
+          \ no ip address\n shutdown\n negotiation auto\n!\ninterface GigabitEthernet3\n\
+          \ description LINK TO INTERNET AND WAN-RTR1\n no ip address\n shutdown\n\
+          \ negotiation auto\n!\ninterface GigabitEthernet3.52\n description LINK\
+          \ TO INET\n encapsulation dot1Q 52\n ip address 100.64.1.6 255.255.255.252\n\
+          !\ninterface GigabitEthernet3.102\n description LINK TO WAN-RTR1\n encapsulation\
+          \ dot1Q 102\n ip address 10.255.255.18 255.255.255.252\n!\ninterface GigabitEthernet4\n\
+          \ vrf forwarding Mgmt-vrf\n ip address 198.18.1.222 255.255.255.0\n negotiation\
+          \ auto\n!\nip forward-protocol nd\n!\nip http server\nip http authentication\
+          \ local\nip http secure-server\nip route vrf Mgmt-vrf 198.18.128.0 255.255.192.0\
+          \ 198.18.1.1\nip ssh bulk-mode 131072\n!\n!\n!\ncontrol-plane\n!\n!\nline\
+          \ con 0\n exec-timeout 0 0\n activation-character 13\n stopbits 1\nline\
+          \ aux 0\n activation-character 13\nline vty 0 4\n exec-timeout 0 0\n activation-character\
+          \ 13\n login local\n transport input ssh\n!\n!\n!\n!\n!\n!\n!\nend"
     cpu_limit: null
     cpus: null
     data_volume: null
@@ -217,6 +229,11 @@ nodes:
     label: WAN-RTR2
     node_definition: cat8000v
     parameters: {}
+    priority: null
+    pyats:
+      username: null
+      password: null
+      enable_password: null
     ram: null
     tags: []
     x: -80
@@ -257,6 +274,11 @@ nodes:
     label: unmanaged-switch-0
     node_definition: unmanaged_switch
     parameters: {}
+    priority: null
+    pyats:
+      username: null
+      password: null
+      enable_password: null
     ram: null
     tags: []
     x: -960
@@ -302,10 +324,30 @@ nodes:
         mac_address: null
         type: physical
         slot: 7
+      - id: i8
+        label: port8
+        mac_address: null
+        type: physical
+        slot: 8
+      - id: i9
+        label: port9
+        mac_address: null
+        type: physical
+        slot: 9
+      - id: i10
+        label: port10
+        mac_address: null
+        type: physical
+        slot: 10
+      - id: i11
+        label: port11
+        mac_address: null
+        type: physical
+        slot: 11
   - boot_disk_size: null
     configuration:
       - name: default
-        content: System Bridge
+        content: bridge1
     cpu_limit: null
     cpus: null
     data_volume: null
@@ -315,6 +357,11 @@ nodes:
     label: ext-conn-0
     node_definition: external_connector
     parameters: {}
+    priority: null
+    pyats:
+      username: null
+      password: null
+      enable_password: null
     ram: null
     tags: []
     x: -960
@@ -328,17 +375,19 @@ nodes:
   - boot_disk_size: null
     configuration:
       - name: iosxe_config.txt
-        content: "Building configuration...\n\nCurrent configuration : 12074 bytes\n\
-          !\n! Last configuration change at 17:43:02 UTC Mon Feb 23 2026\n!\nversion\
-          \ 17.15\nservice timestamps debug datetime msec\nservice timestamps log\
+        content: "Building configuration...\n\nCurrent configuration : 12953 bytes\n\
+          !\n! Last configuration change at 14:14:56 UTC Tue Mar 24 2026\n!\nversion\
+          \ 17.18\nservice timestamps debug datetime msec\nservice timestamps log\
           \ datetime msec\n!\nhostname CORE-SW1\n!\n!\nvrf definition Mgmt-vrf\n !\n\
           \ address-family ipv4\n exit-address-family\n !\n address-family ipv6\n\
-          \ exit-address-family\n!\nno logging console\nno aaa new-model\nswitch 1\
-          \ provision c9kv-q200-8p\n!\n!\n!\n!\n!\n!\n!\n!\n!\nip domain name dcloud.org\n\
-          ip dhcp excluded-address 10.10.10.1 10.10.10.10\n!\nip dhcp pool DESKTOP\n\
-          \ network 10.10.10.0 255.255.255.0\n default-router 10.10.10.1\n!\n!\n!\n\
-          login on-success log\n!\n!\n!\n!\n!\n!\n!\n!\ncrypto pki trustpoint TP-self-signed-1920867830\n\
-          \ enrollment selfsigned\n subject-name cn=IOS-Self-Signed-Certificate-1920867830\n\
+          \ exit-address-family\n!\nno logging console\nno aaa new-model\nno process\
+          \ cpu autoprofile hog\nswitch 1 provision c9kv-q200-8p\n!\n!\n!\n!\n!\n\
+          !\n!\n!\n!\nip domain name dcloud.org\nip dhcp excluded-address 10.10.10.1\
+          \ 10.10.10.10\n!\nip dhcp pool webuidhcp\n!\nip dhcp pool DESKTOP\n network\
+          \ 10.10.10.0 255.255.255.0\n default-router 10.10.10.1\n!\n!\n!\nlogin on-success\
+          \ log\nipv6 nd cache expire refresh\nipv6 unicast-routing\n!\n!\n!\n!\n\
+          !\n!\n!\n!\ncrypto pki trustpoint TP-self-signed-1920867830\n enrollment\
+          \ selfsigned\n subject-name cn=IOS-Self-Signed-Certificate-1920867830\n\
           \ revocation-check none\n rsakeypair TP-self-signed-1920867830\n hash sha512\n\
           !\ncrypto pki trustpoint SLA-TrustPoint\n enrollment pkcs12\n revocation-check\
           \ crl\n hash sha512\n!\n!\ncrypto pki certificate chain TP-self-signed-1920867830\n\
@@ -400,16 +449,18 @@ nodes:
           \ extend system-id\nspanning-tree vlan 10 priority 24576\n!\n!\n!\nusername\
           \ admin privilege 15 secret 9 $9$/9rpny46IEohtk$DDrMd0i0bedoWkm5tcoCrA1rH7SGvZuuJEkykd5WVSg\n\
           !\nredundancy\n mode sso\ncrypto engine compliance shield disable\n!\n!\n\
-          !\n!\n!\n!\nclass-map match-any system-cpp-police-mac-learning\n description\
-          \ MAC Learning\nclass-map match-any system-cpp-police-mcast-data\n description\
-          \ MCAST Data traffic\nclass-map match-any system-cpp-police-topology-control\n\
+          !\n!\nno cdp run\n!\n!\nclass-map match-any system-cpp-police-mac-learning\n\
+          \ description MAC Learning\nclass-map match-any system-cpp-police-mcast-data\n\
+          \ description MCAST Data traffic\nclass-map match-any system-cpp-police-topology-control\n\
           \ description Topology control - STP\nclass-map match-any system-cpp-police-unknown-uc\n\
           \ description Unknown UC Packets\nclass-map match-any system-cpp-police-sw-forward\n\
           \ description Software forwarding\nclass-map match-any system-cpp-police-proto-snoop-v6\n\
           \ description Protocol snooping v6\nclass-map match-any system-cpp-default\n\
           \ description Inter FED Traffic\nclass-map match-any system-cpp-police-proto-snoop-v4\n\
           \ description Protocol snooping v4\nclass-map match-any system-cpp-police-rip-bc\n\
-          \ description RIP Broadcast\nclass-map match-any system-cpp-police-svl-ctrl\n\
+          \ description RIP Broadcast\nclass-map match-any system-cpp-police-meraki-nt-v6\n\
+          \ description Meraki Next-Tunnel V6\nclass-map match-any system-cpp-police-meraki-nt-v4\n\
+          \ description Meraki Next-Tunnel V4\nclass-map match-any system-cpp-police-svl-ctrl\n\
           \ description NGSVL IPC Traffic\nclass-map match-any system-cpp-police-mpls-oam\n\
           \ description MPLS OAM (traceroute, ping etc)\nclass-map match-any system-cpp-police-dhcp-v6\n\
           \ description DHCP V6\nclass-map match-any system-cpp-police-dhcp-v4\n description\
@@ -417,18 +468,21 @@ nodes:
           \ Address resolution and Forus traffic\nclass-map match-any system-cpp-police-icmp-v6\n\
           \ description ICMP redirect, ICMP_GEN over IPv6\nclass-map match-any system-cpp-police-icmp-v4\n\
           \ description ICMP redirect, ICMP_GEN over IPv4\nclass-map match-any system-cpp-police-ospf-v6\n\
-          \ description OSPF over IPv6\nclass-map match-any system-cpp-police-ospf-v4\n\
+          \ description OSPF over IPv6\nclass-map match-any system-cpp-police-svl-bd-reinject\n\
+          \ description NGSVL BD Reinject\nclass-map match-any system-cpp-police-ospf-v4\n\
           \ description OSPF over IPv4\nclass-map match-any system-cpp-police-arp\n\
           \ description Address Resolution Protocol\nclass-map match-any system-cpp-police-igrp-v4\n\
           \ description IGRP and EIGRP over IPv4\nclass-map match-any system-cpp-police-fhrp-v4\n\
-          \ description VRRP, HSRP, GLBP over IPv4\nclass-map match-any system-cpp-police-igrp-v6\n\
+          \ description VRRP, HSRP, GLBP over IPv4\nclass-map match-any system-cpp-police-svl-mcid-reinject\n\
+          \ description NGSVL MCID Reinject\nclass-map match-any system-cpp-police-igrp-v6\n\
           \ description IGRP and EIGRP over IPv6\nclass-map match-any system-cpp-police-fhrp-v6\n\
           \ description VRRP, HSRP, GLBP over IPv6\nclass-map match-any system-cpp-police-fragment-v4\n\
           \ description IPv4 Fragmented Packets\nclass-map match-any system-cpp-police-fragment-v6\n\
           \ description IPv6 Fragmented Packets\nclass-map match-any system-cpp-police-ldp-v4\n\
           \ description LDP (MPLS) over IPv4\nclass-map match-any system-cpp-police-ldp-v6\n\
           \ description LDP (MPLS) over IPv6\nclass-map match-any system-cpp-police-l2-control\n\
-          \ description L2 control\nclass-map match-any system-cpp-police-lacp\n description\
+          \ description L2 control\nclass-map match-any system-cpp-police-mdns\n description\
+          \ multicast DNS\nclass-map match-any system-cpp-police-lacp\n description\
           \ LACP control traffic for ether channel\nclass-map match-any system-cpp-police-bgp-v4\n\
           \ description BGP sessions over IPv4\nclass-map match-any system-cpp-police-bgp-v6\n\
           \ description BGP sessions over IPv6\nclass-map match-any system-cpp-police-rip-v6\n\
@@ -456,35 +510,40 @@ nodes:
           \ description MCAST v6 Register traffic\n!\npolicy-map system-cpp-policy\n\
           !\n!\n!\n!\n!\n!\n!\n!\n!\n!\n!\n!\ninterface Port-channel12\n description\
           \ PORT-CHANNEL TO CORE-SW2\n switchport mode trunk\n!\ninterface GigabitEthernet0/0\n\
-          \ vrf forwarding Mgmt-vrf\n ip address 198.18.133.101 255.255.192.0\n negotiation\
-          \ auto\n!\ninterface GigabitEthernet1/0/1\n description LINK TO WAN-RTR1\n\
-          \ no switchport\n ip address 10.255.255.2 255.255.255.252\n!\ninterface\
-          \ GigabitEthernet1/0/2\n description LINK TO WAN-RTR2\n no switchport\n\
-          \ ip address 10.255.255.5 255.255.255.252\n!\ninterface GigabitEthernet1/0/3\n\
-          \ description PO12 MEMBERS\n switchport mode trunk\n channel-group 12 mode\
-          \ active\n!\ninterface GigabitEthernet1/0/4\n description PO12 MEMBERS\n\
-          \ switchport mode trunk\n channel-group 12 mode active\n!\ninterface GigabitEthernet1/0/5\n\
-          \ description LINK TO ACCESS-SW1\n switchport mode trunk\n!\ninterface GigabitEthernet1/0/6\n\
-          \ description LINK TO ACCESS-SW2\n switchport mode trunk\n!\ninterface GigabitEthernet1/0/7\n\
-          \ switchport mode trunk\n!\ninterface GigabitEthernet1/0/8\n!\ninterface\
-          \ GigabitEthernet1/0/9\n!\ninterface GigabitEthernet1/0/10\n!\ninterface\
-          \ GigabitEthernet1/0/11\n!\ninterface GigabitEthernet1/0/12\n!\ninterface\
-          \ GigabitEthernet1/0/13\n!\ninterface GigabitEthernet1/0/14\n!\ninterface\
-          \ GigabitEthernet1/0/15\n!\ninterface GigabitEthernet1/0/16\n!\ninterface\
-          \ GigabitEthernet1/0/17\n!\ninterface GigabitEthernet1/0/18\n!\ninterface\
-          \ GigabitEthernet1/0/19\n!\ninterface GigabitEthernet1/0/20\n!\ninterface\
-          \ GigabitEthernet1/0/21\n!\ninterface GigabitEthernet1/0/22\n!\ninterface\
-          \ GigabitEthernet1/0/23\n!\ninterface GigabitEthernet1/0/24\n!\ninterface\
-          \ Vlan1\n no ip address\n shutdown\n!\ninterface Vlan10\n description DESKTOP\
-          \ VLAN FOR ACCESS-SW1\n ip address 10.10.10.2 255.255.255.0\n standby version\
-          \ 2\n standby 10 ip 10.10.10.1\n standby 10 priority 101\n standby 10 preempt\n\
-          !\ninterface Vlan20\n description DESKTOP VLAN FOR ACCESS-SW2\n ip address\
-          \ 10.20.20.2 255.255.255.0\n standby version 2\n standby 20 ip 10.20.20.1\n\
-          \ standby 20 preempt\n!\nip forward-protocol nd\nip tcp mss 1280\nip tcp\
-          \ window-size 212000\nip http server\nip http authentication local\nip http\
-          \ secure-server\nip ssh bulk-mode 131072\n!\n!\nip access-list extended\
-          \ DENY-DESKTOP\n 10 deny ip host 10.10.10.10 any\nip access-list standard\
-          \ 1\n 10 deny 10.10.10.10\n!\n!\ncontrol-plane\n service-policy input system-cpp-policy\n\
+          \ vrf forwarding Mgmt-vrf\n ip address 198.18.1.101 255.255.255.0\n negotiation\
+          \ auto\n no cdp enable\n ipv6 dhcp client request vendor\n ipv6 address\
+          \ dhcp\n ipv6 address autoconfig\n ipv6 enable\n!\ninterface GigabitEthernet1/0/1\n\
+          \ description LINK TO WAN-RTR1\n no switchport\n ip address 10.255.255.2\
+          \ 255.255.255.252\n no cdp enable\n!\ninterface GigabitEthernet1/0/2\n description\
+          \ LINK TO WAN-RTR2\n no switchport\n ip address 10.255.255.5 255.255.255.252\n\
+          \ no cdp enable\n!\ninterface GigabitEthernet1/0/3\n description PO12 MEMBERS\n\
+          \ switchport mode trunk\n no cdp enable\n channel-group 12 mode active\n\
+          !\ninterface GigabitEthernet1/0/4\n description PO12 MEMBERS\n switchport\
+          \ mode trunk\n no cdp enable\n channel-group 12 mode active\n!\ninterface\
+          \ GigabitEthernet1/0/5\n description LINK TO ACCESS-SW1\n switchport mode\
+          \ trunk\n no cdp enable\n!\ninterface GigabitEthernet1/0/6\n description\
+          \ LINK TO ACCESS-SW2\n switchport mode trunk\n no cdp enable\n!\ninterface\
+          \ GigabitEthernet1/0/7\n switchport mode trunk\n no cdp enable\n!\ninterface\
+          \ GigabitEthernet1/0/8\n no cdp enable\n!\ninterface GigabitEthernet1/0/9\n\
+          \ no cdp enable\n!\ninterface GigabitEthernet1/0/10\n no cdp enable\n!\n\
+          interface GigabitEthernet1/0/11\n no cdp enable\n!\ninterface GigabitEthernet1/0/12\n\
+          \ no cdp enable\n!\ninterface GigabitEthernet1/0/13\n no cdp enable\n!\n\
+          interface GigabitEthernet1/0/14\n no cdp enable\n!\ninterface GigabitEthernet1/0/15\n\
+          \ no cdp enable\n!\ninterface GigabitEthernet1/0/16\n no cdp enable\n!\n\
+          interface GigabitEthernet1/0/17\n no cdp enable\n!\ninterface GigabitEthernet1/0/18\n\
+          \ no cdp enable\n!\ninterface GigabitEthernet1/0/19\n no cdp enable\n!\n\
+          interface GigabitEthernet1/0/20\n no cdp enable\n!\ninterface GigabitEthernet1/0/21\n\
+          !\ninterface GigabitEthernet1/0/22\n!\ninterface GigabitEthernet1/0/23\n\
+          !\ninterface GigabitEthernet1/0/24\n!\ninterface Vlan1\n no ip address\n\
+          \ shutdown\n!\ninterface Vlan10\n description DESKTOP VLAN FOR ACCESS-SW1\n\
+          \ ip address 10.10.10.2 255.255.255.0\n standby version 2\n standby 10 ip\
+          \ 10.10.10.1\n standby 10 priority 101\n standby 10 preempt\n!\ninterface\
+          \ Vlan20\n description DESKTOP VLAN FOR ACCESS-SW2\n ip address 10.20.20.2\
+          \ 255.255.255.0\n standby version 2\n standby 20 ip 10.20.20.1\n standby\
+          \ 20 preempt\n!\nip forward-protocol nd\nip tcp mss 1280\nip tcp window-size\
+          \ 212000\nip http server\nip http authentication local\nip http secure-server\n\
+          ip route vrf Mgmt-vrf 198.18.128.0 255.255.192.0 198.18.1.1\nip ssh bulk-mode\
+          \ 131072\n!\n!\n!\n!\ncontrol-plane\n service-policy input system-cpp-policy\n\
           !\n!\n!\nline con 0\n exec-timeout 0 0\n stopbits 1\nline vty 0 4\n exec-timeout\
           \ 0 0\n login local\n transport input ssh\nline vty 5 15\n login\n transport\
           \ input ssh\n!\n!\n!\n!\n!\n!\n!\nend"
@@ -497,6 +556,11 @@ nodes:
     label: CORE-SW1
     node_definition: cat9000v-q200
     parameters: {}
+    priority: null
+    pyats:
+      username: null
+      password: null
+      enable_password: null
     ram: null
     tags: []
     x: -440
@@ -634,17 +698,19 @@ nodes:
   - boot_disk_size: null
     configuration:
       - name: iosxe_config.txt
-        content: "Building configuration...\n\nCurrent configuration : 11945 bytes\n\
-          !\n! Last configuration change at 17:43:02 UTC Mon Feb 23 2026\n!\nversion\
-          \ 17.15\nservice timestamps debug datetime msec\nservice timestamps log\
+        content: "Building configuration...\n\nCurrent configuration : 12971 bytes\n\
+          !\n! Last configuration change at 14:16:25 UTC Tue Mar 24 2026\n!\nversion\
+          \ 17.18\nservice timestamps debug datetime msec\nservice timestamps log\
           \ datetime msec\n!\nhostname CORE-SW2\n!\n!\nvrf definition Mgmt-vrf\n !\n\
           \ address-family ipv4\n exit-address-family\n !\n address-family ipv6\n\
-          \ exit-address-family\n!\nno logging console\nno aaa new-model\nswitch 1\
-          \ provision c9kv-q200-8p\n!\n!\n!\n!\n!\n!\n!\n!\n!\nip domain name dcloud.org\n\
-          ip dhcp excluded-address 10.20.20.1 10.20.20.9\n!\nip dhcp pool DESKTOP-SW2\n\
-          \ network 10.20.20.0 255.255.255.0\n default-router 10.20.20.1\n!\n!\n!\n\
-          login on-success log\n!\n!\n!\n!\n!\n!\n!\n!\ncrypto pki trustpoint TP-self-signed-1920867830\n\
-          \ enrollment selfsigned\n subject-name cn=IOS-Self-Signed-Certificate-1920867830\n\
+          \ exit-address-family\n!\nno logging console\nno aaa new-model\nno process\
+          \ cpu autoprofile hog\nswitch 1 provision c9kv-q200-8p\n!\n!\n!\n!\n!\n\
+          !\n!\n!\n!\nip domain name dcloud.org\nip dhcp excluded-address 10.20.20.1\
+          \ 10.20.20.9\n!\nip dhcp pool webuidhcp\n!\nip dhcp pool DESKTOP-SW2\n network\
+          \ 10.20.20.0 255.255.255.0\n default-router 10.20.20.1\n!\n!\n!\nlogin on-success\
+          \ log\nipv6 nd cache expire refresh\nipv6 unicast-routing\n!\n!\n!\n!\n\
+          !\n!\n!\n!\ncrypto pki trustpoint TP-self-signed-1920867830\n enrollment\
+          \ selfsigned\n subject-name cn=IOS-Self-Signed-Certificate-1920867830\n\
           \ revocation-check none\n rsakeypair TP-self-signed-1920867830\n hash sha512\n\
           !\ncrypto pki trustpoint SLA-TrustPoint\n enrollment pkcs12\n revocation-check\
           \ crl\n hash sha512\n!\n!\ncrypto pki certificate chain TP-self-signed-1920867830\n\
@@ -706,16 +772,18 @@ nodes:
           \ extend system-id\nspanning-tree vlan 20 priority 24576\n!\n!\n!\nusername\
           \ admin privilege 15 secret 9 $9$R8GRXk2wnWyr.k$c/PR2MyP0rMB93j6gZZ51Hfb0xfavwQanKtBbR38CNo\n\
           !\nredundancy\n mode sso\ncrypto engine compliance shield disable\n!\n!\n\
-          !\n!\n!\n!\nclass-map match-any system-cpp-police-mac-learning\n description\
-          \ MAC Learning\nclass-map match-any system-cpp-police-mcast-data\n description\
-          \ MCAST Data traffic\nclass-map match-any system-cpp-police-topology-control\n\
+          !\n!\nno cdp run\n!\n!\nclass-map match-any system-cpp-police-mac-learning\n\
+          \ description MAC Learning\nclass-map match-any system-cpp-police-mcast-data\n\
+          \ description MCAST Data traffic\nclass-map match-any system-cpp-police-topology-control\n\
           \ description Topology control - STP\nclass-map match-any system-cpp-police-unknown-uc\n\
           \ description Unknown UC Packets\nclass-map match-any system-cpp-police-sw-forward\n\
           \ description Software forwarding\nclass-map match-any system-cpp-police-proto-snoop-v6\n\
           \ description Protocol snooping v6\nclass-map match-any system-cpp-default\n\
           \ description Inter FED Traffic\nclass-map match-any system-cpp-police-proto-snoop-v4\n\
           \ description Protocol snooping v4\nclass-map match-any system-cpp-police-rip-bc\n\
-          \ description RIP Broadcast\nclass-map match-any system-cpp-police-svl-ctrl\n\
+          \ description RIP Broadcast\nclass-map match-any system-cpp-police-meraki-nt-v6\n\
+          \ description Meraki Next-Tunnel V6\nclass-map match-any system-cpp-police-meraki-nt-v4\n\
+          \ description Meraki Next-Tunnel V4\nclass-map match-any system-cpp-police-svl-ctrl\n\
           \ description NGSVL IPC Traffic\nclass-map match-any system-cpp-police-mpls-oam\n\
           \ description MPLS OAM (traceroute, ping etc)\nclass-map match-any system-cpp-police-dhcp-v6\n\
           \ description DHCP V6\nclass-map match-any system-cpp-police-dhcp-v4\n description\
@@ -723,18 +791,21 @@ nodes:
           \ Address resolution and Forus traffic\nclass-map match-any system-cpp-police-icmp-v6\n\
           \ description ICMP redirect, ICMP_GEN over IPv6\nclass-map match-any system-cpp-police-icmp-v4\n\
           \ description ICMP redirect, ICMP_GEN over IPv4\nclass-map match-any system-cpp-police-ospf-v6\n\
-          \ description OSPF over IPv6\nclass-map match-any system-cpp-police-ospf-v4\n\
+          \ description OSPF over IPv6\nclass-map match-any system-cpp-police-svl-bd-reinject\n\
+          \ description NGSVL BD Reinject\nclass-map match-any system-cpp-police-ospf-v4\n\
           \ description OSPF over IPv4\nclass-map match-any system-cpp-police-arp\n\
           \ description Address Resolution Protocol\nclass-map match-any system-cpp-police-igrp-v4\n\
           \ description IGRP and EIGRP over IPv4\nclass-map match-any system-cpp-police-fhrp-v4\n\
-          \ description VRRP, HSRP, GLBP over IPv4\nclass-map match-any system-cpp-police-igrp-v6\n\
+          \ description VRRP, HSRP, GLBP over IPv4\nclass-map match-any system-cpp-police-svl-mcid-reinject\n\
+          \ description NGSVL MCID Reinject\nclass-map match-any system-cpp-police-igrp-v6\n\
           \ description IGRP and EIGRP over IPv6\nclass-map match-any system-cpp-police-fhrp-v6\n\
           \ description VRRP, HSRP, GLBP over IPv6\nclass-map match-any system-cpp-police-fragment-v4\n\
           \ description IPv4 Fragmented Packets\nclass-map match-any system-cpp-police-fragment-v6\n\
           \ description IPv6 Fragmented Packets\nclass-map match-any system-cpp-police-ldp-v4\n\
           \ description LDP (MPLS) over IPv4\nclass-map match-any system-cpp-police-ldp-v6\n\
           \ description LDP (MPLS) over IPv6\nclass-map match-any system-cpp-police-l2-control\n\
-          \ description L2 control\nclass-map match-any system-cpp-police-lacp\n description\
+          \ description L2 control\nclass-map match-any system-cpp-police-mdns\n description\
+          \ multicast DNS\nclass-map match-any system-cpp-police-lacp\n description\
           \ LACP control traffic for ether channel\nclass-map match-any system-cpp-police-bgp-v4\n\
           \ description BGP sessions over IPv4\nclass-map match-any system-cpp-police-bgp-v6\n\
           \ description BGP sessions over IPv6\nclass-map match-any system-cpp-police-rip-v6\n\
@@ -762,34 +833,41 @@ nodes:
           \ description MCAST v6 Register traffic\n!\npolicy-map system-cpp-policy\n\
           !\n!\n!\n!\n!\n!\n!\n!\n!\n!\n!\n!\ninterface Port-channel12\n description\
           \ PORT-CHANNEL TO CORE-SW2\n switchport mode trunk\n!\ninterface GigabitEthernet0/0\n\
-          \ vrf forwarding Mgmt-vrf\n ip address 198.18.133.202 255.255.192.0\n negotiation\
-          \ auto\n!\ninterface GigabitEthernet1/0/1\n description LINK TO WAN-RTR2\n\
-          \ no switchport\n ip address 10.255.255.10 255.255.255.252\n!\ninterface\
-          \ GigabitEthernet1/0/2\n description LINK TO WAN-RTR1\n no switchport\n\
-          \ ip address 10.255.255.14 255.255.255.252\n!\ninterface GigabitEthernet1/0/3\n\
-          \ description PO12 MEMBERS\n switchport mode trunk\n channel-group 12 mode\
-          \ active\n!\ninterface GigabitEthernet1/0/4\n description PO12 MEMBERS\n\
-          \ switchport mode trunk\n channel-group 12 mode active\n!\ninterface GigabitEthernet1/0/5\n\
-          \ description LINK TO ACCESS-SW2\n switchport mode trunk\n!\ninterface GigabitEthernet1/0/6\n\
-          \ description LINK TO ACCESS-SW1\n switchport mode trunk\n!\ninterface GigabitEthernet1/0/7\n\
-          !\ninterface GigabitEthernet1/0/8\n!\ninterface GigabitEthernet1/0/9\n!\n\
-          interface GigabitEthernet1/0/10\n!\ninterface GigabitEthernet1/0/11\n!\n\
-          interface GigabitEthernet1/0/12\n!\ninterface GigabitEthernet1/0/13\n!\n\
-          interface GigabitEthernet1/0/14\n!\ninterface GigabitEthernet1/0/15\n!\n\
-          interface GigabitEthernet1/0/16\n!\ninterface GigabitEthernet1/0/17\n!\n\
-          interface GigabitEthernet1/0/18\n!\ninterface GigabitEthernet1/0/19\n!\n\
-          interface GigabitEthernet1/0/20\n!\ninterface GigabitEthernet1/0/21\n!\n\
-          interface GigabitEthernet1/0/22\n!\ninterface GigabitEthernet1/0/23\n!\n\
-          interface GigabitEthernet1/0/24\n!\ninterface Vlan1\n no ip address\n shutdown\n\
-          !\ninterface Vlan10\n description DESKTOP VLAN\n ip address 10.10.10.3 255.255.255.0\n\
-          \ standby version 2\n standby 0 timers 1 3\n standby 0 preempt\n standby\
-          \ 10 ip 10.10.10.1\n!\ninterface Vlan20\n description DESKTOP VLAN FOR ACCESS-SW2\n\
-          \ ip address 10.20.20.3 255.255.255.0\n standby version 2\n standby 20 ip\
-          \ 10.20.20.1\n standby 20 priority 101\n standby 20 preempt\n!\nip forward-protocol\
-          \ nd\nip tcp mss 1280\nip tcp window-size 212000\nip http server\nip http\
-          \ authentication local\nip http secure-server\nip ssh bulk-mode 131072\n\
-          !\n!\n!\n!\ncontrol-plane\n service-policy input system-cpp-policy\n!\n\
-          !\n!\nline con 0\n exec-timeout 0 0\n stopbits 1\nline vty 0 4\n exec-timeout\
+          \ vrf forwarding Mgmt-vrf\n ip address 198.18.1.202 255.255.255.0\n negotiation\
+          \ auto\n no cdp enable\n ipv6 dhcp client request vendor\n ipv6 address\
+          \ dhcp\n ipv6 address autoconfig\n ipv6 enable\n!\ninterface GigabitEthernet1/0/1\n\
+          \ description LINK TO WAN-RTR2\n no switchport\n ip address 10.255.255.10\
+          \ 255.255.255.252\n no cdp enable\n!\ninterface GigabitEthernet1/0/2\n description\
+          \ LINK TO WAN-RTR1\n no switchport\n ip address 10.255.255.14 255.255.255.252\n\
+          \ no cdp enable\n!\ninterface GigabitEthernet1/0/3\n description PO12 MEMBERS\n\
+          \ switchport mode trunk\n no cdp enable\n channel-group 12 mode active\n\
+          !\ninterface GigabitEthernet1/0/4\n description PO12 MEMBERS\n switchport\
+          \ mode trunk\n no cdp enable\n channel-group 12 mode active\n!\ninterface\
+          \ GigabitEthernet1/0/5\n description LINK TO ACCESS-SW2\n switchport mode\
+          \ trunk\n no cdp enable\n!\ninterface GigabitEthernet1/0/6\n description\
+          \ LINK TO ACCESS-SW1\n switchport mode trunk\n no cdp enable\n!\ninterface\
+          \ GigabitEthernet1/0/7\n no cdp enable\n!\ninterface GigabitEthernet1/0/8\n\
+          \ no cdp enable\n!\ninterface GigabitEthernet1/0/9\n no cdp enable\n!\n\
+          interface GigabitEthernet1/0/10\n no cdp enable\n!\ninterface GigabitEthernet1/0/11\n\
+          \ no cdp enable\n!\ninterface GigabitEthernet1/0/12\n no cdp enable\n!\n\
+          interface GigabitEthernet1/0/13\n no cdp enable\n!\ninterface GigabitEthernet1/0/14\n\
+          \ no cdp enable\n!\ninterface GigabitEthernet1/0/15\n no cdp enable\n!\n\
+          interface GigabitEthernet1/0/16\n no cdp enable\n!\ninterface GigabitEthernet1/0/17\n\
+          \ no cdp enable\n!\ninterface GigabitEthernet1/0/18\n no cdp enable\n!\n\
+          interface GigabitEthernet1/0/19\n no cdp enable\n!\ninterface GigabitEthernet1/0/20\n\
+          \ no cdp enable\n!\ninterface GigabitEthernet1/0/21\n no cdp enable\n!\n\
+          interface GigabitEthernet1/0/22\n no cdp enable\n!\ninterface GigabitEthernet1/0/23\n\
+          !\ninterface GigabitEthernet1/0/24\n!\ninterface Vlan1\n no ip address\n\
+          \ shutdown\n!\ninterface Vlan10\n description DESKTOP VLAN\n ip address\
+          \ 10.10.10.3 255.255.255.0\n standby version 2\n standby 0 timers 1 3\n\
+          \ standby 0 preempt\n standby 10 ip 10.10.10.1\n!\ninterface Vlan20\n description\
+          \ DESKTOP VLAN FOR ACCESS-SW2\n ip address 10.20.20.3 255.255.255.0\n standby\
+          \ version 2\n standby 20 ip 10.20.20.1\n standby 20 priority 101\n standby\
+          \ 20 preempt\n!\nip forward-protocol nd\nip tcp mss 1280\nip tcp window-size\
+          \ 212000\nip http server\nip http authentication local\nip http secure-server\n\
+          ip route vrf Mgmt-vrf 198.18.128.0 255.255.192.0 198.18.1.1\nip ssh bulk-mode\
+          \ 131072\n!\n!\n!\n!\ncontrol-plane\n service-policy input system-cpp-policy\n\
+          !\n!\n!\nline con 0\n exec-timeout 0 0\n stopbits 1\nline vty 0 4\n exec-timeout\
           \ 0 0\n login local\n transport input ssh\nline vty 5 15\n login\n transport\
           \ input ssh\n!\n!\n!\n!\n!\n!\n!\nend"
     cpu_limit: null
@@ -801,6 +879,11 @@ nodes:
     label: CORE-SW2
     node_definition: cat9000v-q200
     parameters: {}
+    priority: null
+    pyats:
+      username: null
+      password: null
+      enable_password: null
     ram: null
     tags: []
     x: -80
@@ -936,57 +1019,59 @@ nodes:
         type: physical
         slot: 24
   - boot_disk_size: null
-    configuration: []
+    configuration:
+      - name: node.cfg
+        content: |-
+          # this is a shell script which will be sourced at boot
+          hostname desktop2
+          # configurable user account
+          USERNAME=cisco
+          PASSWORD=cisco
+          ip link set eth1 up
+          ip addr add 198.18.1.225/24 dev eth1
+
+          # Add static route (e.g., default or specific prefix)
+          ip route add 198.18.128.0/18 via 198.18.1.1
     cpu_limit: null
     cpus: null
     data_volume: null
     hide_links: false
     id: n6
     image_definition: null
-    label: desktop-0
-    node_definition: desktop
-    parameters: {}
-    ram: null
-    tags: []
-    x: -360
-    y: 600
-    interfaces:
-      - id: i0
-        label: eth0
-        mac_address: null
-        type: physical
-        slot: 0
-  - boot_disk_size: null
-    configuration: []
-    cpu_limit: null
-    cpus: null
-    data_volume: null
-    hide_links: false
-    id: n7
-    image_definition: null
     label: desktop-1
     node_definition: desktop
     parameters: {}
+    priority: null
+    pyats:
+      username: null
+      password: null
+      enable_password: null
     ram: null
     tags: []
-    x: -40
+    x: -80
     y: 600
     interfaces:
       - id: i0
         label: eth0
-        mac_address: null
+        mac_address: 52:54:00:c1:68:c3
         type: physical
         slot: 0
+      - id: i1
+        label: eth1
+        mac_address: 52:54:00:4a:33:7d
+        type: physical
+        slot: 1
   - boot_disk_size: null
     configuration:
       - name: iosxe_config.txt
-        content: "Building configuration...\n\nCurrent configuration : 5856 bytes\n\
-          !\n! Last configuration change at 17:43:02 UTC Mon Feb 23 2026\n!\nversion\
-          \ 17.16\nservice timestamps debug datetime msec\nservice timestamps log\
+        content: "Building configuration...\n\nCurrent configuration : 6071 bytes\n\
+          !\n! Last configuration change at 14:19:17 UTC Tue Mar 24 2026\n!\nversion\
+          \ 17.18\nservice timestamps debug datetime msec\nservice timestamps log\
           \ datetime msec\nplatform qfp utilization monitor load 80\nplatform sslvpn\
           \ use-pd\nplatform console serial\n!\nhostname INET-RTR\n!\nboot-start-marker\n\
-          boot-end-marker\n!\n!\nno logging console\nno aaa new-model\n!\n!\n!\n!\n\
-          !\n!\n!\n!\n!\n!\n!\n!\nip domain name dcloud.org\n!\n!\n!\nlogin on-success\
+          boot-end-marker\n!\n!\nvrf definition Mgmt-vrf\n !\n address-family ipv4\n\
+          \ exit-address-family\n!\nno logging console\nno aaa new-model\n!\n!\n!\n\
+          !\n!\n!\n!\n!\n!\n!\n!\n!\nip domain name dcloud.org\n!\n!\n!\nlogin on-success\
           \ log\n!\n!\nsubscriber templating\n!\n!\n!\ncrypto pki trustpoint SLA-TrustPoint\n\
           \ enrollment pkcs12\n revocation-check crl\n hash sha512\n!\ncrypto pki\
           \ trustpoint TP-self-signed-2460913335\n enrollment selfsigned\n subject-name\
@@ -1045,31 +1130,38 @@ nodes:
           \  B6947969 D0D033B0 B92B5604 2E3B7FC9 C627924D 09777CA6 62602EFF 51099768\n\
           \  AFA446BF 6159A89E 08AD7304 7379B1D2 044F0012 0ECB5EEF C355D311 31A7119C\n\
           \  5713D0F3 92C933B2 995EA2EF 41F02145 19659878\n  \tquit\n!\n!\nlicense\
-          \ udi pid C8000V sn 9VWSS4AAMPY\nmemory free low-watermark processor 165529\n\
+          \ udi pid C8000V sn 928AK98AP9A\nmemory free low-watermark processor 165529\n\
           diagnostic bootup level minimal\n!\n!\n!\nusername admin privilege 15 secret\
           \ 9 $9$.rT3stQbC6rmek$6VXXIebZ3fsv5PkgNApPA6RdXy17DDbh6Nl7gKhBllA\n!\nredundancy\n\
           !\n!\n!\n!\n!\n!\n!\n!\n!\n!\ninterface GigabitEthernet1\n description LINK\
-          \ TO WAN-RTR1 and WAN-RTR2\n no ip address\n negotiation auto\n!\ninterface\
-          \ GigabitEthernet1.51\n description LINK TO WAN-RTR1\n encapsulation dot1Q\
-          \ 51\n ip address 100.64.1.1 255.255.255.252\n!\ninterface GigabitEthernet1.52\n\
+          \ TO WAN-RTR1 and WAN-RTR2\n no ip address\n shutdown\n negotiation auto\n\
+          !\ninterface GigabitEthernet1.51\n description LINK TO WAN-RTR1\n encapsulation\
+          \ dot1Q 51\n ip address 100.64.1.1 255.255.255.252\n!\ninterface GigabitEthernet1.52\n\
           \ description LINK TO WAN-RTR2\n encapsulation dot1Q 52\n ip address 100.64.1.5\
           \ 255.255.255.252\n!\ninterface GigabitEthernet2\n no ip address\n shutdown\n\
           \ negotiation auto\n!\ninterface GigabitEthernet3\n no ip address\n shutdown\n\
           \ negotiation auto\n!\ninterface GigabitEthernet4\n description MANAGEMENT\n\
-          \ ip address 198.18.133.79 255.255.192.0\n negotiation auto\n!\nip forward-protocol\
-          \ nd\nip forward-protocol udp\n!\nno ip http server\nip http secure-server\n\
-          ip ssh bulk-mode 131072\n!\n!\n!\ncontrol-plane\n!\n!\nline con 0\n exec-timeout\
-          \ 0 0\n stopbits 1\nline aux 0\nline vty 0 4\n exec-timeout 0 0\n login\
+          \ vrf forwarding Mgmt-vrf\n ip address 198.18.1.79 255.255.255.0\n negotiation\
+          \ auto\n!\nip forward-protocol nd\n!\nno ip http server\nip http secure-server\n\
+          ip route vrf Mgmt-vrf 198.18.128.0 255.255.192.0 198.18.1.1\nip ssh bulk-mode\
+          \ 131072\n!\n!\n!\ncontrol-plane\n!\n!\nline con 0\n exec-timeout 0 0\n\
+          \ activation-character 13\n stopbits 1\nline aux 0\n activation-character\
+          \ 13\nline vty 0 4\n exec-timeout 0 0\n activation-character 13\n login\
           \ local\n transport input ssh\n!\n!\n!\n!\n!\n!\n!\nend"
     cpu_limit: null
     cpus: null
     data_volume: null
     hide_links: false
-    id: n8
+    id: n7
     image_definition: null
     label: Internet-Provider
     node_definition: cat8000v
     parameters: {}
+    priority: null
+    pyats:
+      username: null
+      password: null
+      enable_password: null
     ram: null
     tags: []
     x: -280
@@ -1105,11 +1197,16 @@ nodes:
     cpus: null
     data_volume: null
     hide_links: false
-    id: n9
+    id: n8
     image_definition: null
     label: Internet
     node_definition: unmanaged_switch
     parameters: {}
+    priority: null
+    pyats:
+      username: null
+      password: null
+      enable_password: null
     ram: null
     tags: []
     x: -280
@@ -1156,38 +1253,19 @@ nodes:
         type: physical
         slot: 7
   - boot_disk_size: null
-    configuration: []
-    cpu_limit: null
-    cpus: null
-    data_volume: null
-    hide_links: false
-    id: n10
-    image_definition: null
-    label: ubuntu-0
-    node_definition: ubuntu
-    parameters: {}
-    ram: null
-    tags: []
-    x: -760
-    y: 600
-    interfaces:
-      - id: i0
-        label: ens2
-        mac_address: null
-        type: physical
-        slot: 0
-  - boot_disk_size: null
     configuration:
       - name: iosxe_config.txt
-        content: "Building configuration...\n\nCurrent configuration : 9034 bytes\n\
-          !\n! Last configuration change at 17:43:03 UTC Mon Feb 23 2026\n!\nversion\
-          \ 17.15\nservice timestamps debug datetime msec\nservice timestamps log\
+        content: "Building configuration...\n\nCurrent configuration : 9674 bytes\n\
+          !\n! Last configuration change at 14:16:37 UTC Tue Mar 24 2026\n!\nversion\
+          \ 17.18\nservice timestamps debug datetime msec\nservice timestamps log\
           \ datetime msec\n!\nhostname ACCESS-SW1\n!\n!\nvrf definition Mgmt-vrf\n\
           \ !\n address-family ipv4\n exit-address-family\n !\n address-family ipv6\n\
-          \ exit-address-family\n!\nno logging console\nno aaa new-model\nswitch 1\
-          \ provision c9kv-uadp-8p\n!\n!\n!\n!\n!\n!\n!\n!\n!\nip domain name dcloud.org\n\
-          !\n!\n!\nlogin on-success log\n!\n!\n!\n!\n!\n!\n!\n!\ncrypto pki trustpoint\
-          \ TP-self-signed-2957430692\n enrollment selfsigned\n subject-name cn=IOS-Self-Signed-Certificate-2957430692\n\
+          \ exit-address-family\n!\nno logging console\nno aaa new-model\nno process\
+          \ cpu autoprofile hog\nswitch 1 provision c9kv-uadp-8p\n!\n!\n!\n!\n!\n\
+          !\n!\n!\n!\nip domain name dcloud.org\n!\nip dhcp pool webuidhcp\n!\n!\n\
+          !\nlogin on-success log\nipv6 nd cache expire refresh\nipv6 unicast-routing\n\
+          !\n!\n!\n!\n!\n!\n!\n!\ncrypto pki trustpoint TP-self-signed-2957430692\n\
+          \ enrollment selfsigned\n subject-name cn=IOS-Self-Signed-Certificate-2957430692\n\
           \ revocation-check none\n rsakeypair TP-self-signed-2957430692\n hash sha512\n\
           !\ncrypto pki trustpoint SLA-TrustPoint\n enrollment pkcs12\n revocation-check\
           \ crl\n hash sha512\n!\n!\ncrypto pki certificate chain TP-self-signed-2957430692\n\
@@ -1248,8 +1326,8 @@ nodes:
           \ bootup level minimal\n!\nspanning-tree mode rapid-pvst\nspanning-tree\
           \ extend system-id\n!\n!\n!\nusername admin privilege 15 secret 9 $9$Vs5h0aUTCSEOpE$K4Vx8Zh1RYz/Oss6WsKB0ZRnkN49ZdUWIcJ6vnkjzks\n\
           !\nredundancy\n mode sso\ncrypto engine compliance shield disable\n!\n!\n\
-          !\n!\n!\n!\nclass-map match-any system-cpp-police-ewlc-control\n description\
-          \ EWLC Control\nclass-map match-any system-cpp-police-topology-control\n\
+          !\n!\nno cdp run\n!\n!\nclass-map match-any system-cpp-police-ewlc-control\n\
+          \ description EWLC Control\nclass-map match-any system-cpp-police-topology-control\n\
           \ description Topology control\nclass-map match-any system-cpp-police-sw-forward\n\
           \ description Sw forwarding, L2 LVX data packets, LOGGING, Transit Traffic\n\
           class-map match-any system-cpp-default\n description EWLC Data, Inter FED\
@@ -1277,38 +1355,50 @@ nodes:
           \ Critical and Gold Pkt\nclass-map match-any system-cpp-police-ios-feature\n\
           \ description ICMPGEN,BROADCAST,ICMP,L2LVXCntrl,ProtoSnoop,PuntWebauth,MCASTData,Transit,DOT1XAuth,Swfwd,LOGGING,L2LVXData,ForusTraffic,ForusARP,McastEndStn,Openflow,Exception,EGRExcption,NflSampled,RpfFailed\n\
           !\npolicy-map system-cpp-policy\n!\n!\n!\n!\n!\n!\n!\n!\n!\n!\n!\n!\ninterface\
-          \ GigabitEthernet0/0\n vrf forwarding Mgmt-vrf\n ip address 198.18.133.100\
-          \ 255.255.192.0\n negotiation auto\n!\ninterface GigabitEthernet1/0/1\n\
-          \ description LINK TO CORE-SW1\n switchport access vlan 10\n switchport\
-          \ mode trunk\n!\ninterface GigabitEthernet1/0/2\n description LINK TO CORE-SW2\n\
-          \ switchport mode trunk\n!\ninterface GigabitEthernet1/0/3\n switchport\
-          \ access vlan 10\n switchport mode access\n!\ninterface GigabitEthernet1/0/4\n\
-          !\ninterface GigabitEthernet1/0/5\n!\ninterface GigabitEthernet1/0/6\n!\n\
-          interface GigabitEthernet1/0/7\n!\ninterface GigabitEthernet1/0/8\n!\ninterface\
-          \ GigabitEthernet1/0/9\n!\ninterface GigabitEthernet1/0/10\n switchport\
-          \ access vlan 10\n switchport mode access\n!\ninterface GigabitEthernet1/0/11\n\
-          !\ninterface GigabitEthernet1/0/12\n!\ninterface GigabitEthernet1/0/13\n\
-          !\ninterface GigabitEthernet1/0/14\n!\ninterface GigabitEthernet1/0/15\n\
-          !\ninterface GigabitEthernet1/0/16\n!\ninterface GigabitEthernet1/0/17\n\
-          !\ninterface GigabitEthernet1/0/18\n!\ninterface GigabitEthernet1/0/19\n\
-          !\ninterface GigabitEthernet1/0/20\n!\ninterface GigabitEthernet1/0/21\n\
-          !\ninterface GigabitEthernet1/0/22\n!\ninterface GigabitEthernet1/0/23\n\
-          !\ninterface GigabitEthernet1/0/24\n!\ninterface Vlan1\n no ip address\n\
-          \ shutdown\n!\nip forward-protocol nd\nip tcp mss 1280\nip tcp window-size\
-          \ 212000\nip http server\nip http authentication local\nip http secure-server\n\
-          ip ssh bulk-mode 131072\n!\n!\n!\n!\ncontrol-plane\n service-policy input\
-          \ system-cpp-policy\n!\n!\n!\nline con 0\n exec-timeout 0 0\n stopbits 1\n\
-          line vty 0 4\n exec-timeout 0 0\n login local\n transport input ssh\nline\
-          \ vty 5 15\n login\n transport input ssh\n!\n!\n!\n!\n!\n!\n!\nend"
+          \ GigabitEthernet0/0\n vrf forwarding Mgmt-vrf\n ip address 198.18.1.100\
+          \ 255.255.255.0\n negotiation auto\n no cdp enable\n ipv6 dhcp client request\
+          \ vendor\n ipv6 address dhcp\n ipv6 address autoconfig\n ipv6 enable\n!\n\
+          interface GigabitEthernet1/0/1\n description LINK TO CORE-SW1\n switchport\
+          \ access vlan 10\n switchport mode trunk\n no cdp enable\n!\ninterface GigabitEthernet1/0/2\n\
+          \ description LINK TO CORE-SW2\n switchport mode trunk\n no cdp enable\n\
+          !\ninterface GigabitEthernet1/0/3\n switchport access vlan 10\n switchport\
+          \ mode access\n no cdp enable\n!\ninterface GigabitEthernet1/0/4\n no cdp\
+          \ enable\n!\ninterface GigabitEthernet1/0/5\n no cdp enable\n!\ninterface\
+          \ GigabitEthernet1/0/6\n no cdp enable\n!\ninterface GigabitEthernet1/0/7\n\
+          \ no cdp enable\n!\ninterface GigabitEthernet1/0/8\n no cdp enable\n!\n\
+          interface GigabitEthernet1/0/9\n no cdp enable\n!\ninterface GigabitEthernet1/0/10\n\
+          \ switchport access vlan 10\n switchport mode access\n no cdp enable\n!\n\
+          interface GigabitEthernet1/0/11\n no cdp enable\n!\ninterface GigabitEthernet1/0/12\n\
+          \ no cdp enable\n!\ninterface GigabitEthernet1/0/13\n no cdp enable\n!\n\
+          interface GigabitEthernet1/0/14\n no cdp enable\n!\ninterface GigabitEthernet1/0/15\n\
+          \ no cdp enable\n!\ninterface GigabitEthernet1/0/16\n no cdp enable\n!\n\
+          interface GigabitEthernet1/0/17\n no cdp enable\n!\ninterface GigabitEthernet1/0/18\n\
+          \ no cdp enable\n!\ninterface GigabitEthernet1/0/19\n no cdp enable\n!\n\
+          interface GigabitEthernet1/0/20\n no cdp enable\n!\ninterface GigabitEthernet1/0/21\n\
+          \ no cdp enable\n!\ninterface GigabitEthernet1/0/22\n no cdp enable\n!\n\
+          interface GigabitEthernet1/0/23\n no cdp enable\n!\ninterface GigabitEthernet1/0/24\n\
+          \ no cdp enable\n!\ninterface Vlan1\n no ip address\n shutdown\n!\nip forward-protocol\
+          \ nd\nip tcp mss 1280\nip tcp window-size 212000\nip http server\nip http\
+          \ authentication local\nip http secure-server\nip route vrf Mgmt-vrf 198.18.128.0\
+          \ 255.255.192.0 198.18.1.1\nip ssh bulk-mode 131072\n!\n!\n!\n!\ncontrol-plane\n\
+          \ service-policy input system-cpp-policy\n!\n!\n!\nline con 0\n exec-timeout\
+          \ 0 0\n stopbits 1\nline vty 0 4\n exec-timeout 0 0\n login local\n transport\
+          \ input ssh\nline vty 5 15\n login\n transport input ssh\n!\n!\n!\n!\n!\n\
+          !\n!\nend"
     cpu_limit: null
     cpus: null
     data_volume: null
     hide_links: false
-    id: n11
+    id: n9
     image_definition: null
     label: ACCESS-SW1
     node_definition: cat9000v-uadp
     parameters: {}
+    priority: null
+    pyats:
+      username: null
+      password: null
+      enable_password: null
     ram: null
     tags: []
     x: -440
@@ -1446,74 +1536,76 @@ nodes:
   - boot_disk_size: null
     configuration:
       - name: iosxe_config.txt
-        content: "Building configuration...\n\nCurrent configuration : 8956 bytes\n\
-          !\n! Last configuration change at 17:43:07 UTC Mon Feb 23 2026\n!\nversion\
-          \ 17.15\nservice timestamps debug datetime msec\nservice timestamps log\
+        content: "Building configuration...\n\nCurrent configuration : 9179 bytes\n\
+          !\n! Last configuration change at 14:16:47 UTC Tue Mar 24 2026\n!\nversion\
+          \ 17.18\nservice timestamps debug datetime msec\nservice timestamps log\
           \ datetime msec\n!\nhostname ACCESS-SW2\n!\n!\nvrf definition Mgmt-vrf\n\
           \ !\n address-family ipv4\n exit-address-family\n !\n address-family ipv6\n\
           \ exit-address-family\n!\nno logging console\nno aaa new-model\nswitch 1\
           \ provision c9kv-uadp-8p\n!\n!\n!\n!\n!\n!\n!\n!\n!\nip domain name dcloud.org\n\
-          !\n!\n!\nlogin on-success log\n!\n!\n!\n!\n!\n!\n!\n!\ncrypto pki trustpoint\
-          \ TP-self-signed-2957430692\n enrollment selfsigned\n subject-name cn=IOS-Self-Signed-Certificate-2957430692\n\
-          \ revocation-check none\n rsakeypair TP-self-signed-2957430692\n hash sha512\n\
-          !\ncrypto pki trustpoint SLA-TrustPoint\n enrollment pkcs12\n revocation-check\
-          \ crl\n hash sha512\n!\n!\ncrypto pki certificate chain TP-self-signed-2957430692\n\
-          \ certificate self-signed 01\n  30820330 30820218 A0030201 02020101 300D0609\
-          \ 2A864886 F70D0101 0D050030\n  31312F30 2D060355 04030C26 494F532D 53656C66\
-          \ 2D536967 6E65642D 43657274\n  69666963 6174652D 32393537 34333036 3932301E\
-          \ 170D3236 30323233 31323434\n  35335A17 0D333630 32323331 32343435 335A3031\
-          \ 312F302D 06035504 030C2649\n  4F532D53 656C662D 5369676E 65642D43 65727469\
-          \ 66696361 74652D32 39353734\n  33303639 32308201 22300D06 092A8648 86F70D01\
-          \ 01010500 0382010F 00308201\n  0A028201 0100AD51 66D20C05 BFA1D181 0F31B69C\
-          \ 11677540 4197DD2E C10F9FB9\n  445DE278 FF2A441B BDAE0B26 13FFC9B3 6A6B8301\
-          \ 15930E45 699A2A8E CEA4698B\n  D1424798 356C1D8F 2D4936D3 49D1B461 88A04D55\
-          \ 89952623 3432919B 7CB1A881\n  14783A1F 29580C64 CD9D2079 4FAA8618 E7624498\
-          \ 437A94B8 4F1E2599 20F25E5B\n  85648E89 1B339428 B0CF1E04 E19BF2D8 21141746\
-          \ D52FD6A0 42CB0B54 10401437\n  1B62BEE4 A4E3F4F4 29DA58D1 936CAAC4 40B1A20F\
-          \ 879A10C0 48DED385 8ACD66B4\n  54C3C0F8 258AA6C6 73489AA3 8825201D AD6AD985\
-          \ 9B6B01A2 342371A1 2ED42AF4\n  62A2FC74 58387987 AE206C51 E1773A19 F1609107\
-          \ A20D4F26 2A35537A 6FFFBA97\n  729D91F9 08B70203 010001A3 53305130 1D060355\
-          \ 1D0E0416 0414DC1D FAB90BE7\n  AA4FBA41 58C85A56 EB8744C7 7C85301F 0603551D\
-          \ 23041830 168014DC 1DFAB90B\n  E7AA4FBA 4158C85A 56EB8744 C77C8530 0F060355\
-          \ 1D130101 FF040530 030101FF\n  300D0609 2A864886 F70D0101 0D050003 82010100\
-          \ 919E6AE1 C8923F8D 58F4C657\n  592EA074 91657D82 6A49D1FF E8000C8C 65A5A2CB\
-          \ 743CA08F 9ECDEC0F 197F4004\n  D22C8AFC 7828DAD6 468B7AB9 57E5CA44 86E234A9\
-          \ D73C7460 1BAC0C5D 6A073533\n  B72875FA EFB71504 3DA090FA 69DD4C1D 3C8503F6\
-          \ DE495F7C 93A31232 01CFE61D\n  9ED7949B 18CA5B42 CDEDF33B 836118DB 2D3DDA87\
-          \ D0116EB1 40D85CF7 7521F14F\n  EFC982CC 292173AB 0AAE2ACA 81C0F434 4257D55A\
-          \ 1994406F CDB0F7E2 CBEC0B1F\n  184606BB 98DEB253 484FA4EF 8D07E87B F02C1A7F\
-          \ 1F1FF195 C05F69E8 AAE88B2A\n  90D2EF19 C6EAFF1C F36FF7FA 388BC197 4E95D074\
-          \ 8B2A628A C961CDB6 40BEE288\n  789C9BFD 90D96065 5E60E064 793F5DFE 0BD976EB\n\
-          \  \tquit\ncrypto pki certificate chain SLA-TrustPoint\n certificate ca\
-          \ 01\n  30820321 30820209 A0030201 02020101 300D0609 2A864886 F70D0101 0B050030\n\
-          \  32310E30 0C060355 040A1305 43697363 6F312030 1E060355 04031317 43697363\n\
-          \  6F204C69 63656E73 696E6720 526F6F74 20434130 1E170D31 33303533 30313934\n\
-          \  3834375A 170D3338 30353330 31393438 34375A30 32310E30 0C060355 040A1305\n\
-          \  43697363 6F312030 1E060355 04031317 43697363 6F204C69 63656E73 696E6720\n\
-          \  526F6F74 20434130 82012230 0D06092A 864886F7 0D010101 05000382 010F0030\n\
-          \  82010A02 82010100 A6BCBD96 131E05F7 145EA72C 2CD686E6 17222EA1 F1EFF64D\n\
-          \  CBB4C798 212AA147 C655D8D7 9471380D 8711441E 1AAF071A 9CAE6388 8A38E520\n\
-          \  1C394D78 462EF239 C659F715 B98C0A59 5BBB5CBD 0CFEBEA3 700A8BF7 D8F256EE\n\
-          \  4AA4E80D DB6FD1C9 60B1FD18 FFC69C96 6FA68957 A2617DE7 104FDC5F EA2956AC\n\
-          \  7390A3EB 2B5436AD C847A2C5 DAB553EB 69A9A535 58E9F3E3 C0BD23CF 58BD7188\n\
-          \  68E69491 20F320E7 948E71D7 AE3BCC84 F10684C7 4BC8E00F 539BA42B 42C68BB7\n\
-          \  C7479096 B4CB2D62 EA2F505D C7B062A4 6811D95B E8250FC4 5D5D5FB8 8F27D191\n\
-          \  C55F0D76 61F9A4CD 3D992327 A8BB03BD 4E6D7069 7CBADF8B DF5F4368 95135E44\n\
-          \  DFC7C6CF 04DD7FD1 02030100 01A34230 40300E06 03551D0F 0101FF04 04030201\n\
-          \  06300F06 03551D13 0101FF04 05300301 01FF301D 0603551D 0E041604 1449DC85\n\
-          \  4B3D31E5 1B3E6A17 606AF333 3D3B4C73 E8300D06 092A8648 86F70D01 010B0500\n\
-          \  03820101 00507F24 D3932A66 86025D9F E838AE5C 6D4DF6B0 49631C78 240DA905\n\
-          \  604EDCDE FF4FED2B 77FC460E CD636FDB DD44681E 3A5673AB 9093D3B1 6C9E3D8B\n\
-          \  D98987BF E40CBD9E 1AECA0C2 2189BB5C 8FA85686 CD98B646 5575B146 8DFC66A8\n\
-          \  467A3DF4 4D565700 6ADF0F0D CF835015 3C04FF7C 21E878AC 11BA9CD2 55A9232C\n\
-          \  7CA7B7E6 C1AF74F6 152E99B7 B1FCF9BB E973DE7F 5BDDEB86 C71E3B49 1765308B\n\
-          \  5FB0DA06 B92AFE7F 494E8A9E 07B85737 F3A58BE1 1A48A229 C37C1E69 39F08678\n\
-          \  80DDCD16 D6BACECA EEBC7CF9 8428787B 35202CDC 60E4616A B623CDBD 230E3AFB\n\
-          \  418616A9 4093E049 4D10AB75 27E86F73 932E35B5 8862FDAE 0275156F 719BB2F0\n\
-          \  D697DF7F 28\n  \tquit\n!\n!\nlicense boot level network-advantage addon\
-          \ dna-advantage\nmemory free low-watermark processor 74370\n!\ndiagnostic\
-          \ bootup level minimal\n!\nspanning-tree mode rapid-pvst\nspanning-tree\
-          \ extend system-id\n!\n!\n!\nusername admin privilege 15 secret 9 $9$5BwmeJH0VXNLck$nYKU/6o4IuUjeUxrBl8wIjKM4nYlc.9Hvof7N.ms35g\n\
+          !\nip dhcp pool webuidhcp\n!\n!\n!\nlogin on-success log\nipv6 nd cache\
+          \ expire refresh\nipv6 unicast-routing\n!\n!\n!\n!\n!\n!\n!\n!\ncrypto pki\
+          \ trustpoint TP-self-signed-2957430692\n enrollment selfsigned\n subject-name\
+          \ cn=IOS-Self-Signed-Certificate-2957430692\n revocation-check none\n rsakeypair\
+          \ TP-self-signed-2957430692\n hash sha512\n!\ncrypto pki trustpoint SLA-TrustPoint\n\
+          \ enrollment pkcs12\n revocation-check crl\n hash sha512\n!\n!\ncrypto pki\
+          \ certificate chain TP-self-signed-2957430692\n certificate self-signed\
+          \ 01\n  30820330 30820218 A0030201 02020101 300D0609 2A864886 F70D0101 0D050030\n\
+          \  31312F30 2D060355 04030C26 494F532D 53656C66 2D536967 6E65642D 43657274\n\
+          \  69666963 6174652D 32393537 34333036 3932301E 170D3236 30323233 31323434\n\
+          \  35335A17 0D333630 32323331 32343435 335A3031 312F302D 06035504 030C2649\n\
+          \  4F532D53 656C662D 5369676E 65642D43 65727469 66696361 74652D32 39353734\n\
+          \  33303639 32308201 22300D06 092A8648 86F70D01 01010500 0382010F 00308201\n\
+          \  0A028201 0100AD51 66D20C05 BFA1D181 0F31B69C 11677540 4197DD2E C10F9FB9\n\
+          \  445DE278 FF2A441B BDAE0B26 13FFC9B3 6A6B8301 15930E45 699A2A8E CEA4698B\n\
+          \  D1424798 356C1D8F 2D4936D3 49D1B461 88A04D55 89952623 3432919B 7CB1A881\n\
+          \  14783A1F 29580C64 CD9D2079 4FAA8618 E7624498 437A94B8 4F1E2599 20F25E5B\n\
+          \  85648E89 1B339428 B0CF1E04 E19BF2D8 21141746 D52FD6A0 42CB0B54 10401437\n\
+          \  1B62BEE4 A4E3F4F4 29DA58D1 936CAAC4 40B1A20F 879A10C0 48DED385 8ACD66B4\n\
+          \  54C3C0F8 258AA6C6 73489AA3 8825201D AD6AD985 9B6B01A2 342371A1 2ED42AF4\n\
+          \  62A2FC74 58387987 AE206C51 E1773A19 F1609107 A20D4F26 2A35537A 6FFFBA97\n\
+          \  729D91F9 08B70203 010001A3 53305130 1D060355 1D0E0416 0414DC1D FAB90BE7\n\
+          \  AA4FBA41 58C85A56 EB8744C7 7C85301F 0603551D 23041830 168014DC 1DFAB90B\n\
+          \  E7AA4FBA 4158C85A 56EB8744 C77C8530 0F060355 1D130101 FF040530 030101FF\n\
+          \  300D0609 2A864886 F70D0101 0D050003 82010100 919E6AE1 C8923F8D 58F4C657\n\
+          \  592EA074 91657D82 6A49D1FF E8000C8C 65A5A2CB 743CA08F 9ECDEC0F 197F4004\n\
+          \  D22C8AFC 7828DAD6 468B7AB9 57E5CA44 86E234A9 D73C7460 1BAC0C5D 6A073533\n\
+          \  B72875FA EFB71504 3DA090FA 69DD4C1D 3C8503F6 DE495F7C 93A31232 01CFE61D\n\
+          \  9ED7949B 18CA5B42 CDEDF33B 836118DB 2D3DDA87 D0116EB1 40D85CF7 7521F14F\n\
+          \  EFC982CC 292173AB 0AAE2ACA 81C0F434 4257D55A 1994406F CDB0F7E2 CBEC0B1F\n\
+          \  184606BB 98DEB253 484FA4EF 8D07E87B F02C1A7F 1F1FF195 C05F69E8 AAE88B2A\n\
+          \  90D2EF19 C6EAFF1C F36FF7FA 388BC197 4E95D074 8B2A628A C961CDB6 40BEE288\n\
+          \  789C9BFD 90D96065 5E60E064 793F5DFE 0BD976EB\n  \tquit\ncrypto pki certificate\
+          \ chain SLA-TrustPoint\n certificate ca 01\n  30820321 30820209 A0030201\
+          \ 02020101 300D0609 2A864886 F70D0101 0B050030\n  32310E30 0C060355 040A1305\
+          \ 43697363 6F312030 1E060355 04031317 43697363\n  6F204C69 63656E73 696E6720\
+          \ 526F6F74 20434130 1E170D31 33303533 30313934\n  3834375A 170D3338 30353330\
+          \ 31393438 34375A30 32310E30 0C060355 040A1305\n  43697363 6F312030 1E060355\
+          \ 04031317 43697363 6F204C69 63656E73 696E6720\n  526F6F74 20434130 82012230\
+          \ 0D06092A 864886F7 0D010101 05000382 010F0030\n  82010A02 82010100 A6BCBD96\
+          \ 131E05F7 145EA72C 2CD686E6 17222EA1 F1EFF64D\n  CBB4C798 212AA147 C655D8D7\
+          \ 9471380D 8711441E 1AAF071A 9CAE6388 8A38E520\n  1C394D78 462EF239 C659F715\
+          \ B98C0A59 5BBB5CBD 0CFEBEA3 700A8BF7 D8F256EE\n  4AA4E80D DB6FD1C9 60B1FD18\
+          \ FFC69C96 6FA68957 A2617DE7 104FDC5F EA2956AC\n  7390A3EB 2B5436AD C847A2C5\
+          \ DAB553EB 69A9A535 58E9F3E3 C0BD23CF 58BD7188\n  68E69491 20F320E7 948E71D7\
+          \ AE3BCC84 F10684C7 4BC8E00F 539BA42B 42C68BB7\n  C7479096 B4CB2D62 EA2F505D\
+          \ C7B062A4 6811D95B E8250FC4 5D5D5FB8 8F27D191\n  C55F0D76 61F9A4CD 3D992327\
+          \ A8BB03BD 4E6D7069 7CBADF8B DF5F4368 95135E44\n  DFC7C6CF 04DD7FD1 02030100\
+          \ 01A34230 40300E06 03551D0F 0101FF04 04030201\n  06300F06 03551D13 0101FF04\
+          \ 05300301 01FF301D 0603551D 0E041604 1449DC85\n  4B3D31E5 1B3E6A17 606AF333\
+          \ 3D3B4C73 E8300D06 092A8648 86F70D01 010B0500\n  03820101 00507F24 D3932A66\
+          \ 86025D9F E838AE5C 6D4DF6B0 49631C78 240DA905\n  604EDCDE FF4FED2B 77FC460E\
+          \ CD636FDB DD44681E 3A5673AB 9093D3B1 6C9E3D8B\n  D98987BF E40CBD9E 1AECA0C2\
+          \ 2189BB5C 8FA85686 CD98B646 5575B146 8DFC66A8\n  467A3DF4 4D565700 6ADF0F0D\
+          \ CF835015 3C04FF7C 21E878AC 11BA9CD2 55A9232C\n  7CA7B7E6 C1AF74F6 152E99B7\
+          \ B1FCF9BB E973DE7F 5BDDEB86 C71E3B49 1765308B\n  5FB0DA06 B92AFE7F 494E8A9E\
+          \ 07B85737 F3A58BE1 1A48A229 C37C1E69 39F08678\n  80DDCD16 D6BACECA EEBC7CF9\
+          \ 8428787B 35202CDC 60E4616A B623CDBD 230E3AFB\n  418616A9 4093E049 4D10AB75\
+          \ 27E86F73 932E35B5 8862FDAE 0275156F 719BB2F0\n  D697DF7F 28\n  \tquit\n\
+          !\n!\nlicense boot level network-advantage addon dna-advantage\nmemory free\
+          \ low-watermark processor 74370\n!\ndiagnostic bootup level minimal\n!\n\
+          spanning-tree mode rapid-pvst\nspanning-tree extend system-id\n!\n!\n!\n\
+          username admin privilege 15 secret 9 $9$5BwmeJH0VXNLck$nYKU/6o4IuUjeUxrBl8wIjKM4nYlc.9Hvof7N.ms35g\n\
           !\nredundancy\n mode sso\ncrypto engine compliance shield disable\n!\n!\n\
           !\n!\n!\n!\nclass-map match-any system-cpp-police-ewlc-control\n description\
           \ EWLC Control\nclass-map match-any system-cpp-police-topology-control\n\
@@ -1544,8 +1636,9 @@ nodes:
           \ Critical and Gold Pkt\nclass-map match-any system-cpp-police-ios-feature\n\
           \ description ICMPGEN,BROADCAST,ICMP,L2LVXCntrl,ProtoSnoop,PuntWebauth,MCASTData,Transit,DOT1XAuth,Swfwd,LOGGING,L2LVXData,ForusTraffic,ForusARP,McastEndStn,Openflow,Exception,EGRExcption,NflSampled,RpfFailed\n\
           !\npolicy-map system-cpp-policy\n!\n!\n!\n!\n!\n!\n!\n!\n!\n!\n!\n!\ninterface\
-          \ GigabitEthernet0/0\n vrf forwarding Mgmt-vrf\n ip address 198.18.133.200\
-          \ 255.255.192.0\n negotiation auto\n!\ninterface GigabitEthernet1/0/1\n\
+          \ GigabitEthernet0/0\n vrf forwarding Mgmt-vrf\n ip address 198.18.1.200\
+          \ 255.255.255.0\n negotiation auto\n ipv6 dhcp client request vendor\n ipv6\
+          \ address dhcp\n ipv6 address autoconfig\n ipv6 enable\n!\ninterface GigabitEthernet1/0/1\n\
           \ description LINK TO CORE-SW2\n switchport mode trunk\n!\ninterface GigabitEthernet1/0/2\n\
           \ description LINK TO CORE-SW1\n switchport mode trunk\n!\ninterface GigabitEthernet1/0/3\n\
           !\ninterface GigabitEthernet1/0/4\n!\ninterface GigabitEthernet1/0/5\n!\n\
@@ -1561,20 +1654,25 @@ nodes:
           !\ninterface GigabitEthernet1/0/23\n!\ninterface GigabitEthernet1/0/24\n\
           !\ninterface Vlan1\n no ip address\n shutdown\n!\nip forward-protocol nd\n\
           ip tcp mss 1280\nip tcp window-size 212000\nip http server\nip http authentication\
-          \ local\nip http secure-server\nip ssh bulk-mode 131072\n!\n!\n!\n!\ncontrol-plane\n\
-          \ service-policy input system-cpp-policy\n!\n!\n!\nline con 0\n exec-timeout\
-          \ 0 0\n stopbits 1\nline vty 0 4\n exec-timeout 0 0\n login local\n transport\
-          \ input ssh\nline vty 5 15\n login\n transport input ssh\n!\n!\n!\n!\n!\n\
-          !\n!\nend"
+          \ local\nip http secure-server\nip route vrf Mgmt-vrf 198.18.128.0 255.255.192.0\
+          \ 198.18.1.1\nip ssh bulk-mode 131072\n!\n!\n!\n!\ncontrol-plane\n service-policy\
+          \ input system-cpp-policy\n!\n!\n!\nline con 0\n exec-timeout 0 0\n stopbits\
+          \ 1\nline vty 0 4\n exec-timeout 0 0\n login local\n transport input ssh\n\
+          line vty 5 15\n login\n transport input ssh\n!\n!\n!\n!\n!\n!\n!\nend"
     cpu_limit: null
     cpus: null
     data_volume: null
     hide_links: false
-    id: n12
+    id: n10
     image_definition: null
     label: ACCESS-SW2
     node_definition: cat9000v-uadp
     parameters: {}
+    priority: null
+    pyats:
+      username: null
+      password: null
+      enable_password: null
     ram: null
     tags: []
     x: -80
@@ -1709,6 +1807,49 @@ nodes:
         mac_address: null
         type: physical
         slot: 24
+  - boot_disk_size: null
+    configuration:
+      - name: node.cfg
+        content: |-
+          # this is a shell script which will be sourced at boot
+          hostname desktop1
+          # configurable user account
+          USERNAME=cisco
+          PASSWORD=cisco
+          ip link set eth1 up
+          ip addr add 198.18.1.125/24 dev eth1
+
+          # Add static route (e.g., default or specific prefix)
+          ip route add 198.18.128.0/18 via 198.18.1.1
+    cpu_limit: null
+    cpus: null
+    data_volume: null
+    hide_links: false
+    id: n11
+    image_definition: null
+    label: desktop-0
+    node_definition: desktop
+    parameters: {}
+    priority: null
+    pyats:
+      username: null
+      password: null
+      enable_password: null
+    ram: null
+    tags: []
+    x: -440
+    y: 600
+    interfaces:
+      - id: i0
+        label: eth0
+        mac_address: 52:54:00:0e:e7:0e
+        type: physical
+        slot: 0
+      - id: i1
+        label: eth1
+        mac_address: null
+        type: physical
+        slot: 1
 links:
   - id: l0
     n1: n2
@@ -1716,7 +1857,7 @@ links:
     i1: i1
     i2: i4
     conditioning: {}
-    label: unmanaged-switch-0-port1<->cat8000v-0-GigabitEthernet4
+    label: unmanaged-switch-0-port1<->WAN-RTR1-GigabitEthernet4
   - id: l1
     n1: n3
     n2: n2
@@ -1789,97 +1930,108 @@ links:
     label: WAN-RTR2-GigabitEthernet4<->unmanaged-switch-0-port6
   - id: l11
     n1: n0
-    n2: n9
+    n2: n8
     i1: i3
     i2: i0
     conditioning: {}
     label: WAN-RTR1-GigabitEthernet3<->Internet-port0
   - id: l12
     n1: n1
-    n2: n9
+    n2: n8
     i1: i3
     i2: i1
     conditioning: {}
     label: WAN-RTR2-GigabitEthernet3<->Internet-port1
   - id: l13
-    n1: n8
-    n2: n9
+    n1: n7
+    n2: n8
     i1: i1
     i2: i2
     conditioning: {}
-    label: cat8000v-0-GigabitEthernet1<->Internet-port2
+    label: Internet-Provider-GigabitEthernet1<->Internet-port2
   - id: l14
-    n1: n8
+    n1: n7
     n2: n2
     i1: i4
     i2: i7
     conditioning: {}
     label: Internet-Provider-GigabitEthernet4<->unmanaged-switch-0-port7
   - id: l15
-    n1: n10
-    n2: n11
-    i1: i0
-    i2: i4
-    conditioning: {}
-    label: ubuntu-0-ens2<->cat9000v-uadp-0-GigabitEthernet1/0/3
-  - id: l16
     n1: n2
-    n2: n11
+    n2: n9
     i1: i2
     i2: i1
     conditioning: {}
-    label: unmanaged-switch-0-port2<->cat9000v-uadp-0-GigabitEthernet0/0
-  - id: l17
-    n1: n11
+    label: unmanaged-switch-0-port2<->ACCESS-SW1-GigabitEthernet0/0
+  - id: l16
+    n1: n9
     n2: n4
     i1: i2
     i2: i6
     conditioning: {}
-    label: cat9000v-uadp-0-GigabitEthernet1/0/1<->CORE-SW1-GigabitEthernet1/0/5
-  - id: l18
-    n1: n11
+    label: ACCESS-SW1-GigabitEthernet1/0/1<->CORE-SW1-GigabitEthernet1/0/5
+  - id: l17
+    n1: n9
     n2: n5
     i1: i3
     i2: i7
     conditioning: {}
-    label: cat9000v-uadp-0-GigabitEthernet1/0/2<->CORE-SW2-GigabitEthernet1/0/6
-  - id: l19
-    n1: n6
-    n2: n11
-    i1: i0
-    i2: i11
-    conditioning: {}
-    label: desktop-0-eth0<->cat9000v-uadp-0-GigabitEthernet1/0/10
-  - id: l20
-    n1: n12
+    label: ACCESS-SW1-GigabitEthernet1/0/2<->CORE-SW2-GigabitEthernet1/0/6
+  - id: l18
+    n1: n10
     n2: n2
     i1: i1
     i2: i5
     conditioning: {}
-    label: cat9000v-uadp-0-GigabitEthernet0/0<->unmanaged-switch-0-port5
-  - id: l21
-    n1: n12
-    n2: n7
+    label: ACCESS-SW2-GigabitEthernet0/0<->unmanaged-switch-0-port5
+  - id: l19
+    n1: n10
+    n2: n6
     i1: i11
     i2: i0
     conditioning: {}
-    label: cat9000v-uadp-0-GigabitEthernet1/0/10<->desktop-1-eth0
-  - id: l22
+    label: ACCESS-SW2-GigabitEthernet1/0/10<->desktop-1-eth0
+  - id: l20
     n1: n5
-    n2: n12
+    n2: n10
     i1: i6
     i2: i2
     conditioning: {}
-    label: CORE-SW2-GigabitEthernet1/0/5<->cat9000v-uadp-0-GigabitEthernet1/0/1
-  - id: l23
-    n1: n12
+    label: CORE-SW2-GigabitEthernet1/0/5<->ACCESS-SW2-GigabitEthernet1/0/1
+  - id: l21
+    n1: n10
     n2: n4
     i1: i3
     i2: i7
     conditioning: {}
-    label: cat9000v-uadp-0-GigabitEthernet1/0/2<->CORE-SW1-GigabitEthernet1/0/6
+    label: ACCESS-SW2-GigabitEthernet1/0/2<->CORE-SW1-GigabitEthernet1/0/6
+  - id: l22
+    n1: n6
+    n2: n2
+    i1: i1
+    i2: i9
+    conditioning: {}
+    label: desktop-1-eth1<->unmanaged-switch-0-port9
+  - id: l23
+    n1: n11
+    n2: n9
+    i1: i0
+    i2: i11
+    conditioning: {}
+    label: desktop-0-eth0<->ACCESS-SW1-GigabitEthernet1/0/10
+  - id: l24
+    n1: n11
+    n2: n2
+    i1: i1
+    i2: i8
+    conditioning: {}
+    label: desktop-0-eth1<->unmanaged-switch-0-port8
 lab:
   description: ''
   notes: ''
   title: Lab at Sat 19:28 PM
-  version: 0.3.0
+  node_staging:
+    enabled: false
+    start_remaining: true
+    abort_on_failure: false
+  version: 0.3.1

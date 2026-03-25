@@ -1,0 +1,24 @@
+devices:
+  - name: "CORE-SW1"
+    host: "198.18.2.101"
+    username: "admin"
+    password: "C1sco12345"
+    device_type: "cisco_ios"
+    port: 22
+    timeout: 30
+
+  - name: "CORE-SW2"
+    host: "198.18.2.202"
+    username: "admin"
+    password: "C1sco12345"
+    device_type: "cisco_ios"
+    port: 22
+    timeout: 30
+
+  - name: "localhost"
+    host: "127.0.0.1"
+    username: ""
+    password: ""
+    device_type: "local"
+    port: 22
+    timeout: 30
