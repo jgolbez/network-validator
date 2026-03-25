@@ -629,12 +629,12 @@ def get_constraints() -> list[Constraint]:
         ),
         Constraint(
             name="Checking Access-Lists Configuration",
-            description="No access-lists can block traffic to Desktop-0",
+            description="No access-lists can block traffic to Desktop-1",
             test_names=["No ACL denies Desktop-0 Host or Subnet"],
         ),
         Constraint(
-            name="Checking for Connectivity to Desktop-0",
-            description="Desktop-2 should NOT be able to ping Desktop-1 (task complete) or CAN (task incomplete)",
+            name="Checking for Connectivity to Desktop-1",
+            description="Desktop-2 should NOT be able to ping Desktop-1",
             test_names=["Desktop-2 can ping Desktop-1 (before task)"],
             invert_result=True,  # Passes when ping test FAILS (connectivity blocked)
         ),
