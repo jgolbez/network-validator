@@ -8,13 +8,16 @@ tests:
     command: "ssh -l cisco 198.18.1.221 \"ping -c 3 -W 2 4.2.2.2\""
     match_type: "contains"
     expected: "bytes from 4.2.2.2"
+    ssh_password: "cisco"
     devices: ["localhost"]
+
 
   - name: "Host1 cannot ping 8.8.8.8 (one-way connectivity)"
     description: "Host1 should NOT receive echo replies from 8.8.8.8 (one-way connection)"
     command: "ssh -l cisco 198.18.1.221 \"ping -c 3 -W 2 8.8.8.8\""
     match_type: "not_contains"
     expected: "bytes from 8.8.8.8"
+    ssh_password: "cisco"
     devices: ["localhost"]
 
   # ============================================================================
@@ -26,6 +29,7 @@ tests:
     command: "ssh -l cisco 198.18.1.222 \"ping -c 3 -W 2 4.2.2.2\""
     match_type: "contains"
     expected: "bytes from 4.2.2.2"
+    ssh_password: "cisco"
     devices: ["localhost"]
 
   - name: "Host2 cannot ping 8.8.8.8 (one-way connectivity)"
@@ -33,6 +37,7 @@ tests:
     command: "ssh -l cisco 198.18.1.222 \"ping -c 3 -W 2 8.8.8.8\""
     match_type: "not_contains"
     expected: "bytes from 8.8.8.8"
+    ssh_password: "cisco"
     devices: ["localhost"]
 
   # ============================================================================
