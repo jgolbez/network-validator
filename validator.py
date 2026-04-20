@@ -616,29 +616,75 @@ def extract_variables_from_device(
     return variables
 
 
-def get_constraints() -> list[Constraint]:
+def get_constraints(config_dir: str) -> list[Constraint]:
     """
     Define high-level constraints/restrictions for attendee report.
     Maps multiple tests to logical business checks.
+    Constraints vary by network/challenge.
     """
-    return [
-        Constraint(
-            name="Checking Active DHCP Leases",
-            description="Both desktops must have active DHCP leases",
-            test_names=["Desktop-0 uses DHCP", "Desktop-1 uses DHCP"],
-        ),
-        Constraint(
-            name="Checking Access-Lists Configuration",
-            description="No access-lists can block traffic to Desktop-1",
-            test_names=["No ACL denies Desktop-0 Host or Subnet"],
-        ),
-        Constraint(
-            name="Checking for Connectivity to Desktop-1",
-            description="Desktop-2 should NOT be able to ping Desktop-1",
-            test_names=["Desktop-2 can ping Desktop-1 (before task)"],
-            invert_result=True,  # Passes when ping test FAILS (connectivity blocked)
-        ),
-    ]
+    if "network2" in config_dir:
+        # Challenge 2: One-way connectivity
+        return [
+            Constraint(
+                name="One-way Connectivity Established",
+                description="Hosts can ping 4.2.2.2 (replies received) and 8.8.8.8 (replies blocked)",
+                test_names=[
+                    "Host1 can ping 4.2.2.2 (should receive replies)",
+                    "Host1 cannot ping 8.8.8.8 (one-way connectivity)",
+                    "Host2 can ping 4.2.2.2 (should receive replies)",
+                    "Host2 cannot ping 8.8.8.8 (one-way connectivity)",
+                ],
+            ),
+            Constraint(
+                name="No ACLs Blocking Traffic",
+                description="No access-lists blocking traffic on any interfaces",
+                test_names=["No access-group blocking traffic on any device"],
+            ),
+            Constraint(
+                name="No Static Routes",
+                description="No static routes (ip route) configured",
+                test_names=["No static routes used (ip route x.x.x.x)"],
+            ),
+            Constraint(
+                name="No Null Routing",
+                description="No routes directed to null interfaces",
+                test_names=["No null interface routing (Null0)"],
+            ),
+            Constraint(
+                name="All Interfaces Operational",
+                description="All active interfaces are not shutdown",
+                test_names=[
+                    "Dist1 active interfaces not shutdown",
+                    "Dist2 active interfaces not shutdown",
+                    "Acc1 active interfaces not shutdown",
+                    "Acc2 active interfaces not shutdown",
+                    "R1 active interfaces not shutdown",
+                    "R2 active interfaces not shutdown",
+                    "ISP1 active interfaces not shutdown",
+                    "INET active interfaces not shutdown",
+                ],
+            ),
+        ]
+    else:
+        # Challenge 1: Block connectivity
+        return [
+            Constraint(
+                name="Checking Active DHCP Leases",
+                description="Both desktops must have active DHCP leases",
+                test_names=["Desktop-0 uses DHCP", "Desktop-1 uses DHCP"],
+            ),
+            Constraint(
+                name="Checking Access-Lists Configuration",
+                description="No access-lists can block traffic to Desktop-1",
+                test_names=["No ACL denies Desktop-0 Host or Subnet"],
+            ),
+            Constraint(
+                name="Checking for Connectivity to Desktop-1",
+                description="Desktop-2 should NOT be able to ping Desktop-1",
+                test_names=["Desktop-2 can ping Desktop-1 (before task)"],
+                invert_result=True,  # Passes when ping test FAILS (connectivity blocked)
+            ),
+        ]
 
 
 def render_report(device_reports: list[DeviceReport], run_timestamp: str) -> str:
@@ -670,7 +716,7 @@ def render_report(device_reports: list[DeviceReport], run_timestamp: str) -> str
     return html
 
 
-def render_attendee_report(device_reports: list[DeviceReport], run_timestamp: str) -> str:
+def render_attendee_report(device_reports: list[DeviceReport], run_timestamp: str, config_dir: str) -> str:
     """
     Render attendee-focused report with high-level constraint checks (no detailed test output).
     Returns HTML string.
@@ -690,7 +736,7 @@ def render_attendee_report(device_reports: list[DeviceReport], run_timestamp: st
         all_test_results.extend(device_report.test_results)
 
     # Evaluate constraints
-    constraints = get_constraints()
+    constraints = get_constraints(config_dir)
     for constraint in constraints:
         constraint.status = constraint.evaluate(all_test_results)
 
@@ -766,7 +812,7 @@ def main():
     # Generate reports
     run_timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     detailed_html = render_report(device_reports, run_timestamp)
-    attendee_html = render_attendee_report(device_reports, run_timestamp)
+    attendee_html = render_attendee_report(device_reports, run_timestamp, config_dir)
 
     # Derive output filenames from config directory name
     # e.g., "config/network1" -> "network1_report.html" and "network1_attendee_report.html"
