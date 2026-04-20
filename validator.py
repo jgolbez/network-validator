@@ -482,19 +482,15 @@ def run_device_tests(
                 # Send command - use special handling for localhost and nested SSH with password
                 if is_localhost:
                     # Check if this is an SSH command with password authentication
-                    print(f"DEBUG: Command: {command}")
-                    print(f"DEBUG: Has ssh_password: {bool(test.ssh_password)}")
                     if "ssh" in command.lower() and test.ssh_password:
                         # Extract host and username from SSH command
                         # Supports: ssh -l user host "command" or ssh user@host "command"
                         ssh_match = re.search(r'ssh\s+(?:-l\s+)?(\S+)(?:\s+(\S+))?', command, re.IGNORECASE)
-                        print(f"DEBUG: SSH match: {ssh_match}")
                         if ssh_match:
                             # If -l is used: group(1)=username, group(2)=host
                             # If user@host is used: group(1)=user@host, group(2)=None
                             first_part = ssh_match.group(1)
                             second_part = ssh_match.group(2)
-                            print(f"DEBUG: first_part={first_part}, second_part={second_part}")
 
                             if '@' in first_part:
                                 username, host = first_part.split('@')
@@ -502,17 +498,12 @@ def run_device_tests(
                                 username = first_part
                                 host = second_part or "cisco"
 
-                            print(f"DEBUG: Extracted - username={username}, host={host}")
-
                             # Extract the actual command - find content in quotes
                             cmd_match = re.search(r'["\'](.+?)["\']', command)
                             remote_cmd = cmd_match.group(1) if cmd_match else ""
-                            print(f"DEBUG: Remote command: {remote_cmd}")
 
                             if remote_cmd:
-                                print(f"DEBUG: Calling Paramiko for {host}...")
                                 output = run_ssh_command_with_paramiko(host, username, test.ssh_password, remote_cmd, device.timeout)
-                                print(f"DEBUG: Paramiko result: {output[:100]}")
                             else:
                                 output = "Could not parse SSH command"
                         else:
