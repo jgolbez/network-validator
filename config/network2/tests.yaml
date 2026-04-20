@@ -72,7 +72,7 @@ tests:
     description: "Static routes (ip route with destination IP) should not be present"
     command: "show run"
     match_type: "not_regex"
-    expected: "ip route\s+\d+\.\d+\.\d+\.\d+"
+    expected: 'ip route\s+\d+\.\d+\.\d+\.\d+'
     devices: ["Dist1", "Dist2", "Acc1", "Acc2", "R1", "R2", "ISP1", "INET"]
 
   # ============================================================================
@@ -83,7 +83,7 @@ tests:
     description: "Routes to null interfaces should not be configured"
     command: "show run"
     match_type: "not_regex"
-    expected: "(?:ip route|route).*[Nn]ull\s*0"
+    expected: '(?:ip route|route).*[Nn]ull\s*0'
     devices: ["Dist1", "Dist2", "Acc1", "Acc2", "R1", "R2", "ISP1", "INET"]
 
   # ============================================================================
@@ -94,54 +94,54 @@ tests:
     description: "Verify GigabitEthernet0/0, GigabitEthernet1/0/1, GigabitEthernet1/0/3, GigabitEthernet1/0/4 are not shutdown"
     command: "show run | section GigabitEthernet(0/0|1/0/[134])"
     match_type: "not_regex"
-    expected: "(?:^|\n)\s*shutdown\s*(?:$|\n)"
+    expected: '(?:^|\n)\s*shutdown\s*(?:$|\n)'
     devices: ["Dist1"]
 
   - name: "Dist2 active interfaces not shutdown"
     description: "Verify GigabitEthernet0/0, GigabitEthernet1/0/1, GigabitEthernet1/0/3, GigabitEthernet1/0/4 are not shutdown"
     command: "show run | section GigabitEthernet(0/0|1/0/[134])"
     match_type: "not_regex"
-    expected: "(?:^|\n)\s*shutdown\s*(?:$|\n)"
+    expected: '(?:^|\n)\s*shutdown\s*(?:$|\n)'
     devices: ["Dist2"]
 
   - name: "Acc1 active interfaces not shutdown"
     description: "Verify GigabitEthernet0/0, GigabitEthernet1/0/1, GigabitEthernet1/0/2, GigabitEthernet1/0/3 are not shutdown"
     command: "show run | section GigabitEthernet(0/0|1/0/[123])"
     match_type: "not_regex"
-    expected: "(?:^|\n)\s*shutdown\s*(?:$|\n)"
+    expected: '(?:^|\n)\s*shutdown\s*(?:$|\n)'
     devices: ["Acc1"]
 
   - name: "Acc2 active interfaces not shutdown"
     description: "Verify GigabitEthernet0/0, GigabitEthernet1/0/1, GigabitEthernet1/0/2, GigabitEthernet1/0/3 are not shutdown"
     command: "show run | section GigabitEthernet(0/0|1/0/[123])"
     match_type: "not_regex"
-    expected: "(?:^|\n)\s*shutdown\s*(?:$|\n)"
+    expected: '(?:^|\n)\s*shutdown\s*(?:$|\n)'
     devices: ["Acc2"]
 
   - name: "R1 active interfaces not shutdown"
     description: "Verify GigabitEthernet1, GigabitEthernet2, GigabitEthernet3, GigabitEthernet4 are not shutdown"
     command: "show run | section GigabitEthernet[1-4]"
     match_type: "not_regex"
-    expected: "(?:^|\n)\s*shutdown\s*(?:$|\n)"
+    expected: '(?:^|\n)\s*shutdown\s*(?:$|\n)'
     devices: ["R1"]
 
   - name: "R2 active interfaces not shutdown"
     description: "Verify GigabitEthernet1, GigabitEthernet2, GigabitEthernet3, GigabitEthernet4 are not shutdown"
     command: "show run | section GigabitEthernet[1-4]"
     match_type: "not_regex"
-    expected: "(?:^|\n)\s*shutdown\s*(?:$|\n)"
+    expected: '(?:^|\n)\s*shutdown\s*(?:$|\n)'
     devices: ["R2"]
 
   - name: "ISP1 active interfaces not shutdown"
     description: "Verify GigabitEthernet1, GigabitEthernet2, GigabitEthernet3, GigabitEthernet4 are not shutdown"
     command: "show run | section GigabitEthernet[1-4]"
     match_type: "not_regex"
-    expected: "(?:^|\n)\s*shutdown\s*(?:$|\n)"
+    expected: '(?:^|\n)\s*shutdown\s*(?:$|\n)'
     devices: ["ISP1"]
 
   - name: "INET active interfaces not shutdown"
     description: "Verify GigabitEthernet interfaces are not shutdown"
     command: "show run | include GigabitEthernet|shutdown"
     match_type: "not_regex"
-    expected: "(?:^|\n)\s*shutdown\s*(?:$|\n)"
+    expected: '(?:^|\n)\s*shutdown\s*(?:$|\n)'
     devices: ["INET"]
