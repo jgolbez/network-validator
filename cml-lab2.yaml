@@ -16,8 +16,8 @@ nodes:
   - boot_disk_size: null
     configuration:
       - name: iosxe_config.txt
-        content: "Building configuration...\n\nCurrent configuration : 11934 bytes\n\
-          !\n! Last configuration change at 12:23:43 UTC Wed Apr 15 2026\n!\nversion\
+        content: "Building configuration...\n\nCurrent configuration : 11937 bytes\n\
+          !\n! Last configuration change at 12:33:29 UTC Mon Apr 20 2026\n!\nversion\
           \ 17.18\nservice timestamps debug datetime msec\nservice timestamps log\
           \ datetime msec\n!\nhostname Dist1\n!\n!\nvrf definition Mgmt-vrf\n !\n\
           \ address-family ipv4\n exit-address-family\n !\n address-family ipv6\n\
@@ -324,8 +324,8 @@ nodes:
   - boot_disk_size: null
     configuration:
       - name: iosxe_config.txt
-        content: "Building configuration...\n\nCurrent configuration : 11935 bytes\n\
-          !\n! Last configuration change at 12:23:44 UTC Wed Apr 15 2026\n!\nversion\
+        content: "Building configuration...\n\nCurrent configuration : 11938 bytes\n\
+          !\n! Last configuration change at 12:33:28 UTC Mon Apr 20 2026\n!\nversion\
           \ 17.18\nservice timestamps debug datetime msec\nservice timestamps log\
           \ datetime msec\n!\nhostname Dist2\n!\n!\nvrf definition Mgmt-vrf\n !\n\
           \ address-family ipv4\n exit-address-family\n !\n address-family ipv6\n\
@@ -632,8 +632,8 @@ nodes:
   - boot_disk_size: null
     configuration:
       - name: iosxe_config.txt
-        content: "Building configuration...\n\nCurrent configuration : 9393 bytes\n\
-          !\n! Last configuration change at 12:23:45 UTC Wed Apr 15 2026\n!\nversion\
+        content: "Building configuration...\n\nCurrent configuration : 9342 bytes\n\
+          !\n! Last configuration change at 12:33:30 UTC Mon Apr 20 2026\n!\nversion\
           \ 17.18\nservice timestamps debug datetime msec\nservice timestamps log\
           \ datetime msec\n!\nhostname Acc1\n!\n!\nvrf definition Mgmt-vrf\n !\n address-family\
           \ ipv4\n exit-address-family\n !\n address-family ipv6\n exit-address-family\n\
@@ -703,23 +703,23 @@ nodes:
           !\n!\n!\n!\nclass-map match-any system-cpp-police-ewlc-control\n description\
           \ EWLC Control\nclass-map match-any system-cpp-police-topology-control\n\
           \ description Topology control\nclass-map match-any system-cpp-police-sw-forward\n\
-          \ description Sw forwarding, L2 LVX data, LOGGING\nclass-map match-any system-cpp-default\n\
-          \ description EWLC control, EWLC data, Inter FED\nclass-map match-any system-cpp-police-sys-data\n\
-          \ description Learning cache ovfl, High Rate App, Exception, EGR Exception,\
-          \ NFL SAMPLED DATA, RPF Failed\nclass-map match-any system-cpp-police-punt-webauth\n\
-          \ description Punt Webauth\nclass-map match-any system-cpp-police-l2lvx-control\n\
-          \ description L2 LVX control packets\nclass-map match-any system-cpp-police-forus\n\
-          \ description Forus Address resolution and Forus traffic\nclass-map match-any\
-          \ system-cpp-police-multicast-end-station\n description MCAST END STATION\n\
-          class-map match-any system-cpp-police-forus-addr-resolution\n description\
-          \ Forus address resolution\nclass-map match-any system-cpp-police-high-rate-app\n\
+          \ description Sw forwarding, L2 LVX data packets, LOGGING, Transit Traffic\n\
+          class-map match-any system-cpp-default\n description EWLC Data, Inter FED\
+          \ Traffic\nclass-map match-any system-cpp-police-sys-data\n description\
+          \ Openflow, Exception, EGR Exception, NFL Sampled Data, RPF Failed\nclass-map\
+          \ match-any system-cpp-police-punt-webauth\n description Punt Webauth\n\
+          class-map match-any system-cpp-police-l2lvx-control\n description L2 LVX\
+          \ control packets\nclass-map match-any system-cpp-police-forus\n description\
+          \ Forus traffic\nclass-map match-any system-cpp-police-multicast-end-station\n\
+          \ description MCAST END STATION\nclass-map match-any system-cpp-police-forus-addr-resolution\n\
+          \ description Forus address resolution\nclass-map match-any system-cpp-police-high-rate-app\n\
           \ description High Rate Applications\nclass-map match-any system-cpp-police-multicast\n\
-          \ description Transit Traffic and MCAST Data\nclass-map match-any system-cpp-police-meraki-next-tunnel\n\
+          \ description MCAST Data\nclass-map match-any system-cpp-police-meraki-next-tunnel\n\
           \ description Meraki Next tunnel\nclass-map match-any system-cpp-police-l2-control\n\
           \ description L2 control\nclass-map match-any system-cpp-police-dot1x-auth\n\
           \ description DOT1X Auth\nclass-map match-any system-cpp-police-data\n description\
           \ ICMP redirect, ICMP_GEN and BROADCAST\nclass-map match-any system-cpp-police-stackwise-virt-control\n\
-          \ description Stackwise Virtual\nclass-map match-any non-client-nrt-class\n\
+          \ description Stackwise Virtual OOB\nclass-map match-any non-client-nrt-class\n\
           class-map match-any system-cpp-police-routing-control\n description Routing\
           \ control and Low Latency\nclass-map match-any system-cpp-police-protocol-snooping\n\
           \ description Protocol snooping\nclass-map match-any system-cpp-police-dhcp-snooping\n\
@@ -908,8 +908,8 @@ nodes:
   - boot_disk_size: null
     configuration:
       - name: iosxe_config.txt
-        content: "Building configuration...\n\nCurrent configuration : 9526 bytes\n\
-          !\n! Last configuration change at 12:23:43 UTC Wed Apr 15 2026\n!\nversion\
+        content: "Building configuration...\n\nCurrent configuration : 9475 bytes\n\
+          !\n! Last configuration change at 12:33:29 UTC Mon Apr 20 2026\n!\nversion\
           \ 17.18\nservice timestamps debug datetime msec\nservice timestamps log\
           \ datetime msec\n!\nhostname Acc2\n!\n!\nvrf definition Mgmt-vrf\n !\n address-family\
           \ ipv4\n exit-address-family\n !\n address-family ipv6\n exit-address-family\n\
@@ -981,23 +981,23 @@ nodes:
           !\n!\n!\n!\nclass-map match-any system-cpp-police-ewlc-control\n description\
           \ EWLC Control\nclass-map match-any system-cpp-police-topology-control\n\
           \ description Topology control\nclass-map match-any system-cpp-police-sw-forward\n\
-          \ description Sw forwarding, L2 LVX data, LOGGING\nclass-map match-any system-cpp-default\n\
-          \ description EWLC control, EWLC data, Inter FED\nclass-map match-any system-cpp-police-sys-data\n\
-          \ description Learning cache ovfl, High Rate App, Exception, EGR Exception,\
-          \ NFL SAMPLED DATA, RPF Failed\nclass-map match-any system-cpp-police-punt-webauth\n\
-          \ description Punt Webauth\nclass-map match-any system-cpp-police-l2lvx-control\n\
-          \ description L2 LVX control packets\nclass-map match-any system-cpp-police-forus\n\
-          \ description Forus Address resolution and Forus traffic\nclass-map match-any\
-          \ system-cpp-police-multicast-end-station\n description MCAST END STATION\n\
-          class-map match-any system-cpp-police-forus-addr-resolution\n description\
-          \ Forus address resolution\nclass-map match-any system-cpp-police-high-rate-app\n\
+          \ description Sw forwarding, L2 LVX data packets, LOGGING, Transit Traffic\n\
+          class-map match-any system-cpp-default\n description EWLC Data, Inter FED\
+          \ Traffic\nclass-map match-any system-cpp-police-sys-data\n description\
+          \ Openflow, Exception, EGR Exception, NFL Sampled Data, RPF Failed\nclass-map\
+          \ match-any system-cpp-police-punt-webauth\n description Punt Webauth\n\
+          class-map match-any system-cpp-police-l2lvx-control\n description L2 LVX\
+          \ control packets\nclass-map match-any system-cpp-police-forus\n description\
+          \ Forus traffic\nclass-map match-any system-cpp-police-multicast-end-station\n\
+          \ description MCAST END STATION\nclass-map match-any system-cpp-police-forus-addr-resolution\n\
+          \ description Forus address resolution\nclass-map match-any system-cpp-police-high-rate-app\n\
           \ description High Rate Applications\nclass-map match-any system-cpp-police-multicast\n\
-          \ description Transit Traffic and MCAST Data\nclass-map match-any system-cpp-police-meraki-next-tunnel\n\
+          \ description MCAST Data\nclass-map match-any system-cpp-police-meraki-next-tunnel\n\
           \ description Meraki Next tunnel\nclass-map match-any system-cpp-police-l2-control\n\
           \ description L2 control\nclass-map match-any system-cpp-police-dot1x-auth\n\
           \ description DOT1X Auth\nclass-map match-any system-cpp-police-data\n description\
           \ ICMP redirect, ICMP_GEN and BROADCAST\nclass-map match-any system-cpp-police-stackwise-virt-control\n\
-          \ description Stackwise Virtual\nclass-map match-any non-client-nrt-class\n\
+          \ description Stackwise Virtual OOB\nclass-map match-any non-client-nrt-class\n\
           class-map match-any system-cpp-police-routing-control\n description Routing\
           \ control and Low Latency\nclass-map match-any system-cpp-police-protocol-snooping\n\
           \ description Protocol snooping\nclass-map match-any system-cpp-police-dhcp-snooping\n\
@@ -1186,8 +1186,8 @@ nodes:
   - boot_disk_size: null
     configuration:
       - name: iosxe_config.txt
-        content: "Building configuration...\n\nCurrent configuration : 6772 bytes\n\
-          !\n! Last configuration change at 12:23:44 UTC Wed Apr 15 2026\n!\nversion\
+        content: "Building configuration...\n\nCurrent configuration : 6757 bytes\n\
+          !\n! Last configuration change at 12:33:28 UTC Mon Apr 20 2026\n!\nversion\
           \ 17.18\nservice timestamps debug datetime msec\nservice timestamps log\
           \ datetime msec\nplatform qfp utilization monitor load 80\nplatform sslvpn\
           \ use-pd\nplatform console serial\n!\nhostname R1\n!\nboot-start-marker\n\
@@ -1258,28 +1258,27 @@ nodes:
           !\nredundancy\n!\n!\n!\n!\n!\n!\n!\n!\n!\n!\ninterface Loopback0\n ip address\
           \ 10.1.255.1 255.255.255.255\n ip ospf 1 area 0\n!\ninterface GigabitEthernet1\n\
           \ description Link to Dist1 G 1/0/4\n ip address 192.168.255.1 255.255.255.252\n\
-          \ ip nat inside\n ip ospf 1 area 0\n shutdown\n negotiation auto\n!\ninterface\
-          \ GigabitEthernet2\n description Link to R2 G2\n ip address 172.16.1.1 255.255.255.0\n\
-          \ ip ospf 1 area 0\n shutdown\n negotiation auto\n!\ninterface GigabitEthernet3\n\
+          \ ip nat inside\n ip ospf 1 area 0\n negotiation auto\n!\ninterface GigabitEthernet2\n\
+          \ description Link to R2 G2\n ip address 172.16.1.1 255.255.255.0\n ip nat\
+          \ inside\n ip ospf 1 area 0\n negotiation auto\n!\ninterface GigabitEthernet3\n\
           \ description Link to ISP1 G1\n ip address 198.19.1.2 255.255.255.252\n\
-          \ ip nat outside\n shutdown\n negotiation auto\n!\ninterface GigabitEthernet4\n\
-          \ description MANAGEMEMNT\n vrf forwarding Mgmt-vrf\n ip address 198.18.1.228\
-          \ 255.255.255.0\n negotiation auto\n!\nrouter ospf 1\n default-information\
-          \ originate always\n!\nrouter bgp 10001\n bgp log-neighbor-changes\n network\
-          \ 198.19.1.0 mask 255.255.255.252\n neighbor 10.1.255.2 remote-as 10001\n\
-          \ neighbor 10.1.255.2 update-source Loopback0\n neighbor 198.19.1.1 remote-as\
-          \ 1001\n!\nip forward-protocol nd\n!\nno ip http server\nip http secure-server\n\
-          ip route vrf Mgmt-vrf 198.18.128.0 255.255.192.0 198.18.1.1\nip nat inside\
-          \ source list ALLOW_NAT interface GigabitEthernet3 overload\nip ssh bulk-mode\
-          \ 131072\n!\nip access-list extended ALLOW_NAT\n 10 permit ip 10.0.0.0 0.255.255.255\
-          \ any\n 20 permit ip 172.16.0.0 0.15.255.255 any\n 30 permit ip 192.168.0.0\
-          \ 0.0.255.255 any\n!\n!\ncontrol-plane\n!\n!\nline con 0\n exec-timeout\
-          \ 0 0\n activation-character 13\n stopbits 1\nline aux 0\n activation-character\
-          \ 13\nline vty 0\n exec-timeout 0 0\n activation-character 13\n login local\n\
-          \ transport input ssh\nline vty 1\n exec-timeout 0 0\n activation-character\
-          \ 13\n login local\n length 0\n transport input ssh\nline vty 2 4\n exec-timeout\
-          \ 0 0\n activation-character 13\n login local\n transport input ssh\n!\n\
-          !\n!\n!\n!\n!\n!\nend"
+          \ ip nat outside\n negotiation auto\n!\ninterface GigabitEthernet4\n description\
+          \ MANAGEMEMNT\n vrf forwarding Mgmt-vrf\n ip address 198.18.1.228 255.255.255.0\n\
+          \ negotiation auto\n!\nrouter ospf 1\n default-information originate always\n\
+          !\nrouter bgp 10001\n bgp log-neighbor-changes\n network 198.19.1.0 mask\
+          \ 255.255.255.252\n neighbor 10.1.255.2 remote-as 10001\n neighbor 10.1.255.2\
+          \ update-source Loopback0\n neighbor 198.19.1.1 remote-as 1001\n!\nip forward-protocol\
+          \ nd\n!\nno ip http server\nip http secure-server\nip route vrf Mgmt-vrf\
+          \ 198.18.128.0 255.255.192.0 198.18.1.1\nip nat inside source list ALLOW_NAT\
+          \ interface GigabitEthernet3 overload\nip ssh bulk-mode 131072\n!\nip access-list\
+          \ extended ALLOW_NAT\n 10 permit ip 10.0.0.0 0.255.255.255 any\n 20 permit\
+          \ ip 172.16.0.0 0.15.255.255 any\n 30 permit ip 192.168.0.0 0.0.255.255\
+          \ any\n!\n!\ncontrol-plane\n!\n!\nline con 0\n exec-timeout 0 0\n activation-character\
+          \ 13\n stopbits 1\nline aux 0\n activation-character 13\nline vty 0\n exec-timeout\
+          \ 0 0\n activation-character 13\n login local\n transport input ssh\nline\
+          \ vty 1\n exec-timeout 0 0\n activation-character 13\n login local\n length\
+          \ 0\n transport input ssh\nline vty 2 4\n exec-timeout 0 0\n activation-character\
+          \ 13\n login local\n transport input ssh\n!\n!\n!\n!\n!\n!\n!\nend"
     cpu_limit: null
     cpus: null
     data_volume: null
@@ -1326,8 +1325,8 @@ nodes:
   - boot_disk_size: null
     configuration:
       - name: iosxe_config.txt
-        content: "Building configuration...\n\nCurrent configuration : 6669 bytes\n\
-          !\n! Last configuration change at 12:23:45 UTC Wed Apr 15 2026\n!\nversion\
+        content: "Building configuration...\n\nCurrent configuration : 6654 bytes\n\
+          !\n! Last configuration change at 12:33:31 UTC Mon Apr 20 2026\n!\nversion\
           \ 17.18\nservice timestamps debug datetime msec\nservice timestamps log\
           \ datetime msec\nplatform qfp utilization monitor load 80\nplatform sslvpn\
           \ use-pd\nplatform console serial\n!\nhostname R2\n!\nboot-start-marker\n\
@@ -1398,27 +1397,26 @@ nodes:
           !\nredundancy\n!\n!\n!\n!\n!\n!\n!\n!\n!\n!\ninterface Loopback0\n ip address\
           \ 10.1.255.2 255.255.255.255\n ip ospf 1 area 0\n!\ninterface GigabitEthernet1\n\
           \ description Link to Dist2 G 1/0/4\n ip address 192.168.255.5 255.255.255.252\n\
-          \ ip nat inside\n ip ospf 1 area 0\n shutdown\n negotiation auto\n!\ninterface\
-          \ GigabitEthernet2\n description Link to R1 G2\n ip address 172.16.1.2 255.255.255.0\n\
-          \ ip ospf 1 area 0\n shutdown\n negotiation auto\n!\ninterface GigabitEthernet3\n\
+          \ ip nat inside\n ip ospf 1 area 0\n negotiation auto\n!\ninterface GigabitEthernet2\n\
+          \ description Link to R1 G2\n ip address 172.16.1.2 255.255.255.0\n ip nat\
+          \ inside\n ip ospf 1 area 0\n negotiation auto\n!\ninterface GigabitEthernet3\n\
           \ description Link to ISP1 G2\n ip address 198.19.1.6 255.255.255.252\n\
-          \ ip nat outside\n shutdown\n negotiation auto\n!\ninterface GigabitEthernet4\n\
-          \ description MANAGEMEMNT\n vrf forwarding Mgmt-vrf\n ip address 198.18.1.227\
-          \ 255.255.255.0\n negotiation auto\n!\nrouter ospf 1\n default-information\
-          \ originate always\n!\nrouter bgp 10001\n bgp log-neighbor-changes\n network\
-          \ 198.19.1.0 mask 255.255.255.252\n neighbor 10.1.255.1 remote-as 10001\n\
-          \ neighbor 10.1.255.1 update-source Loopback0\n neighbor 198.19.1.5 remote-as\
-          \ 1001\n!\nip forward-protocol nd\n!\nno ip http server\nip http secure-server\n\
-          ip route vrf Mgmt-vrf 198.18.128.0 255.255.192.0 198.18.1.1\nip nat inside\
-          \ source list ALLOW_NAT interface GigabitEthernet3 overload\nip ssh bulk-mode\
-          \ 131072\n!\nip access-list extended ALLOW_NAT\n 10 permit ip 10.0.0.0 0.255.255.255\
-          \ any\n 20 permit ip 172.16.0.0 0.15.255.255 any\n 30 permit ip 192.168.0.0\
-          \ 0.0.255.255 any\n!\n!\ncontrol-plane\n!\n!\nline con 0\n exec-timeout\
-          \ 0 0\n activation-character 13\n stopbits 1\nline aux 0\n activation-character\
-          \ 13\nline vty 0 2\n exec-timeout 0 0\n activation-character 13\n login\
-          \ local\n length 0\n transport input ssh\nline vty 3 4\n exec-timeout 0\
-          \ 0\n activation-character 13\n login local\n transport input ssh\n!\n!\n\
-          !\n!\n!\n!\n!\nend"
+          \ ip nat outside\n negotiation auto\n!\ninterface GigabitEthernet4\n description\
+          \ MANAGEMEMNT\n vrf forwarding Mgmt-vrf\n ip address 198.18.1.227 255.255.255.0\n\
+          \ negotiation auto\n!\nrouter ospf 1\n default-information originate always\n\
+          !\nrouter bgp 10001\n bgp log-neighbor-changes\n network 198.19.1.0 mask\
+          \ 255.255.255.252\n neighbor 10.1.255.1 remote-as 10001\n neighbor 10.1.255.1\
+          \ update-source Loopback0\n neighbor 198.19.1.5 remote-as 1001\n!\nip forward-protocol\
+          \ nd\n!\nno ip http server\nip http secure-server\nip route vrf Mgmt-vrf\
+          \ 198.18.128.0 255.255.192.0 198.18.1.1\nip nat inside source list ALLOW_NAT\
+          \ interface GigabitEthernet3 overload\nip ssh bulk-mode 131072\n!\nip access-list\
+          \ extended ALLOW_NAT\n 10 permit ip 10.0.0.0 0.255.255.255 any\n 20 permit\
+          \ ip 172.16.0.0 0.15.255.255 any\n 30 permit ip 192.168.0.0 0.0.255.255\
+          \ any\n!\n!\ncontrol-plane\n!\n!\nline con 0\n exec-timeout 0 0\n activation-character\
+          \ 13\n stopbits 1\nline aux 0\n activation-character 13\nline vty 0 2\n\
+          \ exec-timeout 0 0\n activation-character 13\n login local\n length 0\n\
+          \ transport input ssh\nline vty 3 4\n exec-timeout 0 0\n activation-character\
+          \ 13\n login local\n transport input ssh\n!\n!\n!\n!\n!\n!\n!\nend"
     cpu_limit: null
     cpus: null
     data_volume: null
@@ -1465,8 +1463,8 @@ nodes:
   - boot_disk_size: null
     configuration:
       - name: iosxe_config.txt
-        content: "Building configuration...\n\nCurrent configuration : 6184 bytes\n\
-          !\n! Last configuration change at 12:23:44 UTC Wed Apr 15 2026\n!\nversion\
+        content: "Building configuration...\n\nCurrent configuration : 6154 bytes\n\
+          !\n! Last configuration change at 12:33:30 UTC Mon Apr 20 2026\n!\nversion\
           \ 17.18\nservice timestamps debug datetime msec\nservice timestamps log\
           \ datetime msec\nplatform qfp utilization monitor load 80\nplatform sslvpn\
           \ use-pd\nplatform console serial\n!\nhostname ISP1\n!\nboot-start-marker\n\
@@ -1536,21 +1534,21 @@ nodes:
           \ privilege 15 secret 9 $9$U7OVfxUWF6zomk$47tRi6.JuNe7Lh4.1q2nUSNIS/iduAzY04FU2/HRaZA\n\
           !\nredundancy\n!\n!\n!\n!\n!\n!\n!\n!\n!\n!\ninterface Loopback0\n ip address\
           \ 10.255.255.1 255.255.255.255\n!\ninterface GigabitEthernet1\n description\
-          \ Link to R1 G3\n ip address 198.19.1.1 255.255.255.252\n shutdown\n negotiation\
-          \ auto\n!\ninterface GigabitEthernet2\n description Link to R2 G3\n ip address\
-          \ 198.19.1.5 255.255.255.252\n shutdown\n negotiation auto\n!\ninterface\
-          \ GigabitEthernet3\n description Link to INET G1\n ip address 198.19.12.1\
-          \ 255.255.255.0\n shutdown\n negotiation auto\n!\ninterface GigabitEthernet4\n\
-          \ description MANAGEMENT\n vrf forwarding Mgmt-vrf\n ip address 198.18.1.229\
-          \ 255.255.255.0\n negotiation auto\n!\nrouter bgp 1001\n bgp log-neighbor-changes\n\
-          \ redistribute connected\n neighbor 198.19.1.2 remote-as 10001\n neighbor\
-          \ 198.19.1.6 remote-as 10001\n neighbor 198.19.12.2 remote-as 1002\n!\n\
-          ip forward-protocol nd\n!\nno ip http server\nip http secure-server\nip\
-          \ route vrf Mgmt-vrf 198.18.128.0 255.255.192.0 198.18.1.1\nip ssh bulk-mode\
-          \ 131072\n!\n!\n!\ncontrol-plane\n!\n!\nline con 0\n exec-timeout 0 0\n\
-          \ activation-character 13\n stopbits 1\nline aux 0\n activation-character\
-          \ 13\nline vty 0 4\n exec-timeout 0 0\n activation-character 13\n login\
-          \ local\n transport input ssh\n!\n!\n!\n!\n!\n!\n!\nend"
+          \ Link to R1 G3\n ip address 198.19.1.1 255.255.255.252\n negotiation auto\n\
+          !\ninterface GigabitEthernet2\n description Link to R2 G3\n ip address 198.19.1.5\
+          \ 255.255.255.252\n negotiation auto\n!\ninterface GigabitEthernet3\n description\
+          \ Link to INET G1\n ip address 198.19.12.1 255.255.255.0\n negotiation auto\n\
+          !\ninterface GigabitEthernet4\n description MANAGEMENT\n vrf forwarding\
+          \ Mgmt-vrf\n ip address 198.18.1.229 255.255.255.0\n negotiation auto\n\
+          !\nrouter bgp 1001\n bgp log-neighbor-changes\n redistribute connected\n\
+          \ neighbor 198.19.1.2 remote-as 10001\n neighbor 198.19.1.6 remote-as 10001\n\
+          \ neighbor 198.19.12.2 remote-as 1002\n!\nip forward-protocol nd\n!\nno\
+          \ ip http server\nip http secure-server\nip route vrf Mgmt-vrf 198.18.128.0\
+          \ 255.255.192.0 198.18.1.1\nip ssh bulk-mode 131072\n!\n!\n!\ncontrol-plane\n\
+          !\n!\nline con 0\n exec-timeout 0 0\n activation-character 13\n stopbits\
+          \ 1\nline aux 0\n activation-character 13\nline vty 0 4\n exec-timeout 0\
+          \ 0\n activation-character 13\n login local\n transport input ssh\n!\n!\n\
+          !\n!\n!\n!\n!\nend"
     cpu_limit: null
     cpus: null
     data_volume: null
@@ -1597,8 +1595,8 @@ nodes:
   - boot_disk_size: null
     configuration:
       - name: iosxe_config.txt
-        content: "Building configuration...\n\nCurrent configuration : 6223 bytes\n\
-          !\n! Last configuration change at 12:23:44 UTC Wed Apr 15 2026\n!\nversion\
+        content: "Building configuration...\n\nCurrent configuration : 6213 bytes\n\
+          !\n! Last configuration change at 12:33:30 UTC Mon Apr 20 2026\n!\nversion\
           \ 17.18\nservice timestamps debug datetime msec\nservice timestamps log\
           \ datetime msec\nplatform qfp utilization monitor load 80\nplatform sslvpn\
           \ use-pd\nplatform console serial\n!\nhostname INET\n!\nboot-start-marker\n\
@@ -1669,21 +1667,20 @@ nodes:
           !\nredundancy\n!\n!\n!\n!\n!\n!\n!\n!\n!\n!\ninterface Loopback0\n ip address\
           \ 8.8.8.8 255.255.255.255\n!\ninterface Loopback2\n ip address 4.2.2.2 255.255.255.255\n\
           !\ninterface GigabitEthernet1\n description Link to ISP1 G3\n ip address\
-          \ 198.19.12.2 255.255.255.0\n shutdown\n negotiation auto\n!\ninterface\
-          \ GigabitEthernet2\n no ip address\n shutdown\n negotiation auto\n!\ninterface\
-          \ GigabitEthernet3\n no ip address\n shutdown\n negotiation auto\n!\ninterface\
-          \ GigabitEthernet4\n description MANAGEMENT\n vrf forwarding Mgmt-vrf\n\
-          \ ip address 198.18.1.230 255.255.255.0\n negotiation auto\n!\nrouter bgp\
-          \ 1002\n bgp log-neighbor-changes\n redistribute connected\n neighbor 198.19.12.1\
-          \ remote-as 1001\n!\nip forward-protocol nd\n!\nno ip http server\nip http\
-          \ secure-server\nip route vrf Mgmt-vrf 198.18.128.0 255.255.192.0 198.18.133.1\n\
-          ip route vrf Mgmt-vrf 198.18.128.0 255.255.192.0 198.18.1.1\nip ssh bulk-mode\
-          \ 131072\n!\n!\n!\ncontrol-plane\n!\n!\nline con 0\n exec-timeout 0 0\n\
-          \ activation-character 13\n stopbits 1\nline aux 0\n activation-character\
-          \ 13\nline vty 0 2\n exec-timeout 0 0\n activation-character 13\n login\
-          \ local\n length 0\n transport input ssh\nline vty 3 4\n exec-timeout 0\
-          \ 0\n activation-character 13\n login local\n transport input ssh\n!\n!\n\
-          !\n!\n!\n!\n!\nend"
+          \ 198.19.12.2 255.255.255.0\n negotiation auto\n!\ninterface GigabitEthernet2\n\
+          \ no ip address\n shutdown\n negotiation auto\n!\ninterface GigabitEthernet3\n\
+          \ no ip address\n shutdown\n negotiation auto\n!\ninterface GigabitEthernet4\n\
+          \ description MANAGEMENT\n vrf forwarding Mgmt-vrf\n ip address 198.18.1.230\
+          \ 255.255.255.0\n negotiation auto\n!\nrouter bgp 1002\n bgp log-neighbor-changes\n\
+          \ redistribute connected\n neighbor 198.19.12.1 remote-as 1001\n!\nip forward-protocol\
+          \ nd\n!\nno ip http server\nip http secure-server\nip route vrf Mgmt-vrf\
+          \ 198.18.128.0 255.255.192.0 198.18.133.1\nip route vrf Mgmt-vrf 198.18.128.0\
+          \ 255.255.192.0 198.18.1.1\nip ssh bulk-mode 131072\n!\n!\n!\ncontrol-plane\n\
+          !\n!\nline con 0\n exec-timeout 0 0\n activation-character 13\n stopbits\
+          \ 1\nline aux 0\n activation-character 13\nline vty 0 2\n exec-timeout 0\
+          \ 0\n activation-character 13\n login local\n length 0\n transport input\
+          \ ssh\nline vty 3 4\n exec-timeout 0 0\n activation-character 13\n login\
+          \ local\n transport input ssh\n!\n!\n!\n!\n!\n!\n!\nend"
     cpu_limit: null
     cpus: null
     data_volume: null
@@ -1736,10 +1733,13 @@ nodes:
           # configurable user account
           USERNAME=cisco
           PASSWORD=cisco
+          ip link set eth0 up
+          ip addr add 192.168.255.34/30 dev eth0
           ip link set eth1 up
           ip addr add 198.18.1.221/24 dev eth1
 
           # Add static route (e.g., default or specific prefix)
+          ip route add 0.0.0.0/0  via 192.168.255.33
           ip route add 198.18.128.0/18 via 198.18.1.1
     cpu_limit: null
     cpus: null
@@ -1779,11 +1779,14 @@ nodes:
           # configurable user account
           USERNAME=cisco
           PASSWORD=cisco
+          ip link set eth0 up
+          ip addr add 192.168.255.38/30 dev eth0
           ip link set eth1 up
           ip addr add 198.18.1.222/24 dev eth1
 
           # Add static route (e.g., default or specific prefix)
           ip route add 198.18.128.0/18 via 198.18.1.1
+          ip route add 0.0.0.0/0 via 192.168.255.38
     cpu_limit: null
     cpus: null
     data_volume: null

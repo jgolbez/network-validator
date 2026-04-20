@@ -1,14 +1,62 @@
 devices:
-  - name: "CORE-SW1"
-    host: "198.18.2.101"
+  - name: "Dist1"
+    host: "198.18.1.226"
     username: "admin"
     password: "C1sco12345"
     device_type: "cisco_ios"
     port: 22
     timeout: 30
 
-  - name: "CORE-SW2"
-    host: "198.18.2.202"
+  - name: "Dist2"
+    host: "198.18.1.225"
+    username: "admin"
+    password: "C1sco12345"
+    device_type: "cisco_ios"
+    port: 22
+    timeout: 30
+
+  - name: "Acc1"
+    host: "198.18.1.224"
+    username: "admin"
+    password: "C1sco12345"
+    device_type: "cisco_ios"
+    port: 22
+    timeout: 30
+
+  - name: "Acc2"
+    host: "198.18.1.223"
+    username: "admin"
+    password: "C1sco12345"
+    device_type: "cisco_ios"
+    port: 22
+    timeout: 30
+
+  - name: "R1"
+    host: "198.18.1.228"
+    username: "admin"
+    password: "C1sco12345"
+    device_type: "cisco_ios"
+    port: 22
+    timeout: 30
+
+  - name: "R2"
+    host: "198.18.1.227"
+    username: "admin"
+    password: "C1sco12345"
+    device_type: "cisco_ios"
+    port: 22
+    timeout: 30
+
+  - name: "ISP1"
+    host: "198.18.1.229"
+    username: "admin"
+    password: "C1sco12345"
+    device_type: "cisco_ios"
+    port: 22
+    timeout: 30
+
+  - name: "INET"
+    host: "198.18.1.230"
     username: "admin"
     password: "C1sco12345"
     device_type: "cisco_ios"
