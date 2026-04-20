@@ -483,14 +483,23 @@ def run_device_tests(
                 if is_localhost:
                     # Check if this is an SSH command with password authentication
                     if "ssh" in command.lower() and test.ssh_password:
-                        # Extract host from SSH command (e.g., "ssh -l cisco 198.18.1.221 ...")
-                        ssh_match = re.search(r'ssh\s+(?:-l\s+(\S+)\s+)?(\S+)', command, re.IGNORECASE)
+                        # Extract host and username from SSH command
+                        # Supports: ssh -l user host "command" or ssh user@host "command"
+                        ssh_match = re.search(r'ssh\s+(?:-l\s+)?(\S+)(?:\s+(\S+))?', command, re.IGNORECASE)
                         if ssh_match:
-                            username = ssh_match.group(1) or "cisco"
-                            host = ssh_match.group(2)
-                            # Extract the actual command from the SSH string
-                            # Format: ssh -l user host "command"
-                            cmd_match = re.search(r'ssh\s+(?:-l\s+\S+\s+)?\S+\s+"(.+)"', command)
+                            # If -l is used: group(1)=username, group(2)=host
+                            # If user@host is used: group(1)=user@host, group(2)=None
+                            first_part = ssh_match.group(1)
+                            second_part = ssh_match.group(2)
+
+                            if '@' in first_part:
+                                username, host = first_part.split('@')
+                            else:
+                                username = first_part
+                                host = second_part or "cisco"
+
+                            # Extract the actual command - find content in quotes
+                            cmd_match = re.search(r'["\'](.+?)["\']', command)
                             remote_cmd = cmd_match.group(1) if cmd_match else ""
 
                             if remote_cmd:
@@ -498,7 +507,7 @@ def run_device_tests(
                             else:
                                 output = "Could not parse SSH command"
                         else:
-                            output = "Could not extract host from SSH command"
+                            output = "Could not parse SSH command"
                     else:
                         # Run command locally using shell (non-SSH commands)
                         try:
