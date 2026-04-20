@@ -1,5 +1,16 @@
 tests:
   # ============================================================================
+  # STEP 0: Enable Debug Capture on INET
+  # ============================================================================
+
+  - name: "Enable ICMP debug on INET"
+    description: "Enable ICMP debugging to capture ping traffic"
+    command: "debug ip icmp"
+    match_type: "contains"
+    expected: "ICMP packet debugging is on"
+    devices: ["INET"]
+
+  # ============================================================================
   # STEP 1: Connectivity Tests - Host1 to 4.2.2.2 (should succeed)
   # ============================================================================
 
