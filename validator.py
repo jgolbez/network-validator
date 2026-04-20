@@ -15,6 +15,7 @@ import yaml
 from jinja2 import Template
 from netmiko import ConnectHandler
 from netmiko.exceptions import NetmikoTimeoutException, NetmikoAuthenticationException
+import paramiko
 
 
 def ip_to_int(ip_str: str) -> int:
@@ -374,6 +375,26 @@ def send_ssh_command_with_password(conn, command: str, password: str) -> str:
             raise e
 
 
+def run_ssh_command_with_paramiko(host: str, username: str, password: str, command: str, timeout: int = 30) -> str:
+    """
+    Execute an SSH command using Paramiko with password authentication.
+    Returns the command output.
+    """
+    try:
+        client = paramiko.SSHClient()
+        client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        client.connect(host, username=username, password=password, timeout=timeout, look_for_keys=False, allow_agent=False)
+
+        stdin, stdout, stderr = client.exec_command(command, timeout=timeout)
+        output = stdout.read().decode('utf-8', errors='ignore')
+        error_output = stderr.read().decode('utf-8', errors='ignore')
+        client.close()
+
+        return output + error_output
+    except Exception as e:
+        return f"SSH Error: {e}"
+
+
 def run_device_tests(
     device: DeviceConfig, tests: list[TestDefinition], global_variables: dict[str, str] | None = None
 ) -> DeviceReport:
@@ -460,20 +481,39 @@ def run_device_tests(
 
                 # Send command - use special handling for localhost and nested SSH with password
                 if is_localhost:
-                    # Run command locally using shell
-                    try:
-                        result = subprocess.run(
-                            command,
-                            shell=True,
-                            capture_output=True,
-                            text=True,
-                            timeout=device.timeout
-                        )
-                        output = result.stdout + result.stderr
-                    except subprocess.TimeoutExpired:
-                        output = "Command timed out"
-                    except Exception as e:
-                        output = f"Error running command: {e}"
+                    # Check if this is an SSH command with password authentication
+                    if "ssh" in command.lower() and test.ssh_password:
+                        # Extract host from SSH command (e.g., "ssh -l cisco 198.18.1.221 ...")
+                        ssh_match = re.search(r'ssh\s+(?:-l\s+(\S+)\s+)?(\S+)', command, re.IGNORECASE)
+                        if ssh_match:
+                            username = ssh_match.group(1) or "cisco"
+                            host = ssh_match.group(2)
+                            # Extract the actual command from the SSH string
+                            # Format: ssh -l user host "command"
+                            cmd_match = re.search(r'ssh\s+(?:-l\s+\S+\s+)?\S+\s+"(.+)"', command)
+                            remote_cmd = cmd_match.group(1) if cmd_match else ""
+
+                            if remote_cmd:
+                                output = run_ssh_command_with_paramiko(host, username, test.ssh_password, remote_cmd, device.timeout)
+                            else:
+                                output = "Could not parse SSH command"
+                        else:
+                            output = "Could not extract host from SSH command"
+                    else:
+                        # Run command locally using shell (non-SSH commands)
+                        try:
+                            result = subprocess.run(
+                                command,
+                                shell=True,
+                                capture_output=True,
+                                text=True,
+                                timeout=device.timeout
+                            )
+                            output = result.stdout + result.stderr
+                        except subprocess.TimeoutExpired:
+                            output = "Command timed out"
+                        except Exception as e:
+                            output = f"Error running command: {e}"
                 elif "ssh" in command.lower() and test.ssh_password:
                     output = send_ssh_command_with_password(conn, command, test.ssh_password)
                 else:
