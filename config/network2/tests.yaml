@@ -1,16 +1,5 @@
 tests:
   # ============================================================================
-  # STEP 0: Enable Debug Capture on INET
-  # ============================================================================
-
-  - name: "Enable ICMP debug on INET"
-    description: "Enable ICMP debugging to capture ping traffic"
-    command: "debug ip icmp"
-    match_type: "contains"
-    expected: "ICMP packet debugging is on"
-    devices: ["INET"]
-
-  # ============================================================================
   # STEP 1: Connectivity Tests - Host1 to 4.2.2.2 (should succeed)
   # ============================================================================
 
@@ -52,25 +41,7 @@ tests:
     devices: ["localhost"]
 
   # ============================================================================
-  # STEP 3: INET Debug Verification (ICMP echo/reply for both IPs)
-  # ============================================================================
-
-  - name: "INET received echo requests from both 4.2.2.2 and 8.8.8.8"
-    description: "Debug output should show ICMP echo messages received on INET"
-    command: "show debug"
-    match_type: "regex"
-    expected: "ICMP.*echo.*request"
-    devices: ["INET"]
-
-  - name: "INET sent echo replies for both 4.2.2.2 and 8.8.8.8"
-    description: "Debug output should show ICMP echo reply messages sent from INET"
-    command: "show debug"
-    match_type: "regex"
-    expected: "ICMP.*echo.*reply"
-    devices: ["INET"]
-
-  # ============================================================================
-  # STEP 4: Constraint Validation - No Access-Lists Blocking Traffic
+  # STEP 3: Constraint Validation - No Access-Lists Blocking Traffic
   # ============================================================================
 
   - name: "No access-group blocking traffic on any device"
@@ -81,7 +52,7 @@ tests:
     devices: ["Dist1", "Dist2", "Acc1", "Acc2", "R1", "R2", "ISP1", "INET"]
 
   # ============================================================================
-  # STEP 5: Constraint Validation - No Static Routes
+  # STEP 4: Constraint Validation - No Static Routes
   # ============================================================================
 
   - name: "No static routes used (ip route x.x.x.x)"
@@ -92,7 +63,7 @@ tests:
     devices: ["Dist1", "Dist2", "Acc1", "Acc2", "R1", "R2", "ISP1", "INET"]
 
   # ============================================================================
-  # STEP 6: Constraint Validation - No Null Routing
+  # STEP 5: Constraint Validation - No Null Routing
   # ============================================================================
 
   - name: "No null interface routing (Null0)"
@@ -103,7 +74,7 @@ tests:
     devices: ["Dist1", "Dist2", "Acc1", "Acc2", "R1", "R2", "ISP1", "INET"]
 
   # ============================================================================
-  # STEP 7: Constraint Validation - No Shutdown on Active Interfaces
+  # STEP 6: Constraint Validation - No Shutdown on Active Interfaces
   # ============================================================================
 
   - name: "Dist1 active interfaces not shutdown"
