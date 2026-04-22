@@ -5,7 +5,7 @@ devices:
     password: "C1sco12345"
     device_type: "cisco_ios"
     port: 22
-    timeout: 30
+    timeout: 60
 
   - name: "Dist2"
     host: "198.18.1.225"
@@ -13,7 +13,7 @@ devices:
     password: "C1sco12345"
     device_type: "cisco_ios"
     port: 22
-    timeout: 30
+    timeout: 60
 
   - name: "Acc1"
     host: "198.18.1.224"
@@ -21,7 +21,7 @@ devices:
     password: "C1sco12345"
     device_type: "cisco_ios"
     port: 22
-    timeout: 30
+    timeout: 60
 
   - name: "Acc2"
     host: "198.18.1.223"
@@ -29,7 +29,7 @@ devices:
     password: "C1sco12345"
     device_type: "cisco_ios"
     port: 22
-    timeout: 30
+    timeout: 60
 
   - name: "R1"
     host: "198.18.1.228"
@@ -37,7 +37,7 @@ devices:
     password: "C1sco12345"
     device_type: "cisco_ios"
     port: 22
-    timeout: 30
+    timeout: 60
 
   - name: "R2"
     host: "198.18.1.227"
@@ -45,7 +45,7 @@ devices:
     password: "C1sco12345"
     device_type: "cisco_ios"
     port: 22
-    timeout: 30
+    timeout: 60
 
   - name: "ISP1"
     host: "198.18.1.229"
@@ -53,7 +53,7 @@ devices:
     password: "C1sco12345"
     device_type: "cisco_ios"
     port: 22
-    timeout: 30
+    timeout: 60
 
   - name: "INET"
     host: "198.18.1.230"
@@ -61,7 +61,7 @@ devices:
     password: "C1sco12345"
     device_type: "cisco_ios"
     port: 22
-    timeout: 30
+    timeout: 60
 
   - name: "localhost"
     host: "127.0.0.1"
@@ -69,4 +69,4 @@ devices:
     password: ""
     device_type: "local"
     port: 22
-    timeout: 30
+    timeout: 60

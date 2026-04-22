@@ -5,7 +5,7 @@ devices:
     password: "C1sco12345"
     device_type: "cisco_ios"
     port: 22
-    timeout: 30
+    timeout: 60
 
   - name: "CORE-SW2"
     host: "198.18.1.202"
@@ -13,7 +13,7 @@ devices:
     password: "C1sco12345"
     device_type: "cisco_ios"
     port: 22
-    timeout: 30
+    timeout: 60
 
   - name: "localhost"
     host: "127.0.0.1"
@@ -21,4 +21,4 @@ devices:
     password: ""
     device_type: "local"
     port: 22
-    timeout: 30
+    timeout: 60
