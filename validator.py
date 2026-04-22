@@ -687,7 +687,7 @@ def get_constraints(config_dir: str) -> list[Constraint]:
             Constraint(
                 name="No ACLs Blocking Traffic",
                 description="No access-lists blocking traffic on any interfaces",
-                test_names=["No access-group blocking traffic on any device"],
+                test_names=["No ACLs blocking traffic to 4.2.2.2 or 8.8.8.8"],
             ),
             Constraint(
                 name="No Static Routes",
