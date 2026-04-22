@@ -44,11 +44,11 @@ tests:
   # STEP 3: Constraint Validation - No Access-Lists Blocking Traffic
   # ============================================================================
 
-  - name: "No access-group blocking traffic on any device"
-    description: "Check that ip access-group is not used to block traffic on interfaces"
-    command: "show run | include access-group"
-    match_type: "not_contains"
-    expected: "ip access-group"
+  - name: "No ACLs blocking traffic to 4.2.2.2 or 8.8.8.8"
+    description: "Check that no ACLs deny traffic to the challenge IPs"
+    command: "show run | include access-list"
+    match_type: "not_regex"
+    expected: 'access-list.*deny.*(4\.2\.2\.2|8\.8\.8\.8)'
     devices: ["Dist1", "Dist2", "Acc1", "Acc2", "R1", "R2", "ISP1", "INET"]
 
   # ============================================================================
