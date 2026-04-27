@@ -49,8 +49,15 @@ tests:
     devices: ["CORE-SW2"]
 
   # ============================================================================
-  # STEP 3: Verify No Access-Lists Block Desktop-0
+  # STEP 3: Verify No Access-Lists Block Desktop Traffic
   # ============================================================================
+
+  - name: "No ACL applied to desktop VLAN interfaces"
+    description: "Check that no ip access-group is applied to Vlan10 or Vlan20 interfaces (implicit deny would block desktop traffic)"
+    command: "show run | section interface Vlan(10|20)"
+    match_type: "not_contains"
+    expected: "ip access-group"
+    devices: ["CORE-SW1", "CORE-SW2"]
 
   - name: "No ACL denies Desktop-0 Host or Subnet"
     description: "Check that no access-list denies desktop-0 by host IP or subnet (standard or extended ACL)"
