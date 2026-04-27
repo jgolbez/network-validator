@@ -46,9 +46,9 @@ tests:
 
   - name: "No ACLs blocking traffic to 4.2.2.2 or 8.8.8.8"
     description: "Check that no ACLs deny traffic to the challenge IPs"
-    command: "show run | include access-list"
+    command: "show run | section access-list"
     match_type: "not_regex"
-    expected: 'access-list.*deny.*(4\.2\.2\.2|8\.8\.8\.8)'
+    expected: 'deny.*(4\.2\.2\.2|8\.8\.8\.8)'
     devices: ["Dist1", "Dist2", "Acc1", "Acc2", "R1", "R2", "ISP1", "INET"]
 
   # ============================================================================
