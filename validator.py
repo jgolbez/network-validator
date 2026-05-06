@@ -333,6 +333,31 @@ def extract_variable(output: str, pattern: str) -> str | None:
     return None
 
 
+def check_acl_applied_and_blocks(conn, deny_pattern: str) -> tuple[str, bool]:
+    """
+    Two-step ACL check for Cisco devices.
+    Step 1: Find ACL names applied to interfaces via 'show run | include ip access-group'.
+    Step 2: For each applied ACL, run 'show access-lists <name>' and check for deny rules.
+    Returns (output_for_report, passed). Passes if no applied ACL contains blocking deny rules.
+    """
+    acl_group_output = conn.send_command("show run | include ip access-group")
+    acl_names = list(set(re.findall(r'ip access-group\s+(\S+)', acl_group_output)))
+
+    if not acl_names:
+        return "No access-groups applied to any interface.", True
+
+    report_output = f"Applied ACLs: {', '.join(acl_names)}\n\n"
+    any_blocking = False
+
+    for acl_name in acl_names:
+        detail = conn.send_command(f"show access-lists {acl_name}")
+        report_output += f"--- {acl_name} ---\n{detail}\n\n"
+        if re.search(deny_pattern, detail, re.IGNORECASE):
+            any_blocking = True
+
+    return report_output, not any_blocking
+
+
 def send_ssh_command_with_password(conn, command: str, password: str) -> str:
     """
     Send an SSH command that prompts for a password (nested SSH scenario).
@@ -552,8 +577,13 @@ def run_device_tests(
                 expected = substitute_variables(test.expected, variables)
                 command = substitute_variables(test.command, variables)
 
+                # Two-step ACL check: find applied ACLs then inspect their content
+                if test.match_type == "acl_applied_and_blocks" and not is_localhost:
+                    output, passed = check_acl_applied_and_blocks(conn, expected)
+                    truncated_output = output[:2000]
+                    status = "PASS" if passed else "FAIL"
                 # Special handling for ACL tests: use intelligent IP blocking check
-                if "ACL" in test.name.upper() and "show access-lists" in command:
+                elif "ACL" in test.name.upper() and "show access-lists" in command:
                     if "desktop_0_ip" in variables and "desktop_0_subnet_mask" in variables:
                         # Use intelligent ACL checking instead of regex
                         is_blocked = check_ip_blocked_by_acl(
