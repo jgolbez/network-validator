@@ -48,7 +48,7 @@ tests:
     description: "Check that no ACL applied to an interface has deny rules that would block ICMP traffic"
     command: "show run | include ip access-group"
     match_type: "acl_applied_and_blocks"
-    expected: 'deny\s+(?:icmp|ip\s+any\s+any|ip\s+any\s+host\s+(?:4\.2\.2\.2|8\.8\.8\.8))'
+    expected: 'deny\s+(?:ip|icmp)[^\n]*(?:4\.2\.2\.2|8\.8\.8\.8|any\s+any)'
     devices: ["Dist1", "Dist2", "Acc1", "Acc2", "R1", "R2", "ISP1", "INET"]
 
   # ============================================================================
