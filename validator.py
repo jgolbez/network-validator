@@ -724,7 +724,7 @@ def get_constraints(config_dir: str) -> list[Constraint]:
             ),
             Constraint(
                 name="Checking Access-Lists Configuration",
-                description="No access-lists can block traffic to Desktop-1",
+                description="No IP access-lists can block traffic to Desktop 1",
                 test_names=[
                     "No ACL applied to desktop VLAN interfaces",
                     "No ACL denies Desktop-0 Host or Subnet",
