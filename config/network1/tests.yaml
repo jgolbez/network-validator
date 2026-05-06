@@ -53,8 +53,8 @@ tests:
   # ============================================================================
 
   - name: "No ACL applied to desktop VLAN interfaces"
-    description: "Check that no ip access-group is applied to Vlan10 or Vlan20 interfaces (implicit deny would block desktop traffic)"
-    command: "show run | section interface Vlan(10|20)"
+    description: "Check that no ip access-group is applied to any interface (implicit deny would block desktop traffic)"
+    command: "show run | include ip access-group"
     match_type: "not_contains"
     expected: "ip access-group"
     devices: ["CORE-SW1", "CORE-SW2"]
