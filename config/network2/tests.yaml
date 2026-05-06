@@ -45,10 +45,10 @@ tests:
   # ============================================================================
 
   - name: "No ACLs blocking traffic to 4.2.2.2 or 8.8.8.8"
-    description: "Check that no ip access-group is applied to any interface"
-    command: "show run | include ip access-group"
-    match_type: "not_contains"
-    expected: "ip access-group"
+    description: "Check that no access-list has deny rules that would block ICMP traffic to the challenge IPs"
+    command: "show access-lists"
+    match_type: "not_regex"
+    expected: 'deny\s+(?:icmp|ip\s+any\s+any|ip\s+any\s+host\s+(?:4\.2\.2\.2|8\.8\.8\.8))'
     devices: ["Dist1", "Dist2", "Acc1", "Acc2", "R1", "R2", "ISP1", "INET"]
 
   # ============================================================================
